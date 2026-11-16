@@ -1,0 +1,73 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import EditPdf from '../islands/EditPdf';
+
+const faqs = [
+  { q: 'Is this PDF editor really free with no watermark?', a: 'Yes. Every edit is free, with no watermark, no signup and no limit on pages or files. PDFSherpa runs in your browser, so there are no server costs to pass on to you.' },
+  { q: 'Can I change the existing text in my PDF?', a: 'Not directly. PDFSherpa adds new text, images, highlights and shapes on top of the page. To “replace” a word, cover it with a white shape and type the new text over it. Remember the old text is still in the file underneath.' },
+  { q: 'Is the text I add selectable and searchable?', a: 'Yes. Added text is real PDF text in Helvetica, Times or Courier, so it can be selected, searched and copied, and stays sharp at any zoom.' },
+  { q: 'Can I hide confidential information with a black box?', a: 'Not safely. A box only covers content visually and the original text can still be copied. To remove sensitive content for real, delete the page with <a href="/organize-pdf">Organize PDF</a>, or recreate the document without it.' },
+  { q: 'How do I add a signature?', a: 'Use <a href="/sign-pdf">Sign PDF</a>, which lets you draw, type or upload a signature. Then open the signed file here if you need more edits.' },
+  { q: 'Are my files uploaded?', a: 'No. Editing happens entirely in your browser. Your PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="edit-pdf"
+  title="Edit PDF Free – No Watermark, No Signup | PDFSherpa"
+  description="Add text, images, highlights and shapes to any PDF for free, with no watermark and no signup. Works on phone and computer. Files never leave your device."
+  h1="Edit PDF"
+  lead="Add text, images, highlights and shapes to any PDF, completely free and with no watermark. Type on forms, add notes or a logo, then download. Your file never leaves your device."
+  howToTitle="How to Edit a PDF"
+  steps={['Select or drop your PDF.', 'Add text, an image, a highlight or a shape, then drag it into place.', 'Click <strong>Save & download</strong>. No watermark is added.']}
+  faqs={faqs}
+  related={['sign-pdf', 'watermark-pdf', 'add-page-numbers', 'organize-pdf']}
+>
+  <EditPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Edit PDF does</h2>
+    <p>
+      Edit PDF lets you write on a PDF the way you’d write on paper: fill in a form that isn’t fillable, add a note or a correction, highlight an important line,
+      or place your logo. Many free editors and trial versions stamp a watermark on everything you save. PDFSherpa never does.
+    </p>
+
+    <h2>What you can add</h2>
+    <ul>
+      <li><strong>Text:</strong> real, selectable text in Sans (Helvetica), Serif (Times) or Mono (Courier), any size, bold, in six colours. Line breaks are kept.</li>
+      <li><strong>Images:</strong> logos, stamps, photos (JPG, PNG with transparency, WebP).</li>
+      <li><strong>Highlights:</strong> see-through yellow (or any colour) bars over important lines.</li>
+      <li><strong>Shapes:</strong> solid rectangles, for example to frame something or to put a clean background behind new text.</li>
+    </ul>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF</strong> and go to the right page with Prev/Next.</li>
+      <li><strong>Add an item.</strong> It appears on the page, selected.</li>
+      <li><strong>Adjust it.</strong> Drag to move it and pull the blue dot to resize. For text, edit the words, font, size and colour in the panel below the page.</li>
+      <li><strong>Save & download.</strong> The file keeps its original name.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li>Type your name, address and date onto a scanned application form.</li>
+      <li>Highlight the clauses a client needs to read, then send the PDF back.</li>
+      <li>Add your company logo to the top of a quotation.</li>
+    </ul>
+    <p>For a step-by-step walkthrough, read <a href="/guides/edit-pdf-free-no-watermark">how to edit a PDF for free without a watermark</a>.</p>
+
+    <h2>Limitations</h2>
+    <p>
+      PDFSherpa adds content on top of pages. It doesn’t rewrite text that’s already in the PDF, and it can’t reflow paragraphs. Shapes cover content visually but
+      don’t remove it, so <strong>never use a box to hide passwords, account numbers or personal data</strong>. Added text supports Latin characters. For other
+      scripts, add the text as an image. Password-protected PDFs must be unlocked first with <a href="/unlock-pdf">Unlock PDF</a>.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>
+      Editing runs locally with the open-source pdf-lib library. Your document isn’t uploaded, stored or seen by anyone, and the tool keeps working offline after your first visit.
+    </p>
+  </Fragment>
+</ToolLayout>

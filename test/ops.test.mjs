@@ -65,4 +65,22 @@ assert.ok(w > h, 'landscape image → landscape A4'); ok('images to pdf (auto or
   ok('stamp signatures (rotated + normal page, shared image)');
 }
 
+// editPdf: text (incl. multi-line + non-WinAnsi), rect, highlight, image on normal + rotated pages
+{
+  const sizes = await ops.pageSizes(buf('test/fixtures/rotated.pdf'));
+  assert.ok(sizes[0].w > sizes[0].h, 'rotated page reports landscape visual size');
+  const pngB = readFileSync('test/fixtures/image.png');
+  const png = pngB.buffer.slice(pngB.byteOffset, pngB.byteOffset + pngB.byteLength);
+  const out = await ops.editPdf(buf('test/fixtures/rotated.pdf'), [
+    { type: 'text', page: 0, x: 0.1, y: 0.1, text: 'Hello PDFSherpa\nSecond line ✓', size: 18, color: '#1d4ed8', font: 'helvetica', bold: true },
+    { type: 'text', page: 1, x: 0.5, y: 0.5, text: 'Times text', size: 12, color: '#111827', font: 'times', bold: false },
+    { type: 'rect', page: 0, x: 0.5, y: 0.5, w: 0.2, h: 0.1, color: '#ffffff', opacity: 1 },
+    { type: 'rect', page: 1, x: 0.1, y: 0.2, w: 0.5, h: 0.03, color: '#facc15', opacity: 0.35 },
+    { type: 'image', page: 1, x: 0.6, y: 0.7, w: 0.3, h: 0.15, png },
+  ]);
+  d = await open(out);
+  assert.equal(d.getPageCount(), 2);
+  ok('editPdf text/rect/highlight/image (+ rotated page, sanitized glyphs)');
+}
+
 console.log(`\nAll ${n} pdfOps tests passed`);

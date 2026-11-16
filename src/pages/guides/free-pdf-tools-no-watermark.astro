@@ -1,0 +1,49 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: 'Are there daily limits or file-size caps?', a: 'No fixed limits. Because processing happens on your device, the only practical limit is your device’s memory. Phones comfortably handle documents of 100 MB or more.' },
+  { q: 'Will PDFSherpa start adding watermarks later?', a: 'No. “No watermark” is a core promise, and the code is open source, so anyone can check what it does.' },
+  { q: 'What’s the catch?', a: 'There isn’t a hidden one. The site shows a few ads that never cover the tools. That’s enough because there are no servers processing files.' },
+];
+---
+<GuideLayout slug="free-pdf-tools-no-watermark" faqs={faqs}>
+  <p><strong>Short answer:</strong> every tool on PDFSherpa is free, needs no signup and never adds a watermark: compress, merge, split, edit, sign, convert, protect and more. That’s possible because your files are processed in your own browser, not on paid servers.</p>
+
+  <h2>Why “free” PDF tools often aren’t</h2>
+  <p>Most online PDF services run your files through their own servers, which costs money. To cover that, they typically:</p>
+  <ul>
+    <li>add a watermark to files from free or trial accounts;</li>
+    <li>limit you to a few tasks per day or small file sizes;</li>
+    <li>ask you to create an account, then upsell a subscription.</li>
+  </ul>
+  <p>
+    Those are fair business choices, but they’re frustrating when you just need to sign one form or shrink one PDF for an upload portal.
+    PDFSherpa avoids the cost entirely: the processing engines run on <em>your</em> device, so there’s nothing expensive to pay for.
+  </p>
+
+  <h2>The full list: all free, all watermark-free</h2>
+  <ul>
+    <li><strong>Optimize:</strong> <a href="/compress-pdf">Compress PDF</a> (with exact targets like 100KB/200KB), <a href="/grayscale-pdf">Grayscale PDF</a></li>
+    <li><strong>Organize:</strong> <a href="/merge-pdf">Merge</a>, <a href="/split-pdf">Split</a>, <a href="/organize-pdf">Organize</a>, <a href="/rotate-pdf">Rotate</a></li>
+    <li><strong>Edit:</strong> <a href="/edit-pdf">Edit PDF</a>, <a href="/sign-pdf">Sign PDF</a>, <a href="/add-page-numbers">Page Numbers</a>, <a href="/watermark-pdf">add your own watermark</a></li>
+    <li><strong>Convert:</strong> <a href="/jpg-to-pdf">JPG to PDF</a>, <a href="/pdf-to-jpg">PDF to JPG</a>, <a href="/pdf-to-text">PDF to Text</a>, <a href="/image-converter">Image Converter</a></li>
+    <li><strong>Security:</strong> <a href="/protect-pdf">Protect PDF</a>, <a href="/unlock-pdf">Unlock PDF</a> (with your password)</li>
+    <li><strong>Images:</strong> <a href="/compress-image">Compress Image</a>, <a href="/resize-image">Resize</a>, <a href="/crop-image">Crop</a>, <a href="/passport-photo-maker">Passport Photo</a></li>
+  </ul>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>How to check a tool really is watermark-free</h2>
+  <ol>
+    <li>Process a test file before your real document.</li>
+    <li>Open the result and zoom to 200%, checking corners and page margins, where watermarks often hide.</li>
+    <li>Look at the PDF’s properties. Some tools add their name as the “Producer”, which is normal and not a watermark.</li>
+  </ol>
+
+  <h2>Bonus: privacy</h2>
+  <p>
+    No upload also means no copy of your documents on anyone’s server. That matters for IDs, contracts and bank statements. Read more in
+    <a href="/guides/are-online-pdf-tools-safe">is it safe to use online PDF tools?</a>
+  </p>
+</GuideLayout>

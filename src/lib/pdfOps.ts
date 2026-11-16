@@ -261,3 +261,70 @@ export async function stamp(input: ArrayBuffer, items: StampItem[]) {
   }
   return save(doc);
 }
+
+/** Visual (rotation-aware) size of every page in points. */
+export async function pageSizes(input: ArrayBuffer) {
+  const doc = await PDFDocument.load(input, { ignoreEncryption: true, updateMetadata: false });
+  return doc.getPages().map((p) => { const f = frame(p); return { w: f.vw, h: f.vh }; });
+}
+
+export type EditFont = 'helvetica' | 'times' | 'courier';
+export type EditItem =
+  | { type: 'text'; page: number; x: number; y: number; text: string; size: number; color: string; font: EditFont; bold: boolean }
+  | { type: 'rect'; page: number; x: number; y: number; w: number; h: number; color: string; opacity: number }
+  | { type: 'image'; page: number; x: number; y: number; w: number; h: number; png: ArrayBuffer };
+
+const FONT_MAP: Record<EditFont, [StandardFonts, StandardFonts]> = {
+  helvetica: [StandardFonts.Helvetica, StandardFonts.HelveticaBold],
+  times: [StandardFonts.TimesRoman, StandardFonts.TimesRomanBold],
+  courier: [StandardFonts.Courier, StandardFonts.CourierBold],
+};
+
+/**
+ * Add real (selectable) text, rectangles/highlights and images to pages.
+ * Coordinates are fractions of the page's visual box, origin top-left.
+ * Text x/y is the top-left of the first line; size is in points.
+ */
+export async function editPdf(input: ArrayBuffer, items: EditItem[]) {
+  const doc = await load(input);
+  const pages = doc.getPages();
+  const fonts = new Map<string, PDFFont>();
+  const font = async (f: EditFont, bold: boolean) => {
+    const key = `${f}${bold}`;
+    if (!fonts.has(key)) fonts.set(key, await doc.embedFont(FONT_MAP[f][bold ? 1 : 0]));
+    return fonts.get(key)!;
+  };
+  const images = new Map<ArrayBuffer, Awaited<ReturnType<typeof doc.embedPng>>>();
+
+  for (const it of items) {
+    const page = pages[it.page];
+    if (!page) continue;
+    const f = frame(page);
+    const rotate = degrees(f.angle(0));
+    if (it.type === 'text') {
+      const fnt = await font(it.font, it.bold);
+      const lines = it.text.split('\n').map((l) => safeText(fnt, l));
+      const lineH = it.size * 1.2;
+      const ascent = fnt.heightAtSize(it.size, { descender: false });
+      lines.forEach((line, i) => {
+        const vx = it.x * f.vw;
+        const vy = f.vh - (it.y * f.vh + (lineH - it.size) / 2 + ascent + i * lineH);
+        const [x, y] = f.toUser(vx, vy);
+        page.drawText(line, { x, y, size: it.size, font: fnt, color: hexToRgb(it.color), rotate });
+      });
+    } else {
+      const w = it.w * f.vw, h = it.h * f.vh;
+      const cx = it.x * f.vw + w / 2, cy = f.vh - (it.y * f.vh + h / 2);
+      const [vx, vy] = originFor(cx, cy, w, h, 0);
+      const [x, y] = f.toUser(vx, vy);
+      if (it.type === 'rect') {
+        page.drawRectangle({ x, y, width: w, height: h, color: hexToRgb(it.color), opacity: it.opacity, rotate });
+      } else {
+        let img = images.get(it.png);
+        if (!img) { img = await doc.embedPng(it.png); images.set(it.png, img); }
+        page.drawImage(img, { x, y, width: w, height: h, rotate });
+      }
+    }
+  }
+  return save(doc);
+}

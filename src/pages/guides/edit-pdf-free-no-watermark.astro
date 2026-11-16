@@ -1,0 +1,50 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: 'Why do some free PDF editors add a watermark?', a: 'It’s how trial and freemium software encourages you to buy a licence. The watermark marks files saved with the free version. That’s the vendor’s right, so the honest fix is to use a tool that’s genuinely free rather than trying to remove their mark.' },
+  { q: 'How can PDFSherpa be free without a watermark?', a: 'Everything runs in your browser, so there are no servers processing your files and almost no running cost. The site is supported by a few ads that never cover the tools.' },
+  { q: 'Do I need to create an account?', a: 'No. Open the page, edit, download. There’s no signup, login or email required.' },
+];
+---
+<GuideLayout slug="edit-pdf-free-no-watermark" faqs={faqs}>
+  <p><strong>Short answer:</strong> open <a href="/edit-pdf">Edit PDF</a>, select your file, add text, images, highlights or shapes, and click <strong>Save & download</strong>. It’s free, needs no account, and never adds a watermark, because the work happens in your browser instead of on a paid server.</p>
+
+  <h2>Why your PDF got a watermark</h2>
+  <p>
+    If a “free” editor stamped <em>“Created with … Trial”</em> or a logo across your pages, you used a trial or freemium version. That watermark is how the
+    company signals that the file was saved without a licence. Removing someone else’s licence mark isn’t something we help with. You don’t need to, because
+    you can make the same edits with a tool that’s free all the way through.
+  </p>
+
+  <h2>Edit a PDF without a watermark, step by step</h2>
+  <ol>
+    <li>Start from your <strong>original PDF</strong>, the one before any trial editor touched it.</li>
+    <li>Open <a href="/edit-pdf">Edit PDF</a> and select the file. Pages appear as previews.</li>
+    <li>Tap <strong>Add text</strong> to type on the page. Choose Sans, Serif or Mono, set the size and colour, and drag it into place.</li>
+    <li>Use <strong>Image</strong> for a logo or stamp, <strong>Highlight</strong> to mark important lines, and <strong>Shape</strong> for boxes or a clean background behind new text.</li>
+    <li>Need a signature? Use <a href="/sign-pdf">Sign PDF</a> to draw, type or upload it.</li>
+    <li>Click <strong>Save & download</strong>. Open the file: no watermark, no “trial” text, no logo.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Other edits, also watermark-free</h2>
+  <ul>
+    <li><strong>Combine files:</strong> <a href="/merge-pdf">Merge PDF</a></li>
+    <li><strong>Remove or reorder pages:</strong> <a href="/organize-pdf">Organize PDF</a></li>
+    <li><strong>Make it smaller:</strong> <a href="/compress-pdf">Compress PDF</a></li>
+    <li><strong>Number the pages:</strong> <a href="/add-page-numbers">Add Page Numbers</a></li>
+    <li><strong>Add your own watermark</strong> (on purpose!): <a href="/watermark-pdf">Watermark PDF</a></li>
+  </ul>
+  <p>See the full list in <a href="/guides/free-pdf-tools-no-watermark">free PDF tools with no watermark and no signup</a>.</p>
+
+  <h2>One important warning</h2>
+  <p>
+    Covering text with a white or black box hides it on screen, but the original text is still inside the PDF and can be copied out. Never use a shape to hide
+    account numbers, passwords or personal details. Delete the page or recreate the document instead.
+  </p>
+
+  <h2>Private by default</h2>
+  <p>PDFSherpa edits your file inside your browser. Nothing is uploaded, which also means nobody else can add anything to it, watermarks included.</p>
+</GuideLayout>
