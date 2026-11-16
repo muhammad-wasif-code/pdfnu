@@ -8,6 +8,7 @@ import { formatBytes } from '../lib/format';
 import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import { usePdfDoc } from './usePdfDoc';
+import { StickyToolbar, StickyActions } from '../components/ui/Sticky';
 
 interface Placed { id: string; page: number; x: number; y: number; w: number; h: number; img: SignatureImage; }
 let seq = 0;
@@ -136,6 +137,7 @@ export default function SignPdf() {
 
       {doc.file && doc.pageCount > 0 && (
         <>
+          <StickyToolbar>
           <div class="flex flex-wrap gap-2">
             <button type="button" class="btn-primary min-h-11 px-4" onClick={() => setPad('signature')}>✍️ Add signature</button>
             <button type="button" class="btn-secondary min-h-11 px-3" onClick={() => setPad('initials')}>Initials</button>
@@ -146,7 +148,7 @@ export default function SignPdf() {
           {textOpen && (
             <form class="flex gap-2" onSubmit={(e) => { e.preventDefault(); addText(); }}>
               <input type="text" maxLength={60} value={textVal} onInput={(e) => setTextVal((e.target as HTMLInputElement).value)} placeholder="e.g. your full name or place"
-                class="h-11 min-w-0 flex-1 rounded-control border border-line bg-white px-3 text-[15px] outline-none focus:border-brand dark:border-white/10 dark:bg-night-2" aria-label="Text to place" />
+                class="h-11 min-w-0 flex-1 rounded-control border border-line bg-white px-3 text-[15px] outline-none focus:border-brand dark:border-white/10 dark:bg-night-2" aria-label="Text to place" autoFocus />
               <button type="submit" class="btn-primary min-h-11 px-4">Place</button>
             </form>
           )}
@@ -162,11 +164,15 @@ export default function SignPdf() {
             </div>
           )}
 
-          <div class="flex items-center justify-between gap-2 text-sm">
-            <button type="button" class="btn-ghost min-h-11 px-3" disabled={page === 0} onClick={() => { setPage(page - 1); setSelected(null); }}>‹ Prev</button>
-            <span class="font-semibold tabular-nums text-ink dark:text-white">Page {page + 1} of {doc.pageCount}</span>
-            <button type="button" class="btn-ghost min-h-11 px-3" disabled={page >= doc.pageCount - 1} onClick={() => { setPage(page + 1); setSelected(null); }}>Next ›</button>
-          </div>
+          {doc.pageCount > 1 && (
+            <div class="flex items-center justify-between gap-2 text-sm">
+              <button type="button" class="btn-ghost min-h-10 px-3" disabled={page === 0} onClick={() => { setPage(page - 1); setSelected(null); }}>‹ Prev</button>
+              <span class="font-semibold tabular-nums text-ink dark:text-white">Page {page + 1} of {doc.pageCount}</span>
+              <button type="button" class="btn-ghost min-h-10 px-3" disabled={page >= doc.pageCount - 1} onClick={() => { setPage(page + 1); setSelected(null); }}>Next ›</button>
+            </div>
+          )}
+
+          </StickyToolbar>
 
           <div
             ref={pageBox}
@@ -202,11 +208,13 @@ export default function SignPdf() {
           </div>
           <p class="text-center text-xs text-muted dark:text-gray-400">Drag to move · drag the blue dot to resize · tap ✕ to remove</p>
 
-          {phase === 'working' ? <ProgressBar label="Signing your PDF…" value={null} /> : (
-            <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={!items.length} onClick={apply}>
-              {items.length ? `Sign & download (${items.length} item${items.length > 1 ? 's' : ''})` : 'Add a signature first'}
-            </button>
-          )}
+          <StickyActions>
+            {phase === 'working' ? <ProgressBar label="Signing your PDF…" value={null} /> : (
+              <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={!items.length} onClick={apply}>
+                {items.length ? `Sign & download (${items.length} item${items.length > 1 ? 's' : ''})` : 'Add a signature first'}
+              </button>
+            )}
+          </StickyActions>
         </>
       )}
       {pad && <SignaturePad title={pad === 'initials' ? 'Create your initials' : 'Create your signature'} onDone={addFromPad} onClose={() => setPad(null)} />}

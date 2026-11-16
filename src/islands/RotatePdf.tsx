@@ -9,6 +9,7 @@ import { formatBytes } from '../lib/format';
 import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import { usePdfDoc } from './usePdfDoc';
+import { StickyActions } from '../components/ui/Sticky';
 
 export default function RotatePdf() {
   const doc = usePdfDoc();
@@ -69,11 +70,13 @@ export default function RotatePdf() {
               </li>
             ))}
           </ul>
-          {phase === 'working' ? <ProgressBar label="Rotating pages…" value={null} /> : (
-            <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={!changed} onClick={apply}>
-              {changed ? `Apply rotation to ${changed} page${changed > 1 ? 's' : ''}` : 'Rotate pages first'}
-            </button>
-          )}
+          <StickyActions>
+            {phase === 'working' ? <ProgressBar label="Rotating pages…" value={null} /> : (
+              <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={!changed} onClick={apply}>
+                {changed ? `Apply rotation to ${changed} page${changed > 1 ? 's' : ''}` : 'Rotate pages first'}
+              </button>
+            )}
+          </StickyActions>
         </>
       )}
       <PrivacyNote />

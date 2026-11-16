@@ -8,6 +8,7 @@ import { ErrorBox, PrivacyNote } from '../components/ui/Notice';
 import { formatBytes, stripExt } from '../lib/format';
 import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
+import { StickyActions } from '../components/ui/Sticky';
 
 interface Item { id: string; file: File; bytes?: Uint8Array; pages?: number; thumb?: string; aspect?: number; }
 
@@ -127,11 +128,13 @@ export default function MergePdf() {
 
       {phase === 'working' && <ProgressBar label="Merging PDFs…" value={null} detail="Processing on your device…" />}
 
-      {items.length > 0 && phase !== 'working' && (
-        <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={ready.length < 2 || loading} onClick={merge}>
-          {loading ? 'Reading files…' : ready.length < 2 ? 'Add at least 2 PDFs' : `Merge ${ready.length} PDFs`}
-        </button>
-      )}
+      <StickyActions>
+        {items.length > 0 && phase !== 'working' && (
+          <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={ready.length < 2 || loading} onClick={merge}>
+            {loading ? 'Reading files…' : ready.length < 2 ? 'Add at least 2 PDFs' : `Merge ${ready.length} PDFs`}
+          </button>
+        )}
+      </StickyActions>
 
       <PrivacyNote />
     </div>

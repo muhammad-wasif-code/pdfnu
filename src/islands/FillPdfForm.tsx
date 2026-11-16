@@ -7,6 +7,7 @@ import { formatBytes } from '../lib/format';
 import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import type { FieldInfo } from '../lib/pdfOps';
+import { StickyActions } from '../components/ui/Sticky';
 
 type Value = string | boolean | string[];
 
@@ -156,9 +157,11 @@ export default function FillPdfForm() {
             <input type="checkbox" class="h-5 w-5 accent-brand" checked={flatten} onChange={(e) => setFlatten((e.target as HTMLInputElement).checked)} />
             Lock answers (flatten), so they can’t be edited after sending
           </label>
-          {phase === 'working' ? <ProgressBar label="Filling your form…" value={null} /> : (
-            <button type="submit" class="btn-primary min-h-12 w-full text-[15px]">Save filled PDF ({filled}/{fillable.length})</button>
-          )}
+          <StickyActions>
+            {phase === 'working' ? <ProgressBar label="Filling your form…" value={null} /> : (
+              <button type="submit" class="btn-primary min-h-12 w-full text-[15px]">Save filled PDF ({filled}/{fillable.length})</button>
+            )}
+          </StickyActions>
         </form>
       )}
       <PrivacyNote />

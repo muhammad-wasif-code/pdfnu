@@ -11,6 +11,7 @@ import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import { IMAGE_ACCEPT, isImage } from '../lib/image';
 import type { ImagesToPdfOpts } from '../lib/pdfOps';
+import { StickyActions } from '../components/ui/Sticky';
 
 interface Item { id: string; file: File; url: string; }
 type Size = ImagesToPdfOpts['pageSize'];
@@ -159,11 +160,13 @@ export default function JpgToPdf() {
 
       {phase === 'working' && <ProgressBar label={progress.label} value={progress.value} detail="Processing on your device…" />}
 
-      {items.length > 0 && phase !== 'working' && (
-        <button type="button" class="btn-primary min-h-12 w-full text-[15px]" onClick={run}>
-          Convert {items.length} image{items.length > 1 ? 's' : ''} to PDF
-        </button>
-      )}
+      <StickyActions>
+        {items.length > 0 && phase !== 'working' && (
+          <button type="button" class="btn-primary min-h-12 w-full text-[15px]" onClick={run}>
+            Convert {items.length} image{items.length > 1 ? 's' : ''} to PDF
+          </button>
+        )}
+      </StickyActions>
       <PrivacyNote />
     </div>
   );

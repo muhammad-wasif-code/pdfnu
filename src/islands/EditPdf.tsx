@@ -8,6 +8,7 @@ import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import type { EditFont } from '../lib/pdfOps';
 import { usePdfDoc } from './usePdfDoc';
+import { StickyToolbar, StickyActions } from '../components/ui/Sticky';
 
 type Kind = 'text' | 'rect' | 'image';
 interface Base { id: string; kind: Kind; page: number; x: number; y: number; }
@@ -45,6 +46,9 @@ export default function EditPdf() {
   const [error, setError] = useState<string | null>(null);
   const pageBox = useRef<HTMLDivElement>(null);
   const imgInput = useRef<HTMLInputElement>(null);
+  const textBox = useRef<HTMLTextAreaElement>(null);
+  const wantFocus = useRef(false);
+  const focusText = () => { wantFocus.current = true; setTimeout(() => { const ta = textBox.current; if (ta && wantFocus.current) { wantFocus.current = false; ta.focus({ preventScroll: true }); ta.select(); } }, 30); };
   const drag = useRef<{ id: string; mode: 'move' | 'resize'; sx: number; sy: number; start: Item; rw: number; rh: number } | null>(null);
 
   useEffect(() => {
@@ -68,7 +72,16 @@ export default function EditPdf() {
   const update = (id: string, patch: Partial<Item>) => setItems((c) => c.map((i) => (i.id === id ? ({ ...i, ...patch } as Item) : i)));
 
   const add = (it: Item) => { setItems((c) => [...c, it]); setSel(it.id); };
-  const addText = () => add({ id: `e${seq++}`, kind: 'text', page, x: 0.1, y: 0.1, text: 'Your text', size: 14, color: '#111827', font: 'helvetica', bold: false });
+  const addText = () => {
+    // place new text in the part of the page that's currently visible
+    const r = pageBox.current?.getBoundingClientRect();
+    let y = 0.1;
+    const bar = pageBox.current?.parentElement?.querySelector('.sticky')?.getBoundingClientRect();
+    const visibleTop = bar ? bar.bottom + 210 : 300; // below the toolbar once the text editor row opens
+    if (r && r.top < visibleTop) y = Math.min(0.85, Math.max(0.05, (visibleTop - r.top) / r.height));
+    add({ id: `e${seq++}`, kind: 'text', page, x: 0.08, y, text: 'Your text', size: 14, color: '#111827', font: 'helvetica', bold: false });
+    focusText();
+  };
   const addRect = (highlight: boolean) => add({ id: `e${seq++}`, kind: 'rect', page, x: 0.25, y: 0.3, w: highlight ? 0.4 : 0.3, h: highlight ? 0.03 : 0.08, color: highlight ? '#facc15' : '#ffffff', opacity: highlight ? 0.35 : 1 });
   const addImage = async (f?: File) => {
     if (!f) return;
@@ -151,7 +164,14 @@ export default function EditPdf() {
 
   const t = doc.thumbs[page];
   const onPage = items.filter((i) => i.page === page);
-  const chipCls = (on: boolean) => `min-h-10 rounded-lg border px-3 text-sm font-semibold ${on ? 'border-brand bg-brand-soft text-brand dark:bg-brand/15 dark:text-brand-light' : 'border-line dark:border-white/10'}`;
+  const chipCls = (on: boolean) => `grid h-10 min-w-10 place-items-center rounded-lg border px-2 text-sm font-semibold ${on ? 'border-brand bg-brand-soft text-brand dark:bg-brand/15 dark:text-brand-light' : 'border-line bg-white dark:border-white/10 dark:bg-night-3'}`;
+  const iconBtn = 'grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-line bg-white text-gray-700 hover:border-brand dark:border-white/10 dark:bg-night-3 dark:text-gray-200';
+  const tool = (label: string, icon: string, onClick: () => void, primary = false) => (
+    <button type="button" onClick={onClick}
+      class={`flex min-h-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-1 text-[11px] font-semibold sm:flex-none sm:flex-row sm:gap-1.5 sm:px-3 sm:text-sm ${primary ? 'bg-brand text-white' : 'border border-line bg-white text-gray-800 dark:border-white/10 dark:bg-night-3 dark:text-gray-100'}`}>
+      <span aria-hidden="true" class="text-base leading-none">{icon}</span>{label}
+    </button>
+  );
 
   return (
     <div class="card space-y-4 p-4 sm:p-6">
@@ -162,20 +182,75 @@ export default function EditPdf() {
 
       {doc.file && doc.pageCount > 0 && (
         <>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" class="btn-primary min-h-11 px-4" onClick={addText}>T Add text</button>
-            <button type="button" class="btn-secondary min-h-11 px-3" onClick={() => imgInput.current?.click()}>Image</button>
-            <button type="button" class="btn-secondary min-h-11 px-3" onClick={() => addRect(true)}>Highlight</button>
-            <button type="button" class="btn-secondary min-h-11 px-3" onClick={() => addRect(false)}>Shape</button>
-            <a href="/sign-pdf" class="btn-ghost min-h-11 px-3">Signature →</a>
-            <input ref={imgInput} type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" tabIndex={-1} aria-hidden="true" onChange={(e) => { addImage((e.target as HTMLInputElement).files?.[0]); (e.target as HTMLInputElement).value = ''; }} />
-          </div>
+          <StickyToolbar>
+            {/* Row 1: add tools + page navigation */}
+            <div class="flex items-stretch gap-1.5">
+              {tool('Text', 'T', addText, true)}
+              {tool('Image', '🖼', () => imgInput.current?.click())}
+              {tool('Highlight', '▬', () => addRect(true))}
+              {tool('Shape', '■', () => addRect(false))}
+              <input ref={imgInput} type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" tabIndex={-1} aria-hidden="true" onChange={(e) => { addImage((e.target as HTMLInputElement).files?.[0]); (e.target as HTMLInputElement).value = ''; }} />
+            </div>
 
-          <div class="flex items-center justify-between gap-2 text-sm">
-            <button type="button" class="btn-ghost min-h-11 px-3" disabled={page === 0} onClick={() => { setPage(page - 1); setSel(null); }}>‹ Prev</button>
-            <span class="font-semibold tabular-nums text-ink dark:text-white">Page {page + 1} of {doc.pageCount}</span>
-            <button type="button" class="btn-ghost min-h-11 px-3" disabled={page >= doc.pageCount - 1} onClick={() => { setPage(page + 1); setSel(null); }}>Next ›</button>
-          </div>
+            {/* Row 2: editor for the selected item — always on screen */}
+            {selected?.kind === 'text' && (
+              <div class="space-y-2">
+                <textarea ref={textBox} rows={1} value={selected.text} placeholder="Type your text…" aria-label="Text"
+                  onInput={(e) => { const ta = e.target as HTMLTextAreaElement; ta.style.height = 'auto'; ta.style.height = `${Math.min(ta.scrollHeight, 120)}px`; update(selected.id, { text: ta.value }); }}
+                  class="block w-full resize-none rounded-lg border-2 border-brand bg-white px-3 py-2 text-[16px] leading-6 outline-none dark:bg-night-3" />
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <button type="button" class={iconBtn} onClick={() => update(selected.id, { size: Math.max(6, selected.size - 2) })} aria-label="Smaller text">A−</button>
+                  <span class="w-10 text-center text-xs font-semibold tabular-nums">{selected.size}pt</span>
+                  <button type="button" class={iconBtn} onClick={() => update(selected.id, { size: Math.min(144, selected.size + 2) })} aria-label="Bigger text">A+</button>
+                  <button type="button" class={chipCls(selected.bold)} onClick={() => update(selected.id, { bold: !selected.bold })} aria-pressed={selected.bold} aria-label="Bold"><b>B</b></button>
+                  <select value={selected.font} onChange={(e) => update(selected.id, { font: (e.target as HTMLSelectElement).value as EditFont })} aria-label="Font"
+                    class="h-10 rounded-lg border border-line bg-white px-2 text-sm dark:border-white/10 dark:bg-night-3">
+                    <option value="helvetica">Sans</option><option value="times">Serif</option><option value="courier">Mono</option>
+                  </select>
+                  {COLORS.filter((c) => c !== '#ffffff' && c !== '#facc15').map((c) => (
+                    <button key={c} type="button" aria-label={`Colour ${c}`} aria-pressed={selected.color === c} onClick={() => update(selected.id, { color: c })}
+                      class={`h-8 w-8 shrink-0 rounded-full border-[3px] ${selected.color === c ? 'border-brand-light' : 'border-white dark:border-night-3'} ring-1 ring-black/15`} style={{ background: c }} />
+                  ))}
+                  <button type="button" class={`${iconBtn} ml-auto text-danger`} onClick={() => { setItems((c) => c.filter((x) => x.id !== selected.id)); setSel(null); }} aria-label="Delete text">🗑</button>
+                </div>
+              </div>
+            )}
+            {selected?.kind === 'rect' && (
+              <div class="space-y-2">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  {COLORS.map((c) => (
+                    <button key={c} type="button" aria-label={`Colour ${c}`} aria-pressed={selected.color === c} onClick={() => update(selected.id, { color: c })}
+                      class={`h-8 w-8 shrink-0 rounded-full border-[3px] ${selected.color === c ? 'border-brand-light' : 'border-white dark:border-night-3'} ring-1 ring-black/15`} style={{ background: c }} />
+                  ))}
+                  <label class="flex flex-1 items-center gap-2 text-xs font-semibold">Opacity
+                    <input type="range" min={10} max={100} step={5} value={Math.round(selected.opacity * 100)} onInput={(e) => update(selected.id, { opacity: Number((e.target as HTMLInputElement).value) / 100 })} class="h-9 min-w-0 flex-1 accent-brand" />
+                  </label>
+                  <button type="button" class={`${iconBtn} text-danger`} onClick={() => { setItems((c) => c.filter((x) => x.id !== selected.id)); setSel(null); }} aria-label="Delete shape">🗑</button>
+                </div>
+                {selected.opacity >= 0.95 && (
+                  <p class="text-xs text-amber-800 dark:text-amber-200">A shape only <strong>covers</strong> content. The text underneath is still in the file. To remove it for real, <a class="underline" href="/delete-pdf-pages">delete the page</a>.</p>
+                )}
+              </div>
+            )}
+            {selected?.kind === 'image' && (
+              <div class="flex items-center gap-2 text-sm">
+                <span class="text-muted dark:text-gray-400">Drag to move · blue dot to resize</span>
+                <button type="button" class={`${iconBtn} ml-auto text-danger`} onClick={() => { setItems((c) => c.filter((x) => x.id !== selected.id)); setSel(null); }} aria-label="Delete image">🗑</button>
+              </div>
+            )}
+            {(!selected || doc.pageCount > 1) && (
+              <div class="flex items-center gap-2">
+                {!selected && <p class="min-w-0 flex-1 text-xs text-muted dark:text-gray-400">{items.length ? 'Tap an item on the page to edit it.' : 'Tap Text, then type. It appears on the page.'}</p>}
+                {doc.pageCount > 1 && (
+                  <div class="ml-auto flex shrink-0 items-center gap-1">
+                    <button type="button" class="grid h-9 w-9 place-items-center rounded-lg border border-line bg-white dark:border-white/10 dark:bg-night-3" disabled={page === 0} onClick={() => { setPage(page - 1); setSel(null); }} aria-label="Previous page">‹</button>
+                    <span class="px-1 text-xs font-semibold tabular-nums text-ink dark:text-white">Page {page + 1}/{doc.pageCount}</span>
+                    <button type="button" class="grid h-9 w-9 place-items-center rounded-lg border border-line bg-white dark:border-white/10 dark:bg-night-3" disabled={page >= doc.pageCount - 1} onClick={() => { setPage(page + 1); setSel(null); }} aria-label="Next page">›</button>
+                  </div>
+                )}
+              </div>
+            )}
+          </StickyToolbar>
 
           <div ref={pageBox} class="relative mx-auto w-full max-w-[680px] select-none overflow-hidden rounded-md border border-line bg-white shadow-sm dark:border-white/10"
             style={{ aspectRatio: `1 / ${aspect}` }} onPointerMove={(e) => move(e as unknown as PointerEvent)} onPointerUp={up} onPointerCancel={up} onPointerDown={() => setSel(null)}>
@@ -187,77 +262,30 @@ export default function EditPdf() {
               return (
                 <div key={it.id} class={`absolute cursor-move ${on ? 'outline outline-2 outline-brand' : 'outline-dashed outline-1 outline-brand/30'}`}
                   style={{ left: `${it.x * 100}%`, top: `${it.y * 100}%`, width: `${b.w * 100}%`, height: `${b.h * 100}%`, touchAction: 'none' }}
-                  onPointerDown={(e) => down(e as unknown as PointerEvent, it, 'move')}>
+                  onPointerDown={(e) => down(e as unknown as PointerEvent, it, 'move')}
+                  onDblClick={() => { if (it.kind === 'text') focusText(); }}>
                   {it.kind === 'text' && (
-                    <div class="pointer-events-none whitespace-pre" style={{ fontFamily: CSS_FONT[it.font], fontWeight: it.bold ? 700 : 400, fontSize: `${it.size * pxPerPt}px`, lineHeight: 1.2, color: it.color }}>{it.text}</div>
+                    <div class="pointer-events-none whitespace-pre" style={{ fontFamily: CSS_FONT[it.font], fontWeight: it.bold ? 700 : 400, fontSize: `${it.size * pxPerPt}px`, lineHeight: 1.2, color: it.color }}>{it.text || ' '}</div>
                   )}
                   {it.kind === 'rect' && <div class="pointer-events-none h-full w-full" style={{ background: it.color, opacity: it.opacity }} />}
                   {it.kind === 'image' && <img src={it.url} alt="" draggable={false} class="pointer-events-none h-full w-full" />}
                   {on && (
-                    <>
-                      <button type="button" class="absolute -right-3 -top-3 grid h-8 w-8 place-items-center rounded-full bg-white text-danger shadow ring-1 ring-black/10 dark:bg-night-3"
-                        onPointerDown={(e) => e.stopPropagation()} onClick={() => { setItems((c) => c.filter((x) => x.id !== it.id)); setSel(null); }} aria-label="Remove">
-                        <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" /></svg>
-                      </button>
-                      <span class="absolute -bottom-4 -right-4 grid h-9 w-9 place-items-center" style={{ touchAction: 'none', cursor: 'nwse-resize' }} onPointerDown={(e) => down(e as unknown as PointerEvent, it, 'resize')} aria-hidden="true">
-                        <span class="h-4 w-4 rounded-full border-2 border-white bg-brand shadow" />
-                      </span>
-                    </>
+                    <span class="absolute -bottom-4 -right-4 grid h-9 w-9 place-items-center" style={{ touchAction: 'none', cursor: 'nwse-resize' }} onPointerDown={(e) => down(e as unknown as PointerEvent, it, 'resize')} aria-hidden="true">
+                      <span class="h-4 w-4 rounded-full border-2 border-white bg-brand shadow" />
+                    </span>
                   )}
                 </div>
               );
             })}
           </div>
-          <p class="text-center text-xs text-muted dark:text-gray-400">Tap an item to select it · drag to move · drag the blue dot to resize</p>
 
-          {selected && (
-            <div class="space-y-3 rounded-control border border-line bg-surface p-3 dark:border-white/10 dark:bg-white/[.03]">
-              {selected.kind === 'text' && (
-                <>
-                  <label class="block"><span class="mb-1 block text-xs font-semibold">Text</span>
-                    <textarea rows={2} value={selected.text} onInput={(e) => update(selected.id, { text: (e.target as HTMLTextAreaElement).value })}
-                      class="w-full rounded-lg border border-line bg-white p-2 text-[15px] dark:border-white/10 dark:bg-night-2" /></label>
-                  <div class="flex flex-wrap items-center gap-2">
-                    {(['helvetica', 'times', 'courier'] as EditFont[]).map((f) => (
-                      <button key={f} type="button" class={chipCls(selected.font === f)} style={{ fontFamily: CSS_FONT[f] }} onClick={() => update(selected.id, { font: f })}>{f === 'helvetica' ? 'Sans' : f === 'times' ? 'Serif' : 'Mono'}</button>
-                    ))}
-                    <button type="button" class={chipCls(selected.bold)} onClick={() => update(selected.id, { bold: !selected.bold })}><b>B</b></button>
-                    <label class="flex items-center gap-2 text-sm">Size
-                      <input type="number" min={6} max={144} value={selected.size} onInput={(e) => update(selected.id, { size: Math.min(144, Math.max(6, Number((e.target as HTMLInputElement).value) || 12)) })}
-                        class="h-10 w-20 rounded-lg border border-line bg-white px-2 dark:border-white/10 dark:bg-night-2" /></label>
-                  </div>
-                  <p class="text-xs text-muted dark:text-gray-400">Text is real and selectable in the PDF. Latin characters only, others show as “?”.</p>
-                </>
-              )}
-              {(selected.kind === 'text' || selected.kind === 'rect') && (
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="text-xs font-semibold">Colour</span>
-                  {COLORS.map((c) => (
-                    <button key={c} type="button" aria-label={`Colour ${c}`} aria-pressed={selected.color === c} onClick={() => update(selected.id, { color: c })}
-                      class={`h-9 w-9 rounded-full border-4 ${selected.color === c ? 'border-brand-light' : 'border-white dark:border-night-2'} ring-1 ring-black/15`} style={{ background: c }} />
-                  ))}
-                </div>
-              )}
-              {selected.kind === 'rect' && (
-                <>
-                  <label class="flex items-center gap-3 text-sm">Opacity
-                    <input type="range" min={10} max={100} step={5} value={Math.round(selected.opacity * 100)} onInput={(e) => update(selected.id, { opacity: Number((e.target as HTMLInputElement).value) / 100 })} class="h-10 flex-1 accent-brand" />
-                    <span class="w-10 tabular-nums">{Math.round(selected.opacity * 100)}%</span></label>
-                  {selected.opacity >= 0.95 && (
-                    <p class="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:bg-amber-400/10 dark:text-amber-200">
-                      A shape only <strong>covers</strong> what’s underneath. The original text is still in the file and can be copied. To truly remove content, delete the page with <a class="underline" href="/organize-pdf">Organize PDF</a>.
-                    </p>
-                  )}
-                </>
-              )}
-            </div>
-          )}
-
-          {phase === 'working' ? <ProgressBar label="Saving your edits…" value={null} /> : (
-            <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={!items.length} onClick={apply}>
-              {items.length ? `Save & download (${items.length} edit${items.length > 1 ? 's' : ''})` : 'Add text, an image or a shape first'}
-            </button>
-          )}
+          <StickyActions>
+            {phase === 'working' ? <ProgressBar label="Saving your edits…" value={null} /> : (
+              <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={!items.length} onClick={apply}>
+                {items.length ? `Save & download (${items.length} edit${items.length > 1 ? 's' : ''})` : 'Add text, an image or a shape first'}
+              </button>
+            )}
+          </StickyActions>
         </>
       )}
       <PrivacyNote />

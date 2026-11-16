@@ -1,4 +1,5 @@
 import type { ComponentChildren } from 'preact';
+import { useEffect, useRef } from 'preact/hooks';
 
 interface Props {
   title: string;
@@ -14,8 +15,16 @@ interface Props {
 }
 
 export default function ResultCard({ title, stats, highlight, warnings, onDownload, downloadLabel = 'Download', onReset, resetLabel = 'Process another file', children }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
+  // Bring the result into view so nobody has to hunt for the download button
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (r.top < 64 || r.bottom > innerHeight) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
   return (
-    <div class="space-y-3">
+    <div ref={ref} class="scroll-mt-24 space-y-3">
       <div class="rounded-card border border-emerald-200 bg-emerald-50/70 p-4 sm:p-5 dark:border-emerald-400/20 dark:bg-emerald-400/[.06]" role="status">
         <p class="flex items-center gap-2 font-semibold text-emerald-900 dark:text-emerald-200">
           <svg viewBox="0 0 20 20" class="h-5 w-5 text-success" fill="currentColor" aria-hidden="true"><path d="M10 1.8a8.2 8.2 0 1 0 0 16.4 8.2 8.2 0 0 0 0-16.4Zm3.7 6.4-4.4 4.4a.8.8 0 0 1-1.1 0l-2-2a.8.8 0 1 1 1.1-1.1l1.4 1.4 3.9-3.8a.8.8 0 0 1 1.1 1.1Z"/></svg>

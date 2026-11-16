@@ -10,6 +10,7 @@ import { formatBytes } from '../lib/format';
 import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import { usePdfDoc } from './usePdfDoc';
+import { StickyActions } from '../components/ui/Sticky';
 
 interface P { id: string; src: number; rotate: number; }
 
@@ -84,11 +85,13 @@ export default function OrganizePdf() {
               );
             }}
           />
-          {phase === 'working' ? <ProgressBar label="Saving your PDF…" value={null} /> : (
-            <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={!moved || !pages.length} onClick={apply}>
-              {!pages.length ? 'Keep at least one page' : moved ? 'Save changes' : 'Move, rotate or delete pages first'}
-            </button>
-          )}
+          <StickyActions>
+            {phase === 'working' ? <ProgressBar label="Saving your PDF…" value={null} /> : (
+              <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={!moved || !pages.length} onClick={apply}>
+                {!pages.length ? 'Keep at least one page' : moved ? 'Save changes' : 'Move, rotate or delete pages first'}
+              </button>
+            )}
+          </StickyActions>
         </>
       )}
       <PrivacyNote />

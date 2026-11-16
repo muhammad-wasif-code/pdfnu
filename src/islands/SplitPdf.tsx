@@ -9,6 +9,7 @@ import { formatBytes, stripExt } from '../lib/format';
 import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import { usePdfDoc } from './usePdfDoc';
+import { StickyActions } from '../components/ui/Sticky';
 
 type Mode = 'ranges' | 'select' | 'each';
 interface Out { name: string; data: Uint8Array; }
@@ -168,13 +169,15 @@ export default function SplitPdf({ initialMode = 'ranges' }: { initialMode?: Mod
 
           {mode === 'each' && <p class="rounded-control bg-surface px-4 py-3 text-sm text-gray-700 dark:bg-white/5 dark:text-gray-300">You’ll get {doc.pageCount} PDFs, one per page, in a single .zip download.</p>}
 
-          {phase === 'working' ? (
-            <ProgressBar label="Splitting PDF…" value={null} detail="Processing on your device…" />
-          ) : (
-            <button type="button" class="btn-primary min-h-12 w-full text-[15px]" onClick={run} disabled={(mode === 'ranges' && !ranges.trim()) || (mode === 'select' && !selected.size)}>
-              {mode === 'each' ? `Split into ${doc.pageCount} PDFs` : mode === 'select' ? `Extract ${selected.size || ''} page${selected.size === 1 ? '' : 's'}` : 'Split PDF'}
-            </button>
-          )}
+          <StickyActions>
+            {phase === 'working' ? (
+              <ProgressBar label="Splitting PDF…" value={null} detail="Processing on your device…" />
+            ) : (
+              <button type="button" class="btn-primary min-h-12 w-full text-[15px]" onClick={run} disabled={(mode === 'ranges' && !ranges.trim()) || (mode === 'select' && !selected.size)}>
+                {mode === 'each' ? `Split into ${doc.pageCount} PDFs` : mode === 'select' ? `Extract ${selected.size || ''} page${selected.size === 1 ? '' : 's'}` : 'Split PDF'}
+              </button>
+            )}
+          </StickyActions>
         </>
       )}
       <PrivacyNote />

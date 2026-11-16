@@ -8,6 +8,7 @@ import { formatBytes } from '../lib/format';
 import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import { usePdfDoc } from './usePdfDoc';
+import { StickyActions } from '../components/ui/Sticky';
 
 export default function DeletePages() {
   const doc = usePdfDoc();
@@ -75,9 +76,11 @@ export default function DeletePages() {
               </li>
             ))}
           </ul>
-          {phase === 'working' ? <ProgressBar label="Deleting pages…" value={null} /> : (
-            <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={!del.size} onClick={run}>{del.size ? `Delete ${del.size} page${del.size > 1 ? 's' : ''}` : 'Select pages to delete'}</button>
-          )}
+          <StickyActions>
+            {phase === 'working' ? <ProgressBar label="Deleting pages…" value={null} /> : (
+              <button type="button" class="btn-primary min-h-12 w-full text-[15px]" disabled={!del.size} onClick={run}>{del.size ? `Delete ${del.size} page${del.size > 1 ? 's' : ''}` : 'Select pages to delete'}</button>
+            )}
+          </StickyActions>
         </>
       )}
       <PrivacyNote />
