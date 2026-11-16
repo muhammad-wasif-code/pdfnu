@@ -80,3 +80,12 @@ export function decryptArgs(password: string): string[] {
     '-sOutputFile=/out.pdf', '/in.pdf',
   ];
 }
+
+/** Re-write a damaged PDF; Ghostscript reconstructs broken cross-reference tables while reading. */
+export function repairArgs(): string[] {
+  return [
+    '-sDEVICE=pdfwrite', '-dNOPAUSE', '-dQUIET', '-dBATCH', '-dSAFER', '-dAutoRotatePages=/None', '-dPDFSETTINGS=/default',
+    '-dDownsampleColorImages=false', '-dDownsampleGrayImages=false', '-dDownsampleMonoImages=false', '-dPassThroughJPEGImages=true',
+    '-sOutputFile=/out.pdf', '/in.pdf',
+  ];
+}

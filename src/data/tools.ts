@@ -37,6 +37,12 @@ export const tools: Tool[] = [
   { slug: 'image-converter', name: 'Image Converter', short: 'Convert Image', tagline: 'JPG, PNG, WebP', category: 'Convert', from: '#2dd4bf', to: '#0891b2', icon: 'convert', keywords: 'image converter jpg to png png to jpg webp to jpg convert format' },
   { slug: 'grayscale-pdf', name: 'Grayscale PDF', short: 'Grayscale', tagline: 'Black & white PDF', category: 'Optimize', from: '#9ca3af', to: '#4b5563', icon: 'grayscale', keywords: 'grayscale pdf black and white convert color remove colour' },
   { slug: 'pdf-to-text', name: 'PDF to Text', short: 'PDF to Text', tagline: 'Extract text', category: 'Convert', from: '#a3e635', to: '#4d7c0f', icon: 'text', keywords: 'pdf to text extract text copy txt convert' },
+  { slug: 'fill-pdf-form', name: 'Fill PDF Form', short: 'Fill Form', tagline: 'Complete form fields', category: 'Edit', from: '#60a5fa', to: '#1d4ed8', icon: 'form', keywords: 'fill pdf form fillable fields online type answers application' },
+  { slug: 'delete-pdf-pages', name: 'Delete Pages', short: 'Delete Pages', tagline: 'Remove pages', category: 'Organize', from: '#fca5a5', to: '#b91c1c', icon: 'delete', keywords: 'delete pdf pages remove pages blank' },
+  { slug: 'extract-pdf-pages', name: 'Extract Pages', short: 'Extract Pages', tagline: 'Save chosen pages', category: 'Organize', from: '#86efac', to: '#15803d', icon: 'extract', keywords: 'extract pdf pages save selected pages new pdf' },
+  { slug: 'extract-images-from-pdf', name: 'Extract Images', short: 'PDF Images', tagline: 'Save photos from PDF', category: 'Convert', from: '#fdba74', to: '#c2410c', icon: 'extractimg', keywords: 'extract images from pdf save pictures photos get images' },
+  { slug: 'repair-pdf', name: 'Repair PDF', short: 'Repair', tagline: 'Fix damaged files', category: 'Optimize', from: '#94a3b8', to: '#334155', icon: 'repair', keywords: 'repair pdf fix corrupted damaged broken pdf wont open recover' },
+  { slug: 'signature-cleaner', name: 'Signature Cleaner', short: 'Clean Signature', tagline: 'Clear background', category: 'Image', from: '#a5b4fc', to: '#4338ca', icon: 'signclean', keywords: 'signature background remove transparent signature png clean scan signature white' },
 ];
 
 export const categories: { name: Category; accent: string }[] = [

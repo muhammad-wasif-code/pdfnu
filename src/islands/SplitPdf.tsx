@@ -13,9 +13,9 @@ import { usePdfDoc } from './usePdfDoc';
 type Mode = 'ranges' | 'select' | 'each';
 interface Out { name: string; data: Uint8Array; }
 
-export default function SplitPdf() {
+export default function SplitPdf({ initialMode = 'ranges' }: { initialMode?: Mode }) {
   const doc = usePdfDoc();
-  const [mode, setMode] = useState<Mode>('ranges');
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [ranges, setRanges] = useState('');
   const [mergeRanges, setMergeRanges] = useState(false);
   const [selected, setSelected] = useState<Set<number>>(new Set());

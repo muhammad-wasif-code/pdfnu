@@ -1,0 +1,73 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import SplitPdf from '../islands/SplitPdf';
+
+const faqs = [
+  { q: 'How do I save just one page of a PDF?', a: 'Open the PDF, tap the page you want, and click Extract. You’ll get a new PDF containing only that page.' },
+  { q: 'Can I extract pages into separate files?', a: 'Yes. Switch to <strong>Every page</strong> for one PDF per page, or <strong>By ranges</strong> to make several files like pages 1-3 and 7-9.' },
+  { q: 'Will the extracted pages keep their quality?', a: 'Yes. Pages are copied exactly, so text stays selectable and images aren’t re-compressed.' },
+  { q: 'Is the order kept?', a: 'Selected pages are saved in their original order. To reorder them, open the result in <a href="/organize-pdf">Organize PDF</a>.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Extraction happens in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="extract-pdf-pages"
+  title="Extract Pages from PDF – Save Selected Pages | PDFSherpa"
+  description="Pick the pages you need from a PDF and save them as a new file: one page, a few pages or ranges. Quality unchanged. Free, private, no upload."
+  h1="Extract PDF Pages"
+  lead="Pick exactly the pages you need from a PDF and save them as a new file: a single page, a handful, or whole ranges. Your document never leaves your device."
+  howToTitle="How to Extract Pages from a PDF"
+  steps={['Select or drop your PDF.', 'Tap the pages you want to keep.', 'Click <strong>Extract</strong> and download the new PDF.']}
+  faqs={faqs}
+  related={['delete-pdf-pages', 'split-pdf', 'organize-pdf', 'merge-pdf']}
+>
+  <SplitPdf client:load initialMode="select" />
+
+  <Fragment slot="content">
+    <h2>What Extract Pages does</h2>
+    <p>
+      Extract Pages copies the pages you select into a brand-new PDF and leaves the original untouched. Use it to send only the relevant part of a long
+      document, like one chapter, the signature page or a single certificate, instead of the whole file.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> Thumbnails load progressively.</li>
+      <li><strong>Tap the pages to keep.</strong> Use <em>All</em> and <em>None</em> to speed up big selections.</li>
+      <li><strong>Extract.</strong> The new file is named after the original plus the page numbers, for example <code>report-pages-3_7.pdf</code>.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li>Send only pages 4–6 of a contract to a colleague.</li>
+      <li>Save the one certificate a job portal asks for from a 20-page scan.</li>
+      <li>Pull a single chapter out of a textbook PDF for revision.</li>
+    </ul>
+    <p>The opposite job, removing a few pages, is faster with <a href="/delete-pdf-pages">Delete Pages</a>.</p>
+
+    <h2>Other ways to choose pages</h2>
+    <ul>
+      <li><strong>By ranges:</strong> type <code>1-3, 8-10</code> to create separate files for each range, or tick the box to combine them into one PDF.</li>
+      <li><strong>Every page:</strong> turn each page into its own PDF and download them together as a .zip.</li>
+      <li><strong>Select pages:</strong> the default here. Tap thumbnails, which is easiest on a phone.</li>
+    </ul>
+
+    <h2>Tips</h2>
+    <ul>
+      <li>Check the page numbers in the thumbnails, not the numbers printed on the pages. They often differ because of cover pages.</li>
+      <li>After extracting, use <a href="/compress-pdf">Compress PDF</a> if the new file still needs to fit an upload limit.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Pages keep their original order. Use <a href="/organize-pdf">Organize PDF</a> to rearrange them. Bookmarks to pages you didn’t select are dropped.
+      Password-protected files need to be unlocked first.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Extraction is done locally with pdf-lib. Nothing is uploaded, logged or kept.</p>
+  </Fragment>
+</ToolLayout>

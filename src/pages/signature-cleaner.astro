@@ -1,0 +1,68 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import SignatureCleaner from '../islands/SignatureCleaner';
+
+const faqs = [
+  { q: 'How do I get a transparent signature PNG?', a: 'Photograph your signature on white paper, open it here, adjust the slider until the paper disappears, and download as <strong>Transparent PNG</strong>. It can be placed on any document without a white box around it.' },
+  { q: 'My form needs a JPG under 20KB. Can it do that?', a: 'Yes. Choose <strong>White JPG</strong> and a max size such as 20KB. For exact pixel dimensions, open the result in <a href="/resize-image">Resize Image</a>.' },
+  { q: 'Why is my signature faint or broken?', a: 'The slider is removing too much. Move it to the left, or retake the photo with a darker pen and brighter, even light.' },
+  { q: 'Should I choose black or blue ink?', a: 'Black is the safest for official forms. Blue makes it obvious the signature was added, not photocopied. “Original” keeps the colour from your photo.' },
+  { q: 'Is my signature uploaded?', a: 'No. The photo is processed in your browser and never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="signature-cleaner"
+  title="Signature Background Remover – Transparent PNG | PDFSherpa"
+  description="Turn a phone photo of your signature into clean ink with a transparent or white background. Auto-crop, black or blue ink, KB limits. Free, no upload."
+  h1="Signature Cleaner"
+  lead="Turn a phone photo of your signature into a crisp, auto-cropped image with a transparent or white background, ready for documents and online forms. It all happens on your device."
+  howToTitle="How to Clean Up a Signature"
+  steps={['Select a photo of your signature on white paper.', 'Adjust the slider until only the ink remains, and pick an ink colour.', 'Download as transparent PNG or white JPG.']}
+  faqs={faqs}
+  related={['sign-pdf', 'resize-image', 'compress-image', 'passport-photo-maker']}
+>
+  <SignatureCleaner client:load />
+
+  <Fragment slot="content">
+    <h2>What Signature Cleaner does</h2>
+    <p>
+      A photo of a signature usually comes with gray paper, shadows and too much empty space. Signature Cleaner removes the paper, keeps the ink with smooth edges,
+      crops tightly around it, and can recolour it to solid black or blue. The result looks like you signed directly on the document.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Sign</strong> on plain white paper with a dark pen, a bit larger than usual.</li>
+      <li><strong>Photograph</strong> it from directly above, in daylight, without your phone’s shadow.</li>
+      <li><strong>Open the photo here.</strong> The preview on the checkerboard shows exactly what’s transparent.</li>
+      <li><strong>Adjust the slider.</strong> Go right to remove shadows and gray paper, left if thin strokes start to vanish.</li>
+      <li><strong>Download.</strong> Transparent PNG for documents, or White JPG with an optional KB limit for online forms.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Where to use the result</h2>
+    <ul>
+      <li>Upload it in <a href="/sign-pdf">Sign PDF</a> to sign contracts and forms. It’s already clean, so it looks natural.</li>
+      <li>Add it to letters and documents in Word or Google Docs.</li>
+      <li>Meet signature rules on job and exam portals: <a href="/guides/photo-signature-size-for-online-applications">photo and signature size rules</a>.</li>
+    </ul>
+
+    <h2>Tips for the cleanest result</h2>
+    <ul>
+      <li>Use a gel or felt-tip pen. Ballpoint ink is often too thin and gray for a crisp result.</li>
+      <li>Sign in the middle of the paper, away from folds, lines and printed text.</li>
+      <li>Keep the original photo. You can always re-run it with a different slider setting.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      It works best with dark ink on light paper. Lined or coloured paper, and signatures written in pencil, are harder to separate cleanly. It doesn’t
+      straighten tilted photos, so crop or rotate first with <a href="/crop-image">Crop Image</a>.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Your signature should never sit on a stranger’s server. PDFSherpa processes it in your browser’s memory and forgets it when you close the tab.</p>
+  </Fragment>
+</ToolLayout>

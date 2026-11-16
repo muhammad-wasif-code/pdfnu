@@ -1,0 +1,67 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import DeletePages from '../islands/DeletePages';
+
+const faqs = [
+  { q: 'How do I delete several pages at once?', a: 'Tap each page you want to remove, or type pages and ranges like <code>2, 5-7</code> and press Select. Then click Delete.' },
+  { q: 'Does deleting pages reduce quality?', a: 'No. The remaining pages are copied exactly as they were, so text stays selectable and images keep their quality.' },
+  { q: 'Is the content really gone?', a: 'Yes. Deleted pages are not included in the new file at all, unlike covering content with a box. That makes it the safe way to remove pages with personal information.' },
+  { q: 'Can I undo it?', a: 'Your original file isn’t changed. Use “Change selection” to adjust before downloading, or start again from the original.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Pages are removed inside your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="delete-pdf-pages"
+  title="Delete PDF Pages Online Free – Remove Pages | PDFSherpa"
+  description="Remove unwanted pages from a PDF: tap thumbnails or type ranges like 2, 5-7, then download. Quality unchanged. Free, private, no upload."
+  h1="Delete PDF Pages"
+  lead="Remove blank, duplicate or unwanted pages from a PDF in seconds. Tap thumbnails or type page ranges, then download the slimmer file. Nothing is uploaded."
+  howToTitle="How to Delete Pages from a PDF"
+  steps={['Select or drop your PDF.', 'Tap the pages to remove, or type ranges like 2, 5-7.', 'Click <strong>Delete</strong> and download.']}
+  faqs={faqs}
+  related={['organize-pdf', 'extract-pdf-pages', 'split-pdf', 'merge-pdf']}
+>
+  <DeletePages client:load />
+
+  <Fragment slot="content">
+    <h2>What Delete Pages does</h2>
+    <p>
+      Delete Pages makes a new copy of your PDF without the pages you choose. It’s the quickest fix for blank pages from double-sided scans, instruction pages
+      a portal doesn’t need, duplicate pages, or a page with information you shouldn’t share.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> Thumbnails of every page appear.</li>
+      <li><strong>Mark pages</strong> by tapping them (a red ✕ appears), or type a list like <code>1, 4-6</code> and press Select.</li>
+      <li><strong>Delete and download.</strong> The result card shows the page count before and after.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li>Remove every blank back page from a scanned contract before emailing it.</li>
+      <li>Drop the cover and instruction pages from a form before uploading it.</li>
+      <li>Remove a page showing your bank details before sharing a document.</li>
+    </ul>
+    <p>To also reorder or rotate pages, use <a href="/organize-pdf">Organize PDF</a>. To keep only a few pages, <a href="/extract-pdf-pages">Extract Pages</a> is quicker.</p>
+
+    <h2>Tips</h2>
+    <ul>
+      <li>Scanned double-sided documents often have a blank page every second page. Type <code>2, 4, 6, 8</code> to select them in one go.</li>
+      <li>Thumbnails load progressively. On long documents you can type ranges straight away without waiting.</li>
+      <li>Deleting is the only safe way to remove sensitive pages. Covering content with a shape leaves the text inside the file.</li>
+      <li>Delete pages before compressing. A smaller document compresses faster and to a smaller size.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      You need to keep at least one page. Bookmarks pointing to deleted pages are dropped. Password-protected PDFs must be unlocked first with <a href="/unlock-pdf">Unlock PDF</a>.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Pages are removed locally with pdf-lib. Your PDF isn’t uploaded, which is what you want when the page you’re removing is a private one.</p>
+  </Fragment>
+</ToolLayout>

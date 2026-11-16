@@ -1,0 +1,49 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: 'How do I know if my PDF form is fillable?', a: 'Open it in PDFSherpa’s Fill PDF Form tool. If it lists fields, it’s fillable. If it says there are no fields, it’s a flat (scanned or printed-to-PDF) form, so use Edit PDF to type on it.' },
+  { q: 'Can I save a half-filled form and continue later?', a: 'Yes. Leave “Lock answers” unticked, download the file, and open it again later to change or add answers.' },
+  { q: 'Do I need Adobe Acrobat?', a: 'No. For standard fillable forms a browser is enough. Only old XFA forms need Adobe Acrobat Reader.' },
+];
+---
+<GuideLayout slug="fill-pdf-form-online" faqs={faqs}>
+  <p><strong>Short answer:</strong> open <a href="/fill-pdf-form">Fill PDF Form</a>, select your form, type your answers into the fields that appear, tick <em>Lock answers</em> if you’re submitting it, and save. If the PDF has no fillable fields, use <a href="/edit-pdf">Edit PDF</a> to type anywhere on the page. Then sign it with <a href="/sign-pdf">Sign PDF</a>.</p>
+
+  <h2>Two kinds of PDF forms</h2>
+  <ul>
+    <li><strong>Fillable forms</strong> have real fields built in, such as text boxes, checkboxes and drop-downs. They’re made in tools like Word, Acrobat or online form builders.</li>
+    <li><strong>Flat forms</strong> are just pictures of a form, usually scans or “printed to PDF”. There are no fields, so you type on top of the page instead.</li>
+  </ul>
+
+  <h2>Filling a fillable form</h2>
+  <ol>
+    <li>Open <a href="/fill-pdf-form">Fill PDF Form</a> and select the PDF.</li>
+    <li>Fields appear as a simple form, grouped by page. On a phone, this is much easier than zooming into tiny boxes.</li>
+    <li>Fill in text, tick checkboxes, choose from drop-downs.</li>
+    <li>Tick <strong>Lock answers (flatten)</strong> if you’re sending it to an organisation, so nothing gets changed by accident.</li>
+    <li>Click <strong>Save filled PDF</strong>.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Filling a flat form</h2>
+  <ol>
+    <li>Open <a href="/edit-pdf">Edit PDF</a> and select the form.</li>
+    <li>Tap <strong>Add text</strong>, type your answer, and drag it onto the line or box. Resize it with the blue dot.</li>
+    <li>Use the same font size for every answer so the form looks neat. 10–12 pt usually fits printed forms.</li>
+    <li>Save and download.</li>
+  </ol>
+
+  <h2>Signing and sending</h2>
+  <p>
+    Open the filled form in <a href="/sign-pdf">Sign PDF</a>, add your signature and the date, and download. If the portal has a size limit, run it through
+    <a href="/compress-pdf">Compress PDF</a>. If you need to attach documents, combine them with <a href="/merge-pdf">Merge PDF</a>.
+  </p>
+
+  <h2>Keep your details private</h2>
+  <p>
+    Forms contain your ID number, address and date of birth. PDFSherpa fills, edits and signs them inside your browser. Nothing is uploaded, so your
+    information goes only where you choose to send it.
+  </p>
+</GuideLayout>

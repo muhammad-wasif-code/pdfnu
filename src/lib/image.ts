@@ -154,3 +154,42 @@ export async function setJpegDpi(blob: Blob, dpi: number): Promise<Blob> {
   }
   return new Blob([b], { type: 'image/jpeg' });
 }
+
+/** Crop a canvas to its non-transparent pixels plus padding. Returns null if nothing is visible. */
+export function trimCanvas(c: HTMLCanvasElement, padFrac = 0.02): HTMLCanvasElement | null {
+  const ctx = c.getContext('2d')!;
+  const { data, width, height } = ctx.getImageData(0, 0, c.width, c.height);
+  let x0 = width, y0 = height, x1 = -1, y1 = -1;
+  for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
+    if (data[(y * width + x) * 4 + 3] > 16) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  }
+  if (x1 < 0) return null;
+  const pad = Math.round(Math.max(x1 - x0, y1 - y0) * padFrac) + 2;
+  x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(width - 1, x1 + pad); y1 = Math.min(height - 1, y1 + pad);
+  const out = document.createElement('canvas');
+  out.width = x1 - x0 + 1; out.height = y1 - y0 + 1;
+  out.getContext('2d')!.drawImage(c, x0, y0, out.width, out.height, 0, 0, out.width, out.height);
+  return out;
+}
+
+/**
+ * Make paper transparent: pixels lighter than `threshold` become clear, darker ones become ink,
+ * with a soft 60-level ramp to keep edges smooth. Optionally recolour the ink.
+ */
+export function cleanInk(src: HTMLCanvasElement, threshold: number, ink: [number, number, number] | null): HTMLCanvasElement {
+  const c = document.createElement('canvas');
+  c.width = src.width; c.height = src.height;
+  const ctx = c.getContext('2d')!;
+  ctx.drawImage(src, 0, 0);
+  const img = ctx.getImageData(0, 0, c.width, c.height);
+  const d = img.data;
+  const lo = threshold - 60;
+  for (let i = 0; i < d.length; i += 4) {
+    const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+    const a = lum >= threshold ? 0 : lum <= lo ? 255 : Math.round(((threshold - lum) / 60) * 255);
+    d[i + 3] = Math.min(d[i + 3], a);
+    if (ink) { d[i] = ink[0]; d[i + 1] = ink[1]; d[i + 2] = ink[2]; }
+  }
+  ctx.putImageData(img, 0, 0);
+  return c;
+}

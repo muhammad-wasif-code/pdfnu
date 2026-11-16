@@ -1,0 +1,64 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FillPdfForm from '../islands/FillPdfForm';
+
+const faqs = [
+  { q: 'What if my PDF form isn’t fillable?', a: 'Many forms are just scanned pages without real fields. You can still type on them with <a href="/edit-pdf">Edit PDF</a>, which lets you place text anywhere on the page.' },
+  { q: 'What does “lock answers (flatten)” do?', a: 'It turns your answers into regular page content, so the recipient can’t accidentally change them. Leave it unticked if you or someone else needs to edit the form later.' },
+  { q: 'Can I type in Urdu, Hindi or Arabic?', a: 'Standard PDF form fonts only cover Latin characters, so PDFSherpa warns you instead of saving broken text. For other scripts, use Edit PDF or fill the form in Adobe Acrobat Reader.' },
+  { q: 'How do I sign the form after filling it?', a: 'Download the filled PDF, then open it in <a href="/sign-pdf">Sign PDF</a> to draw, type or upload your signature.' },
+  { q: 'Is my information uploaded?', a: 'No. Your answers and the PDF stay in your browser. That matters for forms full of personal details like ID numbers, addresses and dates of birth.' },
+];
+---
+<ToolLayout
+  slug="fill-pdf-form"
+  title="Fill PDF Form Online Free – Type, Tick & Save | PDFSherpa"
+  description="Fill in fillable PDF forms in your browser: text fields, checkboxes, drop-downs and radio buttons. Lock answers, then sign. Free, private, no upload."
+  h1="Fill PDF Form"
+  lead="Open a fillable PDF form and complete it like a web form: type answers, tick boxes and pick options, then save. Your personal details never leave your device."
+  howToTitle="How to Fill a PDF Form"
+  steps={['Select or drop your PDF form.', 'Fill in the fields shown below it.', 'Optionally lock your answers, then click <strong>Save filled PDF</strong>.']}
+  faqs={faqs}
+  related={['sign-pdf', 'edit-pdf', 'compress-pdf', 'merge-pdf']}
+>
+  <FillPdfForm client:load />
+
+  <Fragment slot="content">
+    <h2>What Fill PDF Form does</h2>
+    <p>
+      Fillable PDFs contain interactive fields: boxes to type in, checkboxes, drop-down lists and option buttons. PDFSherpa reads those fields and shows them
+      as a clean, phone-friendly form, so you don’t have to pinch and zoom into tiny boxes. When you save, your answers are written back into the PDF’s own
+      fields, exactly where the form’s designer put them.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open the form.</strong> PDFSherpa lists every field, grouped by page, with readable names.</li>
+      <li><strong>Fill it in.</strong> Text fields respect the form’s maximum lengths, and multi-line fields accept line breaks.</li>
+      <li><strong>Decide whether to lock answers.</strong> Flattening makes them permanent, which is good for submissions. Leave it off for drafts.</li>
+      <li><strong>Save.</strong> The file keeps its name. Sign it next with <a href="/sign-pdf">Sign PDF</a> if needed.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Typical forms</h2>
+    <ul>
+      <li>Job and admission application forms sent as PDFs.</li>
+      <li>Tax, insurance and bank account-opening forms.</li>
+      <li>Visa, travel and consent forms. Remember to sign them after filling.</li>
+    </ul>
+    <p>Step-by-step for phones: <a href="/guides/fill-pdf-form-online">how to fill a PDF form online for free</a>.</p>
+
+    <h2>Limitations</h2>
+    <p>
+      Only standard (AcroForm) fields are supported. Older XFA forms, made with Adobe LiveCycle, can’t be filled in browsers, and PDFSherpa tells you if
+      that’s the case. Form scripts and calculations aren’t run. Answers use Latin characters. Password-protected forms must be unlocked first.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>
+      Forms are full of personal data. PDFSherpa fills them entirely on your device using the open-source pdf-lib library. Nothing you type is uploaded or stored.
+    </p>
+  </Fragment>
+</ToolLayout>

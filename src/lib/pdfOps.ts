@@ -1,7 +1,10 @@
 /**
  * Pure pdf-lib operations. Executed inside the pdf worker (see workers/pdf.worker.ts).
  */
-import { PDFDocument, StandardFonts, degrees, rgb, type PDFPage, type PDFFont } from 'pdf-lib';
+import {
+  PDFDocument, StandardFonts, degrees, rgb, PDFName, PDFDict, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown,
+  PDFOptionList, PDFSignature, PDFButton, type PDFPage, type PDFFont,
+} from 'pdf-lib';
 
 const load = (buf: ArrayBuffer) => PDFDocument.load(buf, { updateMetadata: false });
 const save = (doc: PDFDocument) => doc.save({ useObjectStreams: true, addDefaultPage: false });
@@ -327,4 +330,69 @@ export async function editPdf(input: ArrayBuffer, items: EditItem[]) {
     }
   }
   return save(doc);
+}
+
+/* ---------------- Forms ---------------- */
+
+export type FieldKind = 'text' | 'checkbox' | 'radio' | 'dropdown' | 'list' | 'button' | 'signature' | 'unknown';
+export interface FieldInfo { name: string; kind: FieldKind; value: string | boolean | string[]; options?: string[]; multiline?: boolean; readOnly?: boolean; maxLength?: number; page?: number; }
+
+export async function formFields(input: ArrayBuffer): Promise<{ fields: FieldInfo[]; hasXfa: boolean }> {
+  const doc = await load(input);
+  const form = doc.getForm();
+  const hasXfa = !!doc.catalog.lookup(PDFName.of('AcroForm'), PDFDict)?.get(PDFName.of('XFA'));
+  const pageRefs = doc.getPages().map((p) => p.ref);
+  const fields: FieldInfo[] = [];
+  for (const f of form.getFields()) {
+    const name = f.getName();
+    const readOnly = f.isReadOnly();
+    let page: number | undefined;
+    try { const w = f.acroField.getWidgets()[0]; const ref = w?.P(); if (ref) { const i = pageRefs.findIndex((r) => r === ref); if (i >= 0) page = i; } } catch {}
+    if (f instanceof PDFTextField) fields.push({ name, kind: 'text', value: f.getText() ?? '', multiline: f.isMultiline(), readOnly, maxLength: f.getMaxLength(), page });
+    else if (f instanceof PDFCheckBox) fields.push({ name, kind: 'checkbox', value: f.isChecked(), readOnly, page });
+    else if (f instanceof PDFRadioGroup) fields.push({ name, kind: 'radio', value: f.getSelected() ?? '', options: f.getOptions(), readOnly, page });
+    else if (f instanceof PDFDropdown) fields.push({ name, kind: 'dropdown', value: f.getSelected()[0] ?? '', options: f.getOptions(), readOnly, page });
+    else if (f instanceof PDFOptionList) fields.push({ name, kind: 'list', value: f.getSelected(), options: f.getOptions(), readOnly, page });
+    else if (f instanceof PDFSignature) fields.push({ name, kind: 'signature', value: '', readOnly: true, page });
+    else if (f instanceof PDFButton) fields.push({ name, kind: 'button', value: '', readOnly: true, page });
+    else fields.push({ name, kind: 'unknown', value: '', readOnly: true, page });
+  }
+  return { fields, hasXfa };
+}
+
+/** Fill AcroForm fields. Values not representable in Helvetica (WinAnsi) are reported, not silently dropped. */
+export async function fillForm(input: ArrayBuffer, values: Record<string, string | boolean | string[]>, flatten: boolean) {
+  const doc = await load(input);
+  const form = doc.getForm();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const bad: string[] = [];
+  for (const [name, v] of Object.entries(values)) {
+    let f;
+    try { f = form.getField(name); } catch { continue; }
+    if (f.isReadOnly()) continue;
+    try {
+      if (f instanceof PDFTextField) {
+        const text = String(v ?? '');
+        try { text.split(/\r?\n/).forEach((line) => font.encodeText(line)); } catch { bad.push(name); continue; }
+        const max = f.getMaxLength();
+        f.setText(max ? text.slice(0, max) : text);
+      } else if (f instanceof PDFCheckBox) { v ? f.check() : f.uncheck(); }
+      else if (f instanceof PDFRadioGroup) { if (v) f.select(String(v)); }
+      else if (f instanceof PDFDropdown) { if (v) f.select(String(v)); else f.clear(); }
+      else if (f instanceof PDFOptionList) { const arr = Array.isArray(v) ? v : [String(v)]; if (arr.length) f.select(arr.filter(Boolean)); else f.clear(); }
+    } catch { bad.push(name); }
+  }
+  form.updateFieldAppearances(font);
+  if (flatten) form.flatten();
+  return { bytes: await save(doc), bad };
+}
+
+/* ---------------- Repair ---------------- */
+
+/** Lossless rebuild: re-parse leniently and write a fresh cross-reference table. */
+export async function rebuild(input: ArrayBuffer) {
+  const doc = await PDFDocument.load(input, { ignoreEncryption: false, throwOnInvalidObject: false, updateMetadata: false });
+  const pages = doc.getPageCount();
+  if (!pages) throw new Error('No pages found');
+  return { bytes: await doc.save({ useObjectStreams: false }), pages };
 }

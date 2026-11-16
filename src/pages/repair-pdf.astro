@@ -1,0 +1,68 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import RepairPdf from '../islands/RepairPdf';
+
+const faqs = [
+  { q: 'What kinds of damage can be repaired?', a: 'Common problems like a broken or missing cross-reference table, a cut-off end of file from an interrupted download, or wrong internal offsets. Pages whose actual content was lost can’t be brought back.' },
+  { q: 'Will repair change my PDF’s quality?', a: 'The first method is lossless: it rebuilds the file’s structure without touching content. Only if that fails does PDFSherpa rewrite the file with Ghostscript, which also keeps images at full quality.' },
+  { q: 'Can it repair password-protected PDFs?', a: 'No. Repair never changes protected files. If you know the password, unlock the file first with <a href="/unlock-pdf">Unlock PDF</a>.' },
+  { q: 'My PDF still won’t open after repair. What now?', a: 'The data is probably truncated or overwritten. Download the file again from the original email or website, or export it again from the program that created it.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Repair runs entirely in your browser, so even damaged confidential files stay on your device.' },
+];
+---
+<ToolLayout
+  slug="repair-pdf"
+  title="Repair PDF – Fix Damaged or Corrupted PDF Free | PDFSherpa"
+  description="Fix PDFs that won’t open, show errors or have missing pages. Lossless rebuild first, deep recovery second. Free and private: no upload."
+  h1="Repair PDF"
+  lead="Fix a PDF that won’t open, shows an error or seems to be missing pages. PDFSherpa rebuilds its structure losslessly and, if needed, recovers content, all on your device."
+  howToTitle="How to Repair a PDF"
+  steps={['Select or drop the damaged PDF.', 'PDFSherpa checks it and tries a lossless rebuild, then a deep recovery.', 'Download the repaired file and check its pages.']}
+  faqs={faqs}
+  related={['compress-pdf', 'merge-pdf', 'split-pdf', 'pdf-to-text']}
+>
+  <RepairPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Repair PDF does</h2>
+    <p>
+      PDFs get damaged when a download is interrupted, an email attachment is corrupted, or a program crashes while saving. Often the content is still
+      there, but the file’s index (the cross-reference table that tells readers where each page lives) is broken. Repair PDF rebuilds that index so the
+      document opens again.
+    </p>
+
+    <h2>How it works</h2>
+    <ol>
+      <li><strong>Check:</strong> PDFSherpa tests how many pages currently open.</li>
+      <li><strong>Lossless rebuild:</strong> the file is re-read leniently and written out with a fresh, correct structure, without touching content.</li>
+      <li><strong>Deep recovery:</strong> if that isn’t enough, Ghostscript reads whatever it can recover and writes a clean new PDF.</li>
+      <li><strong>Verify:</strong> the result is opened again before you download it, and the number of recovered pages is shown.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Common error messages this helps with</h2>
+    <ul>
+      <li>“There was an error opening this document. The file is damaged and could not be repaired.”</li>
+      <li>“Failed to load PDF document.”</li>
+      <li>Blank pages, or a viewer that shows fewer pages than expected.</li>
+    </ul>
+
+    <h2>Avoiding damaged PDFs</h2>
+    <ul>
+      <li>Wait for downloads to finish completely before opening or moving the file.</li>
+      <li>Avoid editing the same PDF in two apps at once, or saving to a USB drive that’s removed too early.</li>
+      <li>Keep a backup of important documents in cloud storage or email.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Repair can’t invent data that’s missing. If half the file never downloaded, those pages are gone, so download it again. Protected PDFs are never
+      modified. Recovered files may lose interactive features like form fields or links when deep recovery is used.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Damaged files are often important ones. PDFSherpa repairs them locally in your browser, and nothing is uploaded.</p>
+  </Fragment>
+</ToolLayout>

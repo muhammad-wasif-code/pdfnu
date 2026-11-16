@@ -83,4 +83,32 @@ assert.ok(w > h, 'landscape image → landscape A4'); ok('images to pdf (auto or
   ok('editPdf text/rect/highlight/image (+ rotated page, sanitized glyphs)');
 }
 
+// forms
+{
+  const { fields, hasXfa } = await ops.formFields(buf('test/fixtures/form.pdf'));
+  assert.equal(hasXfa, false);
+  const kinds = Object.fromEntries(fields.map((f) => [f.name, f.kind]));
+  assert.deepEqual(kinds, { full_name: 'text', 'applicant.email': 'text', address: 'text', agree_terms: 'checkbox', country: 'dropdown', gender: 'radio' });
+  assert.ok(fields.every((f) => f.page === 0), 'fields know their page');
+  const { bytes, bad } = await ops.fillForm(buf('test/fixtures/form.pdf'), { full_name: 'Ali Khan', 'applicant.email': 'ali@example.com', address: 'House 1\nStreet 2', agree_terms: true, country: 'Pakistan', gender: 'Male' }, false);
+  assert.deepEqual(bad, []);
+  const re = await ops.formFields(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength));
+  const vals = Object.fromEntries(re.fields.map((f) => [f.name, f.value]));
+  assert.equal(vals.full_name, 'Ali Khan'); assert.equal(vals.agree_terms, true); assert.equal(vals.country, 'Pakistan'); assert.equal(vals.gender, 'Male');
+  const urdu = await ops.fillForm(buf('test/fixtures/form.pdf'), { full_name: 'علی' }, false);
+  assert.deepEqual(urdu.bad, ['full_name'], 'non-Latin text is reported, not silently mangled');
+  const flat = await ops.fillForm(buf('test/fixtures/form.pdf'), { full_name: 'Ali' }, true);
+  const ff = await ops.formFields(flat.bytes.buffer.slice(flat.bytes.byteOffset, flat.bytes.byteOffset + flat.bytes.byteLength));
+  assert.equal(ff.fields.length, 0, 'flatten removes fields');
+  ok('form fields: read, fill, non-Latin report, flatten');
+}
+
+// repair (lossless rebuild)
+for (const f of ['broken.pdf', 'truncated.pdf']) {
+  const r = await ops.rebuild(buf('test/fixtures/' + f));
+  assert.equal(r.pages, 3);
+  assert.equal((await open(r.bytes)).getPageCount(), 3);
+}
+ok('rebuild broken startxref + truncated trailer');
+
 console.log(`\nAll ${n} pdfOps tests passed`);

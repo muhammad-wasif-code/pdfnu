@@ -1,0 +1,67 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ExtractImages from '../islands/ExtractImages';
+
+const faqs = [
+  { q: 'Are images extracted at full resolution?', a: 'Yes. Each picture is saved at the resolution stored in the PDF, not the size it appears on the page. Photos are saved as high-quality JPG and images with transparency as PNG.' },
+  { q: 'Why were no images found?', a: 'The PDF may contain only text and vector drawings, which aren’t images. To save whole pages as pictures, use <a href="/pdf-to-jpg">PDF to JPG</a>.' },
+  { q: 'Why is a scanned PDF one image per page?', a: 'A scan stores each page as one big picture, so that’s exactly what gets extracted.' },
+  { q: 'Can I extract images from a protected PDF?', a: 'Only after unlocking it with its password using <a href="/unlock-pdf">Unlock PDF</a>.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Images are read by pdf.js inside your browser. The PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="extract-images-from-pdf"
+  title="Extract Images from PDF – Save All Pictures Free | PDFSherpa"
+  description="Save every photo and picture inside a PDF at full resolution, as JPG or PNG, one by one or as a zip. Free, fast and private: no upload."
+  h1="Extract Images from PDF"
+  lead="Pull every photo and picture out of a PDF at its original resolution, then save them one by one or all at once as a zip. Nothing is uploaded."
+  howToTitle="How to Extract Images from a PDF"
+  steps={['Select or drop your PDF.', 'Wait a moment while every page is scanned for images.', 'Save single images or <strong>Download all</strong> as a .zip.']}
+  faqs={faqs}
+  related={['pdf-to-jpg', 'compress-image', 'image-converter', 'pdf-to-text']}
+>
+  <ExtractImages client:load />
+
+  <Fragment slot="content">
+    <h2>What this tool does</h2>
+    <p>
+      PDFs often contain the original photos you need: product shots in a brochure, figures in a report, pictures in an e-book. Instead of taking
+      screenshots, Extract Images saves each embedded picture as its own file, at the resolution stored in the PDF.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> Every page is scanned automatically, with progress shown.</li>
+      <li><strong>Review the gallery.</strong> Each image shows its page number and pixel size. Duplicates, such as a logo repeated on every page, are saved once.</li>
+      <li><strong>Save</strong> individual images or download them all as a zip.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>Tiny graphics under 24 pixels, such as icons and masks, are skipped to keep the result useful.</li>
+      <li>Images with transparency are saved as PNG. Everything else is saved as high-quality JPG.</li>
+      <li>Charts and diagrams drawn as vector graphics aren’t images. Capture them with <a href="/pdf-to-jpg">PDF to JPG</a> instead.</li>
+    </ul>
+
+    <h2>Examples</h2>
+    <ul>
+      <li><strong>Product catalogue:</strong> save every product photo from a supplier’s PDF to use on your online shop, with permission.</li>
+      <li><strong>Scanned document:</strong> get each scanned page as a separate JPG to upload to a portal that only accepts images.</li>
+      <li><strong>Reports and theses:</strong> recover your own figures and photos when you’ve lost the originals.</li>
+    </ul>
+    <p>Respect copyright: only reuse images you own or have permission to use.</p>
+
+    <h2>Limitations</h2>
+    <p>
+      Some special image types, such as certain CMYK printing images, may look slightly different from the PDF because colours are converted for screens.
+      Very large PDFs with hundreds of photos need plenty of memory, so on phones, split them first with <a href="/split-pdf">Split PDF</a>.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Everything happens inside your browser with Mozilla’s pdf.js. Your PDF and its images are never uploaded.</p>
+  </Fragment>
+</ToolLayout>
