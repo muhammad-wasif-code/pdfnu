@@ -1,8 +1,9 @@
 ---
 import Logo from './Logo.astro';
 import { tools } from '../data/tools';
+import { SOURCE_URL } from '../data/site';
 const year = new Date().getFullYear();
-const sourceUrl = (import.meta.env.PUBLIC_SOURCE_URL as string | undefined) || '';
+const sourceUrl = SOURCE_URL;
 ---
 <footer class="mt-16 border-t border-gray-100 dark:border-white/10">
   <div class="container-page grid gap-8 py-10 md:grid-cols-[1.2fr_2fr]">

@@ -73,7 +73,7 @@ Heavy code is lazy-loaded: tool pages ship ~20 KB of JS. pdf-lib, pdf.js and JSZ
 1. **Push to GitHub**
    ```bash
    git add -A && git commit -m "Initial PDFNU site"
-   git remote add origin git@github.com:YOUR-USER/pdfnu.git
+   git remote add origin https://github.com/muhammad-wasif-code/pdfnu.git
    git push -u origin main
    ```
    The repository should be **public**, which is the simplest way to meet the AGPL source-code requirement.
