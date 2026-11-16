@@ -31,7 +31,7 @@ const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: `${tool.name} – PDFNU`,
+  name: `${tool.name} – PDFSherpa`,
   url: `${site}/${slug}`,
   description,
   applicationCategory: 'UtilitiesApplication',
@@ -66,7 +66,7 @@ const jsonLd = {
     <div class="min-w-0 space-y-10">
       <HowToSteps title={howToTitle} steps={steps} />
 
-      <article class="prose-pdfnu">
+      <article class="prose-sherpa">
         <slot name="content" />
       </article>
 
@@ -100,7 +100,7 @@ const jsonLd = {
       <div class="sticky top-24 space-y-4">
         <div class="card p-5 shadow-none">
           <p class="text-sm font-semibold text-ink dark:text-white">100% private</p>
-          <p class="mt-1 text-[13px] leading-5 text-muted dark:text-gray-400">PDFNU processes files with WebAssembly inside your browser. Nothing is uploaded, logged or stored on a server.</p>
+          <p class="mt-1 text-[13px] leading-5 text-muted dark:text-gray-400">PDFSherpa processes files with WebAssembly inside your browser. Nothing is uploaded, logged or stored on a server.</p>
         </div>
         <AdSlot variant="sidebar" slot="tool-sidebar" />
       </div>

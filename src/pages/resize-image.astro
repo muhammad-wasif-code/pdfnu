@@ -6,14 +6,14 @@ import ResizeImage from '../islands/ResizeImage';
 const faqs = [
   { q: 'How do I resize a photo to exact pixels?', a: 'Type the width and height. With the lock on, the other side updates to keep proportions. Unlock it to set both freely, then choose whether to crop, add a white border or stretch.' },
   { q: 'What size is a passport photo in pixels?', a: 'A 35×45 mm photo at 300 DPI is 413×531 px, and a 2×2 inch photo at 300 DPI is 600×600 px. Many countries and portals use their own rules, so always check the official requirements.' },
-  { q: 'Can I resize and keep the file under a KB limit?', a: 'Yes. Enter a value in <strong>Max size (KB)</strong>. PDFNU keeps the exact dimensions and lowers JPG/WebP quality until the file fits.' },
-  { q: 'Will resizing make my photo blurry?', a: 'Making images smaller keeps them sharp, because PDFNU uses high-quality, multi-step downscaling. Making small images much larger can’t add detail, so they’ll look soft.' },
+  { q: 'Can I resize and keep the file under a KB limit?', a: 'Yes. Enter a value in <strong>Max size (KB)</strong>. PDFSherpa keeps the exact dimensions and lowers JPG/WebP quality until the file fits.' },
+  { q: 'Will resizing make my photo blurry?', a: 'Making images smaller keeps them sharp, because PDFSherpa uses high-quality, multi-step downscaling. Making small images much larger can’t add detail, so they’ll look soft.' },
   { q: 'Are my images uploaded?', a: 'No. Resizing happens in your browser and the image never leaves your device.' },
 ];
 ---
 <ToolLayout
   slug="resize-image"
-  title="Resize Image to Exact Pixels – Passport Photo Size | PDFNU"
+  title="Resize Image to Exact Pixels & Passport Size | PDFSherpa"
   description="Resize photos to exact pixel dimensions, with presets for passport photos and signatures. Crop, pad or stretch, and set a max KB. Free, no upload."
   h1="Resize Image"
   lead="Change an image to exact pixel dimensions, or pick a passport or signature preset. Crop to fill, add a border, or keep proportions, all inside your browser."
@@ -60,6 +60,6 @@ const faqs = [
     </p>
 
     <h2>Privacy</h2>
-    <p>Passport photos and signatures are identity documents. PDFNU resizes them locally with the browser’s canvas, and nothing is uploaded.</p>
+    <p>Passport photos and signatures are identity documents. PDFSherpa resizes them locally with the browser’s canvas, and nothing is uploaded.</p>
   </Fragment>
 </ToolLayout>

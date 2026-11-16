@@ -14,22 +14,22 @@ const why = [
 ];
 
 const faqs = [
-  { q: 'Is PDFNU really free?', a: 'Yes. Every tool is free with no signup, no watermark and no daily limits. The site is supported by a small number of non-intrusive ads.' },
-  { q: 'Are my files uploaded?', a: 'No. PDFNU processes your files entirely inside your browser using WebAssembly and JavaScript. Nothing is sent to a server, so your documents never leave your device.' },
+  { q: 'Is PDFSherpa really free?', a: 'Yes. Every tool is free with no signup, no watermark and no daily limits. The site is supported by a small number of non-intrusive ads.' },
+  { q: 'Are my files uploaded?', a: 'No. PDFSherpa processes your files entirely inside your browser using WebAssembly and JavaScript. Nothing is sent to a server, so your documents never leave your device.' },
   { q: 'Can I use it offline?', a: 'Yes. After your first visit the app is cached on your device, so the tools keep working even without an internet connection.' },
-  { q: 'Does it work on my phone?', a: 'Yes. PDFNU is built mobile-first and works in modern browsers on iPhone, Android, tablets and desktops.' },
+  { q: 'Does it work on my phone?', a: 'Yes. PDFSherpa is built mobile-first and works in modern browsers on iPhone, Android, tablets and desktops.' },
   { q: 'Is there a file size limit?', a: 'There is no fixed limit. Because processing happens on your device, the practical limit depends on your device’s memory. Most phones handle files of 100 MB or more.' },
 ];
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const jsonLd = [
-  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'PDFNU', url: site + '/' },
-  { '@context': 'https://schema.org', '@type': 'Organization', name: 'PDFNU', url: site + '/', logo: site + '/icon-512.png' },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'PDFSherpa', url: site + '/' },
+  { '@context': 'https://schema.org', '@type': 'Organization', name: 'PDFSherpa', url: site + '/', logo: site + '/icon-512.png' },
 ];
 ---
 <BaseLayout
-  title="PDFNU – Free PDF Tools That Never Upload Your Files"
-  description="Compress, merge, split and convert PDFs and images for free. Every PDFNU tool runs in your browser, so your files never leave your device. No signup."
+  title="PDFSherpa – Free PDF Tools That Never Upload Your Files"
+  description="Compress, merge, split and convert PDFs and images for free. Every PDFSherpa tool runs in your browser, so your files never leave your device. No signup."
   path="/"
   jsonLd={jsonLd}
 >
@@ -66,10 +66,10 @@ const jsonLd = [
     <p id="no-results" class="hidden py-10 text-center text-sm text-muted" role="status">No matching tools. Try “compress” or “merge”.</p>
   </section>
 
-  <!-- Why PDFNU -->
+  <!-- Why PDFSherpa -->
   <section class="container-page mt-10 sm:mt-12" aria-labelledby="why-title">
     <div class="rounded-card bg-brand-soft/80 px-5 py-8 sm:px-8 dark:bg-white/[.04]">
-      <h2 id="why-title" class="text-center text-xl font-bold tracking-tight text-ink sm:text-h3 dark:text-white">Why PDFNU?</h2>
+      <h2 id="why-title" class="text-center text-xl font-bold tracking-tight text-ink sm:text-h3 dark:text-white">Why PDFSherpa?</h2>
       <ul class="mt-6 grid gap-5 sm:grid-cols-2 md:grid-cols-4 md:gap-4">
         {why.map((w) => (
           <li class="flex items-start gap-3 md:flex-col md:items-center md:text-center">

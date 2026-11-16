@@ -1,7 +1,7 @@
 // Notify Bing, Yandex, Seznam, Naver etc. (via IndexNow) about all URLs in the sitemap.
-// Usage after deploying: INDEXNOW_KEY=yourkey SITE_URL=https://pdfnu.com node scripts/indexnow.mjs
+// Usage after deploying: INDEXNOW_KEY=yourkey SITE_URL=https://pdfsherpa.com node scripts/indexnow.mjs
 const key = process.env.INDEXNOW_KEY;
-const site = (process.env.SITE_URL || 'https://pdfnu.com').replace(/\/$/, '');
+const site = (process.env.SITE_URL || 'https://pdfsherpa.com').replace(/\/$/, '');
 if (!key) { console.error('Set INDEXNOW_KEY (same value used at build time).'); process.exit(1); }
 const index = await (await fetch(`${site}/sitemap-index.xml`)).text();
 const maps = [...index.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1]);

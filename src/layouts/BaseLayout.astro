@@ -18,7 +18,7 @@ interface Props {
 }
 
 const { title, description, path, ogImage = '/og.png', type = 'website', noindex = false, ads = false, jsonLd } = Astro.props;
-const site = (Astro.site?.toString() ?? 'https://pdfnu.com/').replace(/\/$/, '');
+const site = (Astro.site?.toString() ?? 'https://pdfsherpa.com/').replace(/\/$/, '');
 const canonical = site + (path ?? (Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'));
 const ogUrl = ogImage.startsWith('http') ? ogImage : site + ogImage;
 const adClient = import.meta.env.PUBLIC_ADSENSE_CLIENT as string | undefined;
@@ -54,7 +54,7 @@ const lds = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <meta property="og:type" content={type} />
-    <meta property="og:site_name" content="PDFNU" />
+    <meta property="og:site_name" content="PDFSherpa" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

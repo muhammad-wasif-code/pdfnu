@@ -2,8 +2,8 @@
 import GuideLayout from '../../layouts/GuideLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 const faqs = [
-  { q: 'Can every PDF be compressed to 100KB?', a: 'No. A one or two page document almost always can. Long scanned documents often can’t without becoming unreadable. PDFNU tells you when that happens instead of handing you a blurry file.' },
-  { q: 'Why did PDFNU convert my pages to images?', a: 'For very small targets, turning each page into a compressed JPEG is sometimes the only way to fit. Text then can’t be selected, but it stays readable. You’re always warned when this happens.' },
+  { q: 'Can every PDF be compressed to 100KB?', a: 'No. A one or two page document almost always can. Long scanned documents often can’t without becoming unreadable. PDFSherpa tells you when that happens instead of handing you a blurry file.' },
+  { q: 'Why did PDFSherpa convert my pages to images?', a: 'For very small targets, turning each page into a compressed JPEG is sometimes the only way to fit. Text then can’t be selected, but it stays readable. You’re always warned when this happens.' },
   { q: 'Is the 100KB target exact?', a: 'It’s a maximum. The result is as large as possible without going over 100 × 1024 bytes, so it passes 100KB checks on any portal.' },
 ];
 ---
@@ -40,7 +40,7 @@ const faqs = [
     <li><strong>Scan in grayscale.</strong> Color scans of black-and-white documents are wasteful.</li>
   </ul>
 
-  <h2>What PDFNU does behind the scenes</h2>
+  <h2>What PDFSherpa does behind the scenes</h2>
   <p>
     The compressor first tries a lossless rewrite. If that’s not enough, it re-compresses images with Ghostscript at decreasing resolutions (about
     150, 110, then 72 dpi). Only if the file still doesn’t fit does it render pages to JPEG and lower quality step by step, never below a readable

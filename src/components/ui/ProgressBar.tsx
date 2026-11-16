@@ -21,7 +21,7 @@ export default function ProgressBar({ value, label, detail }: Props) {
         {det ? (
           <div class="h-full rounded-full bg-brand transition-[width] duration-300" style={{ width: `${pct}%` }} />
         ) : (
-          <div class="pdfnu-indeterminate absolute inset-y-0 w-1/3 rounded-full bg-brand" />
+          <div class="sherpa-indeterminate absolute inset-y-0 w-1/3 rounded-full bg-brand" />
         )}
       </div>
       {detail && <p class="mt-2 text-xs text-muted dark:text-gray-400">{detail}</p>}

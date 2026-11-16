@@ -5,16 +5,16 @@ import CompressPdf from '../islands/CompressPdf';
 
 const faqs = [
   { q: 'How much smaller will my PDF get?', a: 'It depends on what’s inside. PDFs made of scans or photos often shrink by 60–90%. PDFs that are mostly text are usually already small and may only shrink by a few percent.' },
-  { q: 'Can I compress a PDF to exactly 100KB or 200KB?', a: 'Pick a target chip and PDFNU tries progressively stronger settings until the file is under that size. If the target can’t be reached without making the PDF unreadable, you’ll get the smallest readable version and a clear message.' },
-  { q: 'Will the text still be selectable?', a: 'Yes for the Smallest, Recommended and High Quality levels, which only re-compress images. Only very small size targets may need pages turned into images. When that happens, PDFNU warns you that text is no longer selectable.' },
+  { q: 'Can I compress a PDF to exactly 100KB or 200KB?', a: 'Pick a target chip and PDFSherpa tries progressively stronger settings until the file is under that size. If the target can’t be reached without making the PDF unreadable, you’ll get the smallest readable version and a clear message.' },
+  { q: 'Will the text still be selectable?', a: 'Yes for the Smallest, Recommended and High Quality levels, which only re-compress images. Only very small size targets may need pages turned into images. When that happens, PDFSherpa warns you that text is no longer selectable.' },
   { q: 'Is it safe to compress confidential documents here?', a: 'Yes. Compression runs inside your browser using WebAssembly. Your PDF is never uploaded, so nobody, including us, can see it.' },
-  { q: 'Can I compress a password-protected PDF?', a: 'Not if it needs a password to open. Open it in a PDF reader with its password, save an unprotected copy, then compress that copy. PDFNU never tries to break passwords.' },
-  { q: 'Why did my PDF not get smaller?', a: 'Some PDFs are already optimized, for example ones exported from Word with compressed images. In that case PDFNU keeps your original file instead of handing you a bigger or worse one.' },
+  { q: 'Can I compress a password-protected PDF?', a: 'Not if it needs a password to open. Open it in a PDF reader with its password, save an unprotected copy, then compress that copy. PDFSherpa never tries to break passwords.' },
+  { q: 'Why did my PDF not get smaller?', a: 'Some PDFs are already optimized, for example ones exported from Word with compressed images. In that case PDFSherpa keeps your original file instead of handing you a bigger or worse one.' },
 ];
 ---
 <ToolLayout
   slug="compress-pdf"
-  title="Compress PDF Online Free – Reduce PDF Size | PDFNU"
+  title="Compress PDF Online Free – Reduce PDF Size | PDFSherpa"
   description="Reduce PDF file size for free in your browser. Pick a quality level or an exact target like 100KB or 200KB. No upload, no signup, no watermark."
   h1="Compress PDF"
   lead="Make your PDF smaller in seconds, right in your browser. Pick a quality level or an exact size like 200KB, and your file never leaves your device."
@@ -28,12 +28,12 @@ const faqs = [
   <Fragment slot="content">
     <h2>What does PDF compression actually do?</h2>
     <p>
-      Most of a PDF’s size usually comes from images: scanned pages, phone photos, or pictures pasted into a report. PDFNU makes
+      Most of a PDF’s size usually comes from images: scanned pages, phone photos, or pictures pasted into a report. PDFSherpa makes
       the file smaller by re-encoding those images at a sensible resolution and cleaning up the document’s internal structure.
       Text, fonts and links stay intact, so the result still looks sharp and remains searchable.
     </p>
     <p>
-      Compression runs in three stages, and PDFNU stops as soon as it gets what you asked for:
+      Compression runs in three stages, and PDFSherpa stops as soon as it gets what you asked for:
     </p>
     <ol>
       <li><strong>Lossless optimization:</strong> rewrites the PDF with compact object streams. Nothing visible changes.</li>
@@ -49,7 +49,7 @@ const faqs = [
     </ul>
     <p>
       If a website says “maximum file size 200KB”, skip the levels and tap the matching <strong>target size</strong> chip instead.
-      PDFNU will keep as much quality as possible while getting under the limit. For a step-by-step walkthrough, read
+      PDFSherpa will keep as much quality as possible while getting under the limit. For a step-by-step walkthrough, read
       <a href="/guides/compress-pdf-to-200kb">how to compress a PDF to 200KB</a>.
     </p>
 
@@ -59,12 +59,12 @@ const faqs = [
     <ul>
       <li>A 12-page scanned contract of 9.4 MB typically lands around 1–1.5 MB on Recommended, and well under 500KB on Smallest.</li>
       <li>A photo-heavy brochure exported at print resolution often drops by 70–85% with no visible difference on screen.</li>
-      <li>A text-only invoice of 80KB may only shrink a little. It’s already efficient, and PDFNU won’t make it worse.</li>
+      <li>A text-only invoice of 80KB may only shrink a little. It’s already efficient, and PDFSherpa won’t make it worse.</li>
     </ul>
 
     <h2>Limitations</h2>
     <p>
-      PDFNU won’t open PDFs that need a password to view. Remove the password in your PDF reader first. Very large files (hundreds of MB)
+      PDFSherpa won’t open PDFs that need a password to view. Remove the password in your PDF reader first. Very large files (hundreds of MB)
       can exceed the memory available to a browser tab on older phones. If that happens, try a computer or
       <a href="/split-pdf">split the PDF</a> first. When pages are rasterized to reach a tiny target, text is no longer selectable, and we
       always tell you when that happens.
@@ -72,7 +72,7 @@ const faqs = [
 
     <h2>Your files stay private</h2>
     <p>
-      Many “free” PDF compressors upload your document to a server, process it there and keep it for a while. PDFNU does all the work
+      Many “free” PDF compressors upload your document to a server, process it there and keep it for a while. PDFSherpa does all the work
       on your own device using WebAssembly. Your PDF is never sent anywhere, and the tool even works offline once the page has loaded.
       You can check this yourself: open your browser’s network panel while compressing and you’ll see no upload. Learn more in
       <a href="/guides/are-online-pdf-tools-safe">is it safe to use online PDF tools?</a>

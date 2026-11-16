@@ -1,8 +1,8 @@
-# PDFNU
+# PDFSherpa
 
 **Every PDF tool you need. Fast, free, and your files never leave your device.**
 
-PDFNU is a static website with 12 PDF and image tools that run **100% in the browser**: compress, merge, split, JPG↔PDF, rotate, organize, watermark, protect, page numbers, compress image and resize image. Files are never uploaded.
+PDFSherpa is a static website with 12 PDF and image tools that run **100% in the browser**: compress, merge, split, JPG↔PDF, rotate, organize, watermark, protect, page numbers, compress image and resize image. Files are never uploaded.
 
 - **Stack:** Astro 5 (static output) · TypeScript · Tailwind CSS v4 · Preact islands
 - **Engines:** [pdf-lib](https://pdf-lib.js.org/) (editing), [pdf.js](https://mozilla.github.io/pdf.js/) (rendering), [Ghostscript WASM](https://github.com/jsscheller/ghostscript-wasm) (compression + encryption), JSZip
@@ -37,10 +37,10 @@ Copy `.env.example` to `.env` for local use. Set the same variables in Cloudflar
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `SITE_URL` | yes | Canonical domain, e.g. `https://pdfnu.com` (canonical tags, sitemap, robots.txt) |
+| `SITE_URL` | yes | Canonical domain, e.g. `https://pdfsherpa.com` (canonical tags, sitemap, robots.txt) |
 | `PUBLIC_SOURCE_URL` | **yes (AGPL)** | Public URL of this repository, linked in the footer and About page |
 | `PUBLIC_ADSENSE_CLIENT` | no | `ca-pub-…`. Leave empty to disable ads entirely (no reserved ad space is rendered) |
-| `PUBLIC_CONTACT_EMAIL` | no | Shown on Contact/Privacy (defaults to `hello@pdfnu.com`) |
+| `PUBLIC_CONTACT_EMAIL` | no | Shown on Contact/Privacy (defaults to `hello@pdfsherpa.com`) |
 | `INDEXNOW_KEY` | no | 8–128 letters/digits; publishes `/<key>.txt` for IndexNow |
 
 ### Manual browser testing
@@ -72,7 +72,7 @@ Heavy code is lazy-loaded: tool pages ship ~20 KB of JS. pdf-lib, pdf.js and JSZ
 
 1. **Push to GitHub**
    ```bash
-   git add -A && git commit -m "Initial PDFNU site"
+   git add -A && git commit -m "Initial PDFSherpa site"
    git remote add origin https://github.com/muhammad-wasif-code/pdfnu.git
    git push -u origin main
    ```
@@ -105,7 +105,7 @@ Notes:
 
 ## Google Search Console
 
-1. Go to [search.google.com/search-console](https://search.google.com/search-console) → **Add property → Domain** → enter `pdfnu.com`.
+1. Go to [search.google.com/search-console](https://search.google.com/search-console) → **Add property → Domain** → enter `pdfsherpa.com`.
 2. Verify with the DNS TXT record. If DNS is on Cloudflare, Search Console can add it automatically, or add it under **DNS → Records**.
 3. **Sitemaps** → submit `sitemap-index.xml`.
 4. **URL inspection** → paste the homepage and a few tool URLs → **Request indexing**.
@@ -114,10 +114,10 @@ Notes:
 ## Bing Webmaster Tools
 
 1. Go to [bing.com/webmasters](https://www.bing.com/webmasters) → **Import from Google Search Console**, the fastest route since it copies the verified site and sitemaps. Alternatively add the site manually and verify by DNS CNAME or meta tag.
-2. **Sitemaps** → submit `https://pdfnu.com/sitemap-index.xml`.
+2. **Sitemaps** → submit `https://pdfsherpa.com/sitemap-index.xml`.
 3. **IndexNow:** set `INDEXNOW_KEY` in Cloudflare, redeploy, then after each deploy with new pages run:
    ```bash
-   INDEXNOW_KEY=yourkey SITE_URL=https://pdfnu.com node scripts/indexnow.mjs
+   INDEXNOW_KEY=yourkey SITE_URL=https://pdfsherpa.com node scripts/indexnow.mjs
    ```
    This notifies Bing, Yandex, Seznam and Naver. With Cloudflare Crawler Hints enabled this happens automatically.
 
@@ -128,11 +128,11 @@ Notes:
 ## Known limitations
 
 - **Protect PDF** uses PDF standard security revision 3 (128-bit RC4) via Ghostscript 9.56. It’s universally compatible but weaker than AES-256.
-- **Encrypted PDFs** (including owner-password-only) are rejected by all tools. PDFNU never removes or bypasses protection.
+- **Encrypted PDFs** (including owner-password-only) are rejected by all tools. PDFSherpa never removes or bypasses protection.
 - **Text watermarks/page numbers** use the standard Helvetica font (WinAnsi characters only). Other scripts are replaced with “?”.
 - **Offline:** all pages and the core engines are cached on first visit. Ghostscript (Compress/Protect) is cached the first time one of those tools is used online.
 - **Browsers:** needs WebAssembly + ES2022 (Chrome/Edge 100+, Safari 16.4+, Firefox 110+).
 
 ## Credits & licenses
 
-PDFNU © its contributors, AGPL-3.0-or-later. Bundled: Ghostscript (AGPL-3.0, Artifex), pdf.js (Apache-2.0, Mozilla), pdf-lib (MIT), JSZip (MIT/GPLv3), Preact (MIT), Inter font (OFL-1.1).
+PDFSherpa © its contributors, AGPL-3.0-or-later. Bundled: Ghostscript (AGPL-3.0, Artifex), pdf.js (Apache-2.0, Mozilla), pdf-lib (MIT), JSZip (MIT/GPLv3), Preact (MIT), Inter font (OFL-1.1).

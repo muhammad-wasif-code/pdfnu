@@ -20,8 +20,8 @@ const jsonLd = {
   description: g.description,
   datePublished: g.published,
   dateModified: g.published,
-  author: { '@type': 'Organization', name: 'PDFNU', url: site + '/' },
-  publisher: { '@type': 'Organization', name: 'PDFNU', logo: { '@type': 'ImageObject', url: site + '/icon-512.png' } },
+  author: { '@type': 'Organization', name: 'PDFSherpa', url: site + '/' },
+  publisher: { '@type': 'Organization', name: 'PDFSherpa', logo: { '@type': 'ImageObject', url: site + '/icon-512.png' } },
   mainEntityOfPage: `${site}/guides/${slug}`,
   image: site + '/og.png',
 };
@@ -34,9 +34,9 @@ const date = new Date(g.published).toLocaleDateString('en-US', { year: 'numeric'
       <article class="mt-6">
         <header>
           <h1 class="text-[1.85rem] font-bold leading-tight tracking-tight text-ink sm:text-h1 dark:text-white">{g.title}</h1>
-          <p class="mt-3 text-sm text-muted dark:text-gray-400">By the PDFNU team · <time datetime={g.published}>{date}</time></p>
+          <p class="mt-3 text-sm text-muted dark:text-gray-400">By the PDFSherpa team · <time datetime={g.published}>{date}</time></p>
         </header>
-        <div class="prose-pdfnu mt-6">
+        <div class="prose-sherpa mt-6">
           <slot />
         </div>
       </article>

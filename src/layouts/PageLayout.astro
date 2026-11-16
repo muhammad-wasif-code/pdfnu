@@ -9,7 +9,7 @@ const { title, description, h1, path, lead, noindex } = Astro.props;
     <Breadcrumbs items={[{ name: h1, href: path }]} />
     <h1 class="mt-6 text-[1.85rem] font-bold tracking-tight text-ink sm:text-h1 dark:text-white">{h1}</h1>
     {lead && <p class="mt-3 text-[15px] leading-7 text-muted dark:text-gray-400">{lead}</p>}
-    <div class="prose-pdfnu mt-6"><slot /></div>
+    <div class="prose-sherpa mt-6"><slot /></div>
     <slot name="after" />
   </div>
 </BaseLayout>

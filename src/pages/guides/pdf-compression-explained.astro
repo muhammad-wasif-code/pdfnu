@@ -22,7 +22,7 @@ const faqs = [
   <h2>Lossless compression</h2>
   <p>
     Lossless means the result is identical in content. Techniques include packing many small objects into compressed <em>object streams</em>,
-    re-compressing streams with better settings, removing unused objects and duplicate images, and subsetting fonts. PDFNU’s first stage does this.
+    re-compressing streams with better settings, removing unused objects and duplicate images, and subsetting fonts. PDFSherpa’s first stage does this.
     It often saves 5–30% on documents exported from office apps, and almost nothing on PDFs that were already optimized.
   </p>
 
@@ -34,13 +34,13 @@ const faqs = [
     <li><strong>Downsampling (resolution):</strong> a scan at 300 dpi has four times as many pixels as the same scan at 150 dpi. Halving dpi roughly quarters the image data. On a phone or laptop screen, 150 dpi is indistinguishable from 300.</li>
     <li><strong>JPEG quality:</strong> JPEG discards fine detail the eye is less sensitive to. Moving from very high to medium quality often halves file size with little visible change. Pushed too far, it causes blocky “artifacts” around text edges.</li>
   </ul>
-  <p>PDFNU’s levels map to these settings: <strong>High Quality</strong> keeps about 220 dpi, <strong>Recommended</strong> about 150 dpi, and <strong>Smallest</strong> about 96 dpi.</p>
+  <p>PDFSherpa’s levels map to these settings: <strong>High Quality</strong> keeps about 220 dpi, <strong>Recommended</strong> about 150 dpi, and <strong>Smallest</strong> about 96 dpi.</p>
 
   <h2>Rasterizing: the last resort</h2>
   <p>
     When a strict size target can’t be met any other way, a page can be <em>rasterized</em>, meaning turned into a single image and then JPEG-compressed.
     This guarantees a predictable size per page, but text becomes pixels: it can no longer be selected, searched or read aloud by screen readers.
-    PDFNU only does this for size targets, never below 72 dpi, and always warns you.
+    PDFSherpa only does this for size targets, never below 72 dpi, and always warns you.
   </p>
 
   <h2>Why your PDF didn’t shrink</h2>
@@ -49,7 +49,7 @@ const faqs = [
     <li>Its images were already compressed at screen resolution.</li>
     <li>It uses large embedded fonts, common with CJK languages, that can’t be removed without changing how the document looks.</li>
   </ul>
-  <p>In these cases PDFNU keeps your original file rather than giving you a bigger or worse one.</p>
+  <p>In these cases PDFSherpa keeps your original file rather than giving you a bigger or worse one.</p>
 
   <h2>Try it</h2>
   <p>

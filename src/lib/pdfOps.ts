@@ -219,7 +219,7 @@ export async function imagesToPdf(images: ImagePage[], o: ImagesToPdfOpts) {
     const w = im.width * s, h = im.height * s;
     page.drawImage(img, { x: (pw - w) / 2, y: (ph - h) / 2, width: w, height: h });
   }
-  doc.setProducer('PDFNU');
+  doc.setProducer('PDFSherpa');
   return save(doc);
 }
 
@@ -230,6 +230,6 @@ export async function jpegsToPdf(pages: { jpeg: ArrayBuffer; w: number; h: numbe
     const page = doc.addPage([p.w, p.h]);
     page.drawImage(img, { x: 0, y: 0, width: p.w, height: p.h });
   }
-  doc.setProducer('PDFNU');
+  doc.setProducer('PDFSherpa');
   return save(doc);
 }

@@ -4,7 +4,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * PDFNU design tokens — taken from the approved design system mockup.
+ * PDFSherpa design tokens — taken from the approved design system mockup.
  * Colors:   Indigo #4F46E5 · Indigo light #EEF2FF · Success #10B981 · Warning #F59E0B
  *           Danger #EF4444 · Text #111827 · Text secondary #6B7280 · Bg #FFFFFF
  *           Surface #F8FAFC · Border #E5E7EB
@@ -94,18 +94,18 @@
   .tool-card:hover { @apply -translate-y-0.5 border-indigo-200 shadow-lift dark:border-brand-light/40; }
 
   /* Rich text for SEO content */
-  .prose-pdfnu { @apply max-w-none text-[15px] leading-7 text-gray-700 dark:text-gray-300; }
-  .prose-pdfnu h2 { @apply mt-10 mb-3 text-h3 font-semibold text-ink sm:text-[1.5rem] dark:text-white; }
-  .prose-pdfnu h3 { @apply mt-6 mb-2 text-lg font-semibold text-ink dark:text-white; }
-  .prose-pdfnu p { @apply my-3; }
-  .prose-pdfnu ul { @apply my-3 list-disc space-y-1.5 pl-5; }
-  .prose-pdfnu ol { @apply my-3 list-decimal space-y-1.5 pl-5; }
-  .prose-pdfnu a { @apply font-medium text-brand underline decoration-brand/30 underline-offset-2 hover:decoration-brand dark:text-brand-light; }
-  .prose-pdfnu strong { @apply font-semibold text-ink dark:text-white; }
+  .prose-sherpa { @apply max-w-none text-[15px] leading-7 text-gray-700 dark:text-gray-300; }
+  .prose-sherpa h2 { @apply mt-10 mb-3 text-h3 font-semibold text-ink sm:text-[1.5rem] dark:text-white; }
+  .prose-sherpa h3 { @apply mt-6 mb-2 text-lg font-semibold text-ink dark:text-white; }
+  .prose-sherpa p { @apply my-3; }
+  .prose-sherpa ul { @apply my-3 list-disc space-y-1.5 pl-5; }
+  .prose-sherpa ol { @apply my-3 list-decimal space-y-1.5 pl-5; }
+  .prose-sherpa a { @apply font-medium text-brand underline decoration-brand/30 underline-offset-2 hover:decoration-brand dark:text-brand-light; }
+  .prose-sherpa strong { @apply font-semibold text-ink dark:text-white; }
 }
 
-@keyframes pdfnu-indeterminate { 0% { left: -35%; } 100% { left: 100%; } }
-.pdfnu-indeterminate { animation: pdfnu-indeterminate 1.2s ease-in-out infinite; }
+@keyframes sherpa-indeterminate { 0% { left: -35%; } 100% { left: 100%; } }
+.sherpa-indeterminate { animation: sherpa-indeterminate 1.2s ease-in-out infinite; }
 
 /* Soft glow via radial gradient — far cheaper to paint than filter: blur() on mobile CPUs */
 .hero-glow { background: radial-gradient(closest-side, rgb(199 210 254 / .75), rgb(224 231 255 / .35) 55%, transparent); }

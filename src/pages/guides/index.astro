@@ -4,11 +4,11 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { guides } from '../../data/guides';
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const jsonLd = {
-  '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'PDFNU Guides', url: `${site}/guides`,
+  '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'PDFSherpa Guides', url: `${site}/guides`,
   hasPart: guides.map((g) => ({ '@type': 'Article', headline: g.title, url: `${site}/guides/${g.slug}` })),
 };
 ---
-<BaseLayout title="PDF & Image Guides – Size Limits, Privacy, Tips | PDFNU" description="Practical guides for shrinking PDFs and photos to upload limits, merging on your phone, and keeping documents private. Written by the PDFNU team." path="/guides" jsonLd={jsonLd}>
+<BaseLayout title="PDF & Image Guides – Size Limits, Privacy, Tips | PDFSherpa" description="Practical guides for shrinking PDFs and photos to upload limits, merging on your phone, and keeping documents private. Written by the PDFSherpa team." path="/guides" jsonLd={jsonLd}>
   <div class="container-page pt-5">
     <Breadcrumbs items={[{ name: 'Guides', href: '/guides' }]} />
     <h1 class="mt-6 text-[1.85rem] font-bold tracking-tight text-ink sm:text-h1 dark:text-white">Guides</h1>

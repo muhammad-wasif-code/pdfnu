@@ -1,9 +1,9 @@
-/* PDFNU service worker — generated at build time by scripts/postbuild.mjs. Never touches user files. */
+/* PDFSherpa service worker — generated at build time by scripts/postbuild.mjs. Never touches user files. */
 const VERSION = '__VERSION__';
 const PRECACHE = __PRECACHE__;
-const SHELL = 'pdfnu-shell-' + VERSION;
-const RUNTIME = 'pdfnu-runtime-v1'; // long-lived: versioned /vendor/ engines (Ghostscript WASM, pdf.js data)
-const PAGES = 'pdfnu-pages-v1';
+const SHELL = 'pdfsherpa-shell-' + VERSION;
+const RUNTIME = 'pdfsherpa-runtime-v1'; // long-lived: versioned /vendor/ engines (Ghostscript WASM, pdf.js data)
+const PAGES = 'pdfsherpa-pages-v1';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -16,7 +16,8 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k.startsWith('pdfnu-shell-') && k !== SHELL).map((k) => caches.delete(k))))
+      // drop old shell versions, plus caches from before the PDFNU → PDFSherpa rename
+      .then((keys) => Promise.all(keys.filter((k) => (k.startsWith('pdfsherpa-shell-') && k !== SHELL) || k.startsWith('pdfnu-')).map((k) => caches.delete(k))))
       .then(() => self.clients.claim()),
   );
 });

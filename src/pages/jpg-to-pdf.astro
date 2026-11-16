@@ -5,8 +5,8 @@ import JpgToPdf from '../islands/JpgToPdf';
 
 const faqs = [
   { q: 'Which image formats can I convert?', a: 'JPG/JPEG, PNG and WebP. On iPhone, photos stored as HEIC are converted to JPG automatically when you pick them in the browser.' },
-  { q: 'Can I make the PDF smaller than 100KB?', a: 'Yes. Choose a “Keep PDF under” size and PDFNU lowers image quality and resolution just enough to fit. If it can’t fit while staying readable, it tells you and gives you the smallest readable version.' },
-  { q: 'Why are my phone photos the right way up?', a: 'PDFNU reads the rotation information your camera saves (EXIF orientation) and applies it, so portrait photos don’t end up sideways.' },
+  { q: 'Can I make the PDF smaller than 100KB?', a: 'Yes. Choose a “Keep PDF under” size and PDFSherpa lowers image quality and resolution just enough to fit. If it can’t fit while staying readable, it tells you and gives you the smallest readable version.' },
+  { q: 'Why are my phone photos the right way up?', a: 'PDFSherpa reads the rotation information your camera saves (EXIF orientation) and applies it, so portrait photos don’t end up sideways.' },
   { q: 'Can I put several images in one PDF?', a: 'Yes. Add as many as you like. Each image becomes one page, in the order shown. Drag them to reorder.' },
   { q: 'Are my photos uploaded?', a: 'No. Images are converted inside your browser and never leave your device. That matters for ID cards, certificates and other personal documents.' },
   { q: 'What does “Fit image” page size mean?', a: 'Each page takes the shape of its image, with no white borders apart from the margin you choose. Use A4 or Letter when the PDF will be printed.' },
@@ -14,7 +14,7 @@ const faqs = [
 ---
 <ToolLayout
   slug="jpg-to-pdf"
-  title="JPG to PDF Converter – Free, Under 100KB Option | PDFNU"
+  title="JPG to PDF Converter – Free, Under 100KB Option | PDFSherpa"
   description="Convert JPG, PNG and WebP images to one PDF. Choose page size and margins, or keep the PDF under 100KB for online forms. No upload, no signup."
   h1="JPG to PDF"
   lead="Turn one or more images into a single PDF, with each image on its own page. Set the page size and margins, or keep the file under a size limit such as 100KB."
@@ -61,7 +61,7 @@ const faqs = [
 
     <h2>Privacy</h2>
     <p>
-      The images you convert are often the most sensitive files you own. PDFNU decodes and assembles them entirely inside your browser.
+      The images you convert are often the most sensitive files you own. PDFSherpa decodes and assembles them entirely inside your browser.
       No upload, no server copy, no account. The tool keeps working offline after your first visit.
     </p>
   </Fragment>

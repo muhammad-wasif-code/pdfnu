@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-const RULES = `# PDFNU: all public pages may be crawled and used by search and AI search engines.
+const RULES = `# PDFSherpa: all public pages may be crawled and used by search and AI search engines.
 User-agent: *
 Allow: /
 Disallow: /__test__/
@@ -25,6 +25,6 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /`;
 export const GET: APIRoute = ({ site }) => {
-  const base = (site?.toString() ?? 'https://pdfnu.com/').replace(/\/$/, '');
+  const base = (site?.toString() ?? 'https://pdfsherpa.com/').replace(/\/$/, '');
   return new Response(`${RULES}\nSitemap: ${base}/sitemap-index.xml\n`, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 };

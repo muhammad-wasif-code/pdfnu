@@ -4,11 +4,11 @@ import AdSlot from '../../components/AdSlot.astro';
 const faqs = [
   { q: 'Why is my PDF still over 200KB after compressing?', a: 'It probably contains many pages or very detailed images. Try removing pages you don’t need, splitting the file, or letting the 200KB target rasterize pages as a last resort.' },
   { q: 'Will compressing to 200KB make text blurry?', a: 'Usually not. Text in a normal PDF is stored as text, not pixels, so it stays sharp. Only scanned pages, which are images, lose some sharpness.' },
-  { q: 'Is 200KB the same as 0.2MB?', a: 'Close enough for upload forms. Strictly, 200KB is 204,800 bytes (or 200,000 on some sites). PDFNU aims for 200 × 1024 bytes, which satisfies both.' },
+  { q: 'Is 200KB the same as 0.2MB?', a: 'Close enough for upload forms. Strictly, 200KB is 204,800 bytes (or 200,000 on some sites). PDFSherpa aims for 200 × 1024 bytes, which satisfies both.' },
 ];
 ---
 <GuideLayout slug="compress-pdf-to-200kb" faqs={faqs}>
-  <p><strong>Short answer:</strong> open <a href="/compress-pdf?target=200">Compress PDF</a>, tap the <strong>200KB</strong> chip and press compress. PDFNU tries progressively stronger settings and stops at the best quality that fits under 200KB, so text stays sharp and selectable in most documents.</p>
+  <p><strong>Short answer:</strong> open <a href="/compress-pdf?target=200">Compress PDF</a>, tap the <strong>200KB</strong> chip and press compress. PDFSherpa tries progressively stronger settings and stops at the best quality that fits under 200KB, so text stays sharp and selectable in most documents.</p>
   <p>The rest of this guide explains what makes a PDF big, how to get under 200KB when the first try isn’t enough, and how to keep it readable.</p>
 
   <h2>What makes a PDF bigger than 200KB?</h2>
@@ -25,7 +25,7 @@ const faqs = [
   <ol>
     <li>Go to <a href="/compress-pdf?target=200">Compress PDF</a>. The 200KB target is pre-selected from this link.</li>
     <li>Select your PDF. Nothing is uploaded; the file stays on your device.</li>
-    <li>Press <strong>Compress to under 200KB</strong>. PDFNU runs a lossless pass first, then image compression at about 150, 110 and 72 dpi, stopping as soon as the file fits.</li>
+    <li>Press <strong>Compress to under 200KB</strong>. PDFSherpa runs a lossless pass first, then image compression at about 150, 110 and 72 dpi, stopping as soon as the file fits.</li>
     <li>Check the result card. It shows before and after sizes. If it says pages were converted to images, the text is no longer selectable but still readable.</li>
     <li>Download. The file keeps its original name, so it’s ready to upload.</li>
   </ol>
@@ -33,7 +33,7 @@ const faqs = [
   <AdSlot variant="inline" slot="guide-article" />
 
   <h2>If it doesn’t fit</h2>
-  <p>When PDFNU can’t reach 200KB without making the document unreadable, it tells you and gives you the smallest readable version. You then have three good options:</p>
+  <p>When PDFSherpa can’t reach 200KB without making the document unreadable, it tells you and gives you the smallest readable version. You then have three good options:</p>
   <ul>
     <li><strong>Remove pages you don’t need.</strong> Blank backs of scans, cover pages and instructions often aren’t required. Use <a href="/organize-pdf">Organize PDF</a>.</li>
     <li><strong>Split the document.</strong> Many portals have one upload field per document type. Use <a href="/split-pdf">Split PDF</a> to separate them.</li>
@@ -50,7 +50,7 @@ const faqs = [
   <h2>Why do it in the browser?</h2>
   <p>
     The PDFs people squeeze under 200KB are usually certificates, ID cards, bank statements and application forms. Those are exactly the files you
-    shouldn’t upload to an unknown server. PDFNU compresses them locally with WebAssembly, so the document never leaves your phone or computer.
+    shouldn’t upload to an unknown server. PDFSherpa compresses them locally with WebAssembly, so the document never leaves your phone or computer.
     Read more in <a href="/guides/are-online-pdf-tools-safe">is it safe to use online PDF tools?</a>
   </p>
 </GuideLayout>

@@ -4,7 +4,7 @@ import AdSlot from '../components/AdSlot.astro';
 import CompressImage from '../islands/CompressImage';
 
 const faqs = [
-  { q: 'How do I reduce a photo to under 20KB?', a: 'Pick the <strong>20KB</strong> chip and compress. PDFNU first lowers JPG quality, and if that isn’t enough it reduces the pixel size step by step until the file fits.' },
+  { q: 'How do I reduce a photo to under 20KB?', a: 'Pick the <strong>20KB</strong> chip and compress. PDFSherpa first lowers JPG quality, and if that isn’t enough it reduces the pixel size step by step until the file fits.' },
   { q: 'Will the image dimensions change?', a: 'Only if they have to. Large photos often need fewer pixels to reach 20–50KB. The result shows the final width × height. If a form needs exact dimensions, use <a href="/resize-image">Resize Image</a> with a max size instead.' },
   { q: 'JPG or WebP?', a: 'JPG works everywhere, including government and exam portals. WebP is about 25–35% smaller at the same quality, but some older sites don’t accept it.' },
   { q: 'Can I compress many images at once?', a: 'Yes. Add as many as you like. Each one is compressed to the same target, and you can download them individually or as a .zip.' },
@@ -14,7 +14,7 @@ const faqs = [
 ---
 <ToolLayout
   slug="compress-image"
-  title="Compress Image to 20KB, 50KB, 100KB – Free | PDFNU"
+  title="Compress Image to 20KB, 50KB, 100KB – Free | PDFSherpa"
   description="Reduce JPG, PNG or WebP images to an exact size like 20KB, 50KB or 100KB for online forms. Batch support, no upload, no signup."
   h1="Compress Image"
   lead="Shrink photos and signatures to an exact file size like 20KB, 50KB or 100KB, with the best quality that fits. Your images stay on your device."
@@ -53,12 +53,12 @@ const faqs = [
     <h2>Limitations</h2>
     <p>
       Extremely detailed images may need a large reduction in dimensions to reach 20KB. When a target can’t be reached even at the smallest readable
-      size (64 px), PDFNU says so and gives you its best attempt. Animated GIFs and HEIC files aren’t supported directly, but iPhones convert HEIC to JPG when you pick photos in the browser.
+      size (64 px), PDFSherpa says so and gives you its best attempt. Animated GIFs and HEIC files aren’t supported directly, but iPhones convert HEIC to JPG when you pick photos in the browser.
     </p>
 
     <h2>Privacy</h2>
     <p>
-      Photos of you, your ID and your signature shouldn’t be sent to a stranger’s server. PDFNU compresses them using your browser’s own encoder,
+      Photos of you, your ID and your signature shouldn’t be sent to a stranger’s server. PDFSherpa compresses them using your browser’s own encoder,
       entirely on your device.
     </p>
   </Fragment>
