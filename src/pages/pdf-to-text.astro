@@ -1,0 +1,68 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PdfToText from '../islands/PdfToText';
+
+const faqs = [
+  { q: 'Why is no text found in my PDF?', a: 'Your PDF is probably a scan or a photo, so the “text” is actually a picture of text. Extracting it needs OCR (optical character recognition), which is coming to PDFSherpa soon.' },
+  { q: 'Is the formatting kept?', a: 'Plain text keeps line breaks and paragraph order, but not fonts, colours, columns or tables. It’s ideal for copying, searching and pasting into another document.' },
+  { q: 'Can I copy the text instead of downloading?', a: 'Yes. Use <strong>Copy all text</strong>, or select part of it in the preview box.' },
+  { q: 'Does it work with Urdu, Hindi or Arabic PDFs?', a: 'If the PDF contains real text (not a scan), the characters are extracted as they are stored in the file. Some older PDFs store these scripts in ways that come out jumbled.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Text is read by pdf.js inside your browser. The PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="pdf-to-text"
+  title="PDF to Text Converter – Extract Text Free | PDFSherpa"
+  description="Extract all the text from a PDF in seconds. Preview, copy, or download it as a .txt file. Free and private: the PDF never leaves your device."
+  h1="PDF to Text"
+  lead="Pull all the text out of a PDF in seconds, then copy it or save it as a .txt file. Everything happens in your browser."
+  howToTitle="How to Extract Text from a PDF"
+  steps={['Select or drop your PDF.', 'Check the text in the preview.', 'Click <strong>Copy all text</strong> or <strong>Download .txt</strong>.']}
+  faqs={faqs}
+  related={['pdf-to-jpg', 'split-pdf', 'compress-pdf', 'merge-pdf']}
+>
+  <PdfToText client:load />
+
+  <Fragment slot="content">
+    <h2>What PDF to Text does</h2>
+    <p>
+      PDF to Text reads the text stored inside a PDF and gives it to you as plain, editable text. Use it to quote from a report, paste a contract
+      clause into an email, feed a document into a translation tool, or search through a long file without scrolling.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> Extraction starts straight away and shows progress page by page.</li>
+      <li><strong>Review the preview.</strong> The word and character counts appear above it. Untick <em>Page markers</em> if you don’t want the “--- Page 2 ---” separators.</li>
+      <li><strong>Copy or download.</strong> The .txt file uses UTF-8, so it opens correctly in any editor on any device.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li>Copy a paragraph from a locked-layout e-book to quote it in an assignment, with credit.</li>
+      <li>Get the text of a long policy so you can search it or paste it into a translation tool.</li>
+      <li>Extract text from just a few pages: first use <a href="/split-pdf">Split PDF</a>, then convert the smaller file.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Scanned documents and photos don’t contain real text, so there’s nothing to extract until OCR arrives. Multi-column layouts and tables come
+      out in reading order, line by line, without their structure. Password-protected PDFs must be unlocked first with <a href="/unlock-pdf">Unlock PDF</a>.
+    </p>
+
+    <h2>Tips</h2>
+    <ul>
+      <li>Paste the text into a document editor and use “Find” to locate names, dates or amounts quickly.</li>
+      <li>If words run together, the PDF was created without spaces between text fragments. Untick page markers and check the original layout.</li>
+      <li>Need the pages as pictures instead? Use <a href="/pdf-to-jpg">PDF to JPG</a>.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>
+      Mozilla’s open-source pdf.js engine reads the PDF inside your browser. The document and its text are never uploaded or stored anywhere.
+    </p>
+  </Fragment>
+</ToolLayout>

@@ -1,4 +1,4 @@
-export type Category = 'Optimize' | 'Organize' | 'Convert' | 'Security' | 'Edit';
+export type Category = 'Optimize' | 'Organize' | 'Convert' | 'Security' | 'Edit' | 'Image';
 
 export interface Tool {
   slug: string;
@@ -27,8 +27,15 @@ export const tools: Tool[] = [
   { slug: 'watermark-pdf', name: 'Watermark', short: 'Watermark', tagline: 'Add watermark', category: 'Edit', from: '#f472b6', to: '#db2777', icon: 'watermark', keywords: 'watermark pdf stamp text image logo' },
   { slug: 'protect-pdf', name: 'Protect PDF', short: 'Protect', tagline: 'Add password', category: 'Security', from: '#60a5fa', to: '#4f46e5', icon: 'protect', keywords: 'protect pdf password encrypt lock secure' },
   { slug: 'add-page-numbers', name: 'Page Numbers', short: 'Page #', tagline: 'Add page numbers', category: 'Edit', from: '#fdba74', to: '#f97316', icon: 'numbers', keywords: 'page numbers pdf numbering footer header' },
-  { slug: 'compress-image', name: 'Compress Image', short: 'Compress Image', tagline: 'Reduce image size', category: 'Optimize', from: '#4ade80', to: '#0d9488', icon: 'imgcompress', keywords: 'compress image jpg png reduce size kb 20kb 50kb photo' },
-  { slug: 'resize-image', name: 'Resize Image', short: 'Resize Image', tagline: 'Change dimensions', category: 'Optimize', from: '#c084fc', to: '#9333ea', icon: 'resize', keywords: 'resize image pixels dimensions passport photo signature' },
+  { slug: 'compress-image', name: 'Compress Image', short: 'Compress Image', tagline: 'Reduce image size', category: 'Image', from: '#4ade80', to: '#0d9488', icon: 'imgcompress', keywords: 'compress image jpg png reduce size kb 20kb 50kb photo' },
+  { slug: 'resize-image', name: 'Resize Image', short: 'Resize Image', tagline: 'Change dimensions', category: 'Image', from: '#c084fc', to: '#9333ea', icon: 'resize', keywords: 'resize image pixels dimensions passport photo signature' },
+  { slug: 'sign-pdf', name: 'Sign PDF', short: 'Sign PDF', tagline: 'Add your signature', category: 'Edit', from: '#818cf8', to: '#4338ca', icon: 'sign', keywords: 'sign pdf signature esign draw type electronic signature fill' },
+  { slug: 'unlock-pdf', name: 'Unlock PDF', short: 'Unlock', tagline: 'Remove a password you know', category: 'Security', from: '#fbbf24', to: '#d97706', icon: 'unlock', keywords: 'unlock pdf remove password decrypt open protected' },
+  { slug: 'passport-photo-maker', name: 'Passport Photo', short: 'Passport Photo', tagline: 'Size, crop & print', category: 'Image', from: '#38bdf8', to: '#0284c7', icon: 'passport', keywords: 'passport photo maker size 35x45 2x2 visa id photo form kb crop print' },
+  { slug: 'crop-image', name: 'Crop Image', short: 'Crop Image', tagline: 'Trim photos', category: 'Image', from: '#f87171', to: '#dc2626', icon: 'crop', keywords: 'crop image photo trim cut signature aspect ratio' },
+  { slug: 'image-converter', name: 'Image Converter', short: 'Convert Image', tagline: 'JPG, PNG, WebP', category: 'Convert', from: '#2dd4bf', to: '#0891b2', icon: 'convert', keywords: 'image converter jpg to png png to jpg webp to jpg convert format' },
+  { slug: 'grayscale-pdf', name: 'Grayscale PDF', short: 'Grayscale', tagline: 'Black & white PDF', category: 'Optimize', from: '#9ca3af', to: '#4b5563', icon: 'grayscale', keywords: 'grayscale pdf black and white convert color remove colour' },
+  { slug: 'pdf-to-text', name: 'PDF to Text', short: 'PDF to Text', tagline: 'Extract text', category: 'Convert', from: '#a3e635', to: '#4d7c0f', icon: 'text', keywords: 'pdf to text extract text copy txt convert' },
 ];
 
 export const categories: { name: Category; accent: string }[] = [
@@ -37,6 +44,7 @@ export const categories: { name: Category; accent: string }[] = [
   { name: 'Convert', accent: 'text-amber-600 dark:text-amber-400' },
   { name: 'Edit', accent: 'text-pink-600 dark:text-pink-400' },
   { name: 'Security', accent: 'text-violet-600 dark:text-violet-400' },
+  { name: 'Image', accent: 'text-sky-600 dark:text-sky-400' },
 ];
 
 export const getTool = (slug: string) => {

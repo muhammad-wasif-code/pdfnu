@@ -13,13 +13,14 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "node test/ops.test.mjs && node test/protect.test.cjs",
+    "test": "node test/ops.test.mjs && node test/protect.test.cjs && node test/gs-tools.test.cjs",
     "postbuild": "node scripts/postbuild.mjs"
   },
   "dependencies": {
     "@astrojs/preact": "^4.1.3",
     "@astrojs/sitemap": "^3.7.5",
     "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource/dancing-script": "^5.3.0",
     "@jspawn/ghostscript-wasm": "^0.0.2",
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^5.18.2",

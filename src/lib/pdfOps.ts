@@ -233,3 +233,31 @@ export async function jpegsToPdf(pages: { jpeg: ArrayBuffer; w: number; h: numbe
   doc.setProducer('PDFSherpa');
   return save(doc);
 }
+
+export interface StampItem {
+  page: number;
+  /** box in the page's *visual* space as fractions (0..1), origin top-left */
+  x: number; y: number; w: number; h: number;
+  png: ArrayBuffer;
+}
+
+/** Place PNG stamps (signatures, dates, initials) on pages, upright even on rotated pages. */
+export async function stamp(input: ArrayBuffer, items: StampItem[]) {
+  const doc = await load(input);
+  const pages = doc.getPages();
+  const cache = new Map<ArrayBuffer, Awaited<ReturnType<typeof doc.embedPng>>>();
+  for (const it of items) {
+    const page = pages[it.page];
+    if (!page) continue;
+    let img = cache.get(it.png);
+    if (!img) { img = await doc.embedPng(it.png); cache.set(it.png, img); }
+    const f = frame(page);
+    const w = it.w * f.vw, h = it.h * f.vh;
+    const cx = it.x * f.vw + w / 2;
+    const cy = f.vh - (it.y * f.vh + h / 2);
+    const [vx, vy] = originFor(cx, cy, w, h, 0);
+    const [x, y] = f.toUser(vx, vy);
+    page.drawImage(img, { x, y, width: w, height: h, rotate: degrees(f.angle(0)) });
+  }
+  return save(doc);
+}

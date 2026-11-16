@@ -124,7 +124,7 @@ export default function ResizeImage() {
                   <button key={p.id} type="button" aria-pressed={preset === p.id} onClick={() => choosePreset(preset === p.id ? null : p.id)}
                     class={`min-h-14 rounded-control border px-2 py-2 text-left transition-colors ${preset === p.id ? 'border-brand bg-brand-soft ring-1 ring-brand dark:bg-brand/15' : 'border-line bg-surface hover:border-indigo-300 dark:border-white/10 dark:bg-white/[.03]'}`}>
                     <span class={`block text-[13px] font-semibold ${preset === p.id ? 'text-brand dark:text-brand-light' : 'text-ink dark:text-white'}`}>{p.label}</span>
-                    <span class="block text-[11px] text-muted dark:text-gray-400">{p.note}</span>
+                    <span class="block text-[11px] text-gray-600 dark:text-gray-400">{p.note}</span>
                   </button>
                 ))}
               </div>

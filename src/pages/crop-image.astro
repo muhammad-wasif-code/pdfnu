@@ -1,0 +1,68 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import CropImage from '../islands/CropImage';
+
+const faqs = [
+  { q: 'How do I crop to an exact shape?', a: 'Pick an aspect ratio such as 1:1 (square), 4:3, 16:9 or Passport (35:45). The crop box keeps that shape while you move and resize it.' },
+  { q: 'Can I rotate a sideways photo?', a: 'Yes. Use the ↺ and ↻ buttons before cropping. Phone photos are also turned the right way up automatically.' },
+  { q: 'Does cropping reduce quality?', a: 'No. Cropping keeps the original pixels of the area you choose. Save as PNG for zero quality loss, or JPG/WebP for a smaller file.' },
+  { q: 'How do I get an exact pixel size after cropping?', a: 'Crop first, then open the result in <a href="/resize-image">Resize Image</a> to set exact width and height, or use <a href="/passport-photo-maker">Passport Photo</a> for photo sizes.' },
+  { q: 'Is my photo uploaded?', a: 'No. Cropping happens in your browser and the image never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="crop-image"
+  title="Crop Image Online – Square, Passport & Custom | PDFSherpa"
+  description="Crop photos and signatures in your browser. Free or fixed ratios (1:1, 4:3, 16:9, passport), rotate, save as JPG, PNG or WebP. No upload."
+  h1="Crop Image"
+  lead="Trim a photo or signature to exactly the part you need. Drag the box, pick a ratio like square or passport, rotate if needed, and save. Nothing is uploaded."
+  howToTitle="How to Crop an Image"
+  steps={['Select or drop your image.', 'Drag and resize the crop box, or pick an aspect ratio.', 'Click <strong>Crop image</strong> and download.']}
+  faqs={faqs}
+  related={['resize-image', 'passport-photo-maker', 'compress-image', 'image-converter']}
+>
+  <CropImage client:load />
+
+  <Fragment slot="content">
+    <h2>What Crop Image does</h2>
+    <p>
+      Crop Image cuts away the parts of a picture you don’t want: the desk behind a document, empty space around a signature, other people in a group
+      photo. Less unnecessary background means a sharper subject and a smaller file, which helps with upload limits on forms.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open an image.</strong> JPG, PNG and WebP work. Phone photos are rotated correctly automatically.</li>
+      <li><strong>Adjust the box.</strong> Drag inside it to move it and drag a corner to resize it. On a phone, use one finger. The live size in pixels appears under the image.</li>
+      <li><strong>Choose a ratio</strong> if you need a fixed shape: square for profile pictures, 16:9 for slides, Passport (35:45) for ID photos.</li>
+      <li><strong>Rotate</strong> with ↺ / ↻ if the picture is sideways.</li>
+      <li><strong>Pick a format and crop.</strong> The file is saved as <code>yourphoto-cropped.jpg</code>.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li><strong>Signature for a form:</strong> crop tightly around the ink with a small margin, then <a href="/compress-image">compress to 20KB</a>.</li>
+      <li><strong>Document photo:</strong> crop to the paper’s edges before converting with <a href="/jpg-to-pdf">JPG to PDF</a>. It reads better and fits size limits more easily.</li>
+      <li><strong>Profile picture:</strong> choose 1:1 and centre your face.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      The crop box is rectangular. Very large images (over ~50 megapixels) may be slow on older phones. To change pixel dimensions exactly, use
+      <a href="/resize-image">Resize Image</a> after cropping.
+    </p>
+
+    <h2>Tips for a clean crop</h2>
+    <ul>
+      <li>Leave a little breathing room around the subject. Cropping right up to the edge can look cramped and may cut off detail.</li>
+      <li>Use the rule-of-thirds lines: put eyes or the main subject near one of the lines for a more balanced picture.</li>
+      <li>For documents, align the crop box with the paper’s edges first, then rotate if the page is sideways.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>Cropping is done by your browser’s canvas engine. Your photos never leave your device and nothing is stored online.</p>
+  </Fragment>
+</ToolLayout>

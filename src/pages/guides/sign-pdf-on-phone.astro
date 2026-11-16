@@ -1,0 +1,52 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: 'Do I need to install an app to sign a PDF?', a: 'No. PDFSherpa runs in Safari, Chrome and other mobile browsers. You can add it to your home screen if you sign documents often.' },
+  { q: 'My finger signature looks shaky. Any tips?', a: 'Turn your phone sideways for a wider signing area, sign a bit larger and slower than on paper, and use Undo to retry a single stroke. You can also type your name or upload a photo of your paper signature instead.' },
+  { q: 'Is a phone signature legally valid?', a: 'Simple electronic signatures are accepted for many everyday documents, but rules vary by country and document type. When in doubt, ask the recipient what kind of signature they accept.' },
+];
+---
+<GuideLayout slug="sign-pdf-on-phone" faqs={faqs}>
+  <p><strong>Short answer:</strong> open <a href="/sign-pdf">Sign PDF</a> in your phone’s browser, select the PDF, tap <strong>Add signature</strong>, sign with your finger, drag it onto the signature line, and tap <strong>Sign & download</strong>. No app, no account, and the document never leaves your phone.</p>
+
+  <h2>On iPhone</h2>
+  <ol>
+    <li>Save the PDF to the Files app first. From Mail or WhatsApp, use Share → <em>Save to Files</em>.</li>
+    <li>Open <a href="/sign-pdf">pdfsherpa.com/sign-pdf</a> in Safari and tap <strong>Select PDF</strong> → <em>Choose File</em>.</li>
+    <li>Go to the right page with <strong>Next ›</strong>.</li>
+    <li>Tap <strong>Add signature</strong>, choose a colour, and sign in the white box. Turn the phone sideways for more room.</li>
+    <li>Tap <strong>Use this signature</strong>, then drag it onto the line. Pull the blue dot to resize it.</li>
+    <li>Tap <strong>Date</strong> if the form asks for one, and place it next to your signature.</li>
+    <li>Tap <strong>Sign & download</strong>. The signed file appears in Files → Downloads.</li>
+  </ol>
+
+  <h2>On Android</h2>
+  <ol>
+    <li>Download the PDF from your email or chat app so it’s in your Downloads folder.</li>
+    <li>Open <a href="/sign-pdf">pdfsherpa.com/sign-pdf</a> in Chrome and tap <strong>Select PDF</strong>.</li>
+    <li>Follow the same steps: <strong>Add signature</strong> → sign → place → <strong>Sign & download</strong>.</li>
+    <li>Find the signed PDF in your Files app → Downloads, or tap the download notification.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Getting a signature that looks like yours</h2>
+  <ul>
+    <li><strong>Upload instead of drawing:</strong> sign on white paper with a dark pen, take a photo in daylight, and choose <strong>Upload</strong>. PDFSherpa removes the paper background automatically.</li>
+    <li><strong>Type it:</strong> if you just need something neat, type your name and it appears in a handwriting-style font.</li>
+    <li><strong>Reuse it:</strong> after you create a signature once, it appears under <em>Reuse</em>, so you can place it on other pages with one tap.</li>
+  </ul>
+
+  <h2>Sending it back</h2>
+  <p>
+    Share the signed PDF from Files or Downloads straight into WhatsApp, Gmail or Outlook. If the email bounces because the file is too big, run it through
+    <a href="/compress-pdf">Compress PDF</a> first. Signed several separate documents? Combine them with <a href="/merge-pdf">Merge PDF</a>.
+  </p>
+
+  <h2>Is it safe?</h2>
+  <p>
+    Your signature can be misused if it ends up on a stranger’s server. PDFSherpa signs the PDF inside your phone’s browser. Your signature and document
+    are never uploaded, and they’re forgotten when you close the tab.
+  </p>
+</GuideLayout>

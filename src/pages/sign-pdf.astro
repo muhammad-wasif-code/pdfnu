@@ -1,0 +1,72 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import SignPdf from '../islands/SignPdf';
+
+const faqs = [
+  { q: 'How do I sign a PDF on my phone?', a: 'Open the PDF here, tap <strong>Add signature</strong>, sign with your finger in the Draw tab, then drag the signature into place and tap <strong>Sign & download</strong>. See our step-by-step <a href="/guides/sign-pdf-on-phone">guide for iPhone and Android</a>.' },
+  { q: 'Is this a legally valid electronic signature?', a: 'It adds a visual (“simple”) electronic signature, which many everyday agreements, forms and letters accept. Some documents require a certified digital signature or a wet-ink signature, so check what the recipient needs.' },
+  { q: 'Can I add the date and my name as well?', a: 'Yes. Use <strong>Date</strong> to stamp today’s date and <strong>Text</strong> to add your printed name, place or any short text. Everything can be moved and resized.' },
+  { q: 'Can I use a photo of my real signature?', a: 'Yes. Choose <strong>Upload</strong>, pick a photo of your signature on white paper, and keep “Remove white paper background” ticked so only the ink is placed.' },
+  { q: 'Is my signature stored or uploaded?', a: 'No. Your signature and PDF stay in your browser and are discarded when you close the tab. Nothing is sent to a server.' },
+  { q: 'Can I sign several pages?', a: 'Yes. Move between pages with Prev/Next and add signatures, initials or dates on any page. Reuse a signature you already created with one tap.' },
+];
+---
+<ToolLayout
+  slug="sign-pdf"
+  title="Sign PDF Online Free – Draw, Type or Upload | PDFSherpa"
+  description="Sign a PDF in your browser: draw with your finger, type your name or upload a signature photo, then add the date and initials. Free, no upload, no signup."
+  h1="Sign PDF"
+  lead="Add your signature to any PDF in under a minute. Draw it with your finger or mouse, type your name, or upload a photo of your signature, then place it anywhere. Your PDF never leaves your device."
+  howToTitle="How to Sign a PDF"
+  steps={['Select or drop the PDF you need to sign.', 'Tap <strong>Add signature</strong> and draw, type or upload it.', 'Drag it into place, add the date if needed, then <strong>Sign & download</strong>.']}
+  faqs={faqs}
+  related={['watermark-pdf', 'add-page-numbers', 'merge-pdf', 'protect-pdf']}
+>
+  <SignPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Sign PDF does</h2>
+    <p>
+      Sign PDF lets you sign forms, letters, agreements and applications without printing and scanning. Your signature is placed on the page as an image,
+      exactly where you put it, and the signed PDF opens the same way in every reader.
+    </p>
+
+    <h2>Three ways to create your signature</h2>
+    <ul>
+      <li><strong>Draw:</strong> sign with your finger on a phone or tablet, or with a mouse or trackpad. Undo and Clear help you get it right.</li>
+      <li><strong>Type:</strong> enter your name and it’s rendered in a handwriting-style font.</li>
+      <li><strong>Upload:</strong> photograph your signature on white paper. PDFSherpa removes the paper background so only the ink appears on the document.</li>
+    </ul>
+    <p>Choose black, blue or red ink. Blue is often preferred because it shows the document was signed rather than photocopied.</p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF</strong> and go to the page you want to sign with Prev/Next.</li>
+      <li><strong>Add signature</strong>, then drag it onto the signature line. Use the blue dot to make it bigger or smaller.</li>
+      <li>Add <strong>Initials</strong> on other pages, a <strong>Date</strong>, or <strong>Text</strong> such as your printed name.</li>
+      <li>Press <strong>Sign & download</strong>. The file keeps its original name.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li>Sign a rental agreement on your phone and send it back by WhatsApp or email in two minutes.</li>
+      <li>Initial every page of a contract and sign and date the last one.</li>
+      <li>Sign a school or job application form, then reduce its size with <a href="/compress-pdf">Compress PDF</a> if the portal has a limit.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      This is a visual electronic signature, not a certificate-based digital signature, so it doesn’t include cryptographic proof of identity. Signatures are
+      placed on top of the page, not inside fillable form fields. Password-protected PDFs must be unlocked first with <a href="/unlock-pdf">Unlock PDF</a>.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>
+      Your signature is one of the most sensitive things you can type into a website. PDFSherpa never uploads it: drawing, placing and saving all happen in
+      your browser, and nothing is kept after you close the tab.
+    </p>
+  </Fragment>
+</ToolLayout>

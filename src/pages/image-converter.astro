@@ -1,0 +1,68 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ImageConverter from '../islands/ImageConverter';
+
+const faqs = [
+  { q: 'Which conversions are supported?', a: 'Any combination of JPG, PNG and WebP: PNG to JPG, JPG to PNG, WebP to JPG, JPG to WebP, and so on. You can convert many images at once.' },
+  { q: 'How do I convert WebP to JPG?', a: 'Add your .webp files, choose <strong>JPG</strong>, and click Convert. This is handy when a website or app won’t accept WebP images.' },
+  { q: 'What happens to transparent backgrounds?', a: 'PNG and WebP keep transparency. JPG doesn’t support it, so transparent areas become white.' },
+  { q: 'Which format should I use?', a: 'JPG for photos and anything you upload to forms. PNG for screenshots, logos and graphics with sharp edges or transparency. WebP for websites, because it’s the smallest at the same quality.' },
+  { q: 'Are my images uploaded?', a: 'No. Conversion uses your browser’s built-in image encoders, so images stay on your device.' },
+];
+---
+<ToolLayout
+  slug="image-converter"
+  title="Image Converter – JPG, PNG, WebP Free Online | PDFSherpa"
+  description="Convert images between JPG, PNG and WebP in bulk: WebP to JPG, PNG to JPG, JPG to PNG and more. Free, fast and private: no upload."
+  h1="Image Converter"
+  lead="Convert images between JPG, PNG and WebP, one at a time or in bulk. Pick a format and quality, then download. Everything stays on your device."
+  howToTitle="How to Convert Images"
+  steps={['Select or drop one or more images.', 'Choose JPG, PNG or WebP and set the quality.', 'Click <strong>Convert</strong> and download the files or a .zip.']}
+  faqs={faqs}
+  related={['compress-image', 'resize-image', 'crop-image', 'jpg-to-pdf']}
+>
+  <ImageConverter client:load />
+
+  <Fragment slot="content">
+    <h2>What Image Converter does</h2>
+    <p>
+      Image Converter changes the file format of your pictures. It’s the quick fix when a site rejects your file type, for example a form that accepts
+      only JPG while your phone saved a PNG screenshot, or a WebP image downloaded from the web that an app can’t open.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Add images.</strong> Mix formats freely, and add as many as you like.</li>
+      <li><strong>Choose the target format.</strong> For JPG and WebP, set the quality: 90% looks identical to the original for most photos.</li>
+      <li><strong>Convert and download.</strong> Each file keeps its name with the new extension. With several images you can save them one by one or as a .zip.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Common conversions</h2>
+    <ul>
+      <li><strong>WebP to JPG:</strong> for apps, forms and older software that don’t understand WebP.</li>
+      <li><strong>PNG to JPG:</strong> screenshots and scans often get 5–10× smaller as JPG.</li>
+      <li><strong>JPG to PNG:</strong> when you need to edit a graphic without adding more compression.</li>
+      <li><strong>JPG/PNG to WebP:</strong> for faster websites and blogs.</li>
+    </ul>
+    <p>If you need a specific file size rather than a format, use <a href="/compress-image">Compress Image</a>.</p>
+
+    <h2>Limitations</h2>
+    <p>
+      HEIC/HEIF, GIF animations, TIFF and RAW formats aren’t supported yet. On iPhone, HEIC photos are converted to JPG automatically when you pick them
+      in the browser. Converting a JPG to PNG doesn’t restore detail that JPG compression already removed.
+    </p>
+
+    <h2>Choosing the right quality</h2>
+    <ul>
+      <li><strong>90%:</strong> visually identical to the original for nearly all photos. A safe default.</li>
+      <li><strong>75–80%:</strong> noticeably smaller files and still good for web pages and messages.</li>
+      <li><strong>Below 60%:</strong> only when size matters more than looks. Blocky edges start to appear around text.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>Images are decoded and re-encoded entirely in your browser. Nothing is uploaded, logged or kept.</p>
+  </Fragment>
+</ToolLayout>

@@ -54,4 +54,15 @@ d = await open(await ops.imagesToPdf([{ data: jpg.buffer.slice(jpg.byteOffset, j
 const [w, h] = [d.getPage(0).getWidth(), d.getPage(0).getHeight()];
 assert.ok(w > h, 'landscape image → landscape A4'); ok('images to pdf (auto orientation)');
 
+// stamp (signatures) on normal + rotated page
+{
+  const sharp = (await import('sharp')).default;
+  const pngBuf = await sharp({ create: { width: 300, height: 100, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } }).composite([{ input: Buffer.from('<svg width="300" height="100"><path d="M10 80 C 80 10, 150 90, 290 20" stroke="#1d4ed8" stroke-width="8" fill="none"/></svg>') }]).png().toBuffer();
+  const png = pngBuf.buffer.slice(pngBuf.byteOffset, pngBuf.byteOffset + pngBuf.byteLength);
+  const rot = buf('test/fixtures/rotated.pdf');
+  d = await open(await ops.stamp(rot, [{ page: 0, x: 0.6, y: 0.8, w: 0.3, h: 0.1, png }, { page: 1, x: 0.1, y: 0.1, w: 0.3, h: 0.07, png }]));
+  assert.equal(d.getPageCount(), 2);
+  ok('stamp signatures (rotated + normal page, shared image)');
+}
+
 console.log(`\nAll ${n} pdfOps tests passed`);

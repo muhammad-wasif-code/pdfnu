@@ -1,0 +1,63 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import UnlockPdf from '../islands/UnlockPdf';
+
+const faqs = [
+  { q: 'Can PDFSherpa unlock a PDF if I forgot the password?', a: 'No. PDFSherpa never guesses, cracks or bypasses passwords. You need the password that opens the file. If you’ve lost it, ask the person or organisation that sent the PDF for a new copy.' },
+  { q: 'Why do banks and companies send password-protected PDFs?', a: 'To protect statements and payslips in transit. The password is often a mix of your name, date of birth or account details, and it’s explained in the email that came with the file.' },
+  { q: 'What about PDFs that open fine but can’t be edited or printed?', a: 'Those have owner “permission restrictions” rather than an open password. PDFSherpa doesn’t remove restrictions without the owner’s password. Ask the document’s owner for an unrestricted copy.' },
+  { q: 'Is my password sent anywhere?', a: 'No. The password and the PDF stay in your browser. Unlocking runs locally with pdf.js and a WebAssembly build of Ghostscript.' },
+  { q: 'Will the quality change?', a: 'No. Images are passed through and text stays selectable. The file is only rewritten without encryption.' },
+];
+---
+<ToolLayout
+  slug="unlock-pdf"
+  title="Unlock PDF – Remove a Password You Know, Free | PDFSherpa"
+  description="Remove the password from a PDF you can already open, so you don’t have to type it every time. Free and private: no upload, no password cracking."
+  h1="Unlock PDF"
+  lead="Remove the open password from a PDF you already have the password for, like a bank statement or payslip, so it opens without asking. Nothing is uploaded."
+  howToTitle="How to Remove a PDF Password"
+  steps={['Select your password-protected PDF.', 'Type the password that opens it.', 'Click <strong>Unlock PDF</strong> and download the unprotected copy.']}
+  faqs={faqs}
+  related={['protect-pdf', 'compress-pdf', 'merge-pdf', 'pdf-to-text']}
+>
+  <UnlockPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Unlock PDF does</h2>
+    <p>
+      Many PDFs arrive locked with an open password: bank statements, credit-card bills, payslips, insurance documents. That’s good for security in transit,
+      but annoying when you have to type the password every time, or when an upload portal or another tool can’t open the file. Unlock PDF makes a copy of
+      the document without the password, <strong>only after you enter the correct password yourself</strong>.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open the protected PDF.</strong> PDFSherpa checks whether it really needs a password.</li>
+      <li><strong>Type the password.</strong> It’s checked locally first. A wrong password gets a clear message, never a broken file.</li>
+      <li><strong>Download.</strong> The unlocked copy keeps the original name and quality.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Typical uses</h2>
+    <ul>
+      <li>Unlock a bank statement before uploading it to a visa or loan application that rejects protected PDFs.</li>
+      <li>Unlock several monthly statements, then combine them with <a href="/merge-pdf">Merge PDF</a>.</li>
+      <li>Remove the password before <a href="/compress-pdf">compressing</a> or <a href="/grayscale-pdf">converting to grayscale</a>, since most tools can’t edit locked files.</li>
+    </ul>
+
+    <h2>What it won’t do</h2>
+    <p>
+      PDFSherpa doesn’t crack, guess or bypass passwords, and it doesn’t strip owner permission restrictions without the owner’s password. If a PDF
+      isn’t yours to unlock, ask its owner. To add a password back later, use <a href="/protect-pdf">Protect PDF</a>.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>
+      An online tool that asks for a password should never send it to a server. PDFSherpa keeps both the PDF and the password inside your browser
+      and forgets them when you close the tab. The unlocked copy can be read by anyone who gets it, so store it carefully.
+    </p>
+  </Fragment>
+</ToolLayout>

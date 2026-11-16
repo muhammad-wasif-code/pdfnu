@@ -1,0 +1,71 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import GrayscalePdf from '../islands/GrayscalePdf';
+
+const faqs = [
+  { q: 'Will the text stay sharp and selectable?', a: 'Yes. Only colours are converted. Text and vector graphics stay as text and shapes, so they remain sharp, searchable and selectable.' },
+  { q: 'Does grayscale make a PDF smaller?', a: 'Usually, for PDFs with colour photos or scans, because a gray image stores one channel instead of three. Text-only PDFs may not shrink, and can grow slightly when fonts are embedded for consistent printing.' },
+  { q: 'Why convert a PDF to black and white?', a: 'To save colour ink when printing, to meet upload portals that ask for grayscale documents, or to make a scan smaller before compressing it.' },
+  { q: 'Can I undo it?', a: 'No, colour information is removed from the new file. Your original file on your device is unchanged, so keep it if you might need colour later.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Conversion runs in your browser with a WebAssembly build of Ghostscript. The PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="grayscale-pdf"
+  title="Convert PDF to Grayscale (Black & White) Free | PDFSherpa"
+  description="Turn a colour PDF into black and white in one click. Text stays sharp and selectable, scans often get smaller. Free, private, no upload."
+  h1="Grayscale PDF"
+  lead="Convert every page of a colour PDF to black and white. Text stays sharp and selectable, scans usually get smaller, and the file never leaves your device."
+  howToTitle="How to Convert a PDF to Grayscale"
+  steps={['Select or drop your PDF.', 'Click <strong>Convert to grayscale</strong>.', 'Download your black & white PDF.']}
+  faqs={faqs}
+  related={['compress-pdf', 'pdf-to-jpg', 'watermark-pdf', 'protect-pdf']}
+>
+  <GrayscalePdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Grayscale PDF does</h2>
+    <p>
+      Grayscale PDF rewrites your document so that every colour, in photos, logos, highlighted text and charts, becomes a shade of gray.
+      The layout doesn’t change and text isn’t turned into an image, so the result looks exactly like a black-and-white printout of the original,
+      only cleaner.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> The first time, PDFSherpa downloads its PDF engine once and caches it for offline use.</li>
+      <li><strong>Convert.</strong> Every page, image and drawing is converted to grayscale.</li>
+      <li><strong>Download.</strong> The result card shows the size before and after. The file keeps its original name.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>When it’s useful</h2>
+    <ul>
+      <li><strong>Printing:</strong> stop the printer from using colour cartridges for a document that doesn’t need colour.</li>
+      <li><strong>Forms and portals:</strong> some application systems ask for black-and-white scans of documents.</li>
+      <li><strong>Smaller files:</strong> colour scans often shrink by 40–60% in grayscale. For a tight limit, follow up with <a href="/compress-pdf">Compress PDF</a>.</li>
+      <li><strong>Readability:</strong> faint coloured stamps and backgrounds become plain gray, which some reviewers find easier to read.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Colour information is removed and can’t be restored from the new file, so keep your original. Password-protected PDFs must be unlocked first,
+      see <a href="/unlock-pdf">Unlock PDF</a>. Text-only PDFs might grow by a few kilobytes because fonts are embedded to make printing consistent.
+    </p>
+
+    <h2>Tips</h2>
+    <ul>
+      <li>Convert to grayscale <em>before</em> compressing. Removing colour first gives the compressor less data to deal with.</li>
+      <li>Check highlighted text afterwards: light yellow highlights become very pale gray and may be hard to see.</li>
+      <li>Charts that rely only on colour to tell lines apart can become harder to read in grayscale.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>
+      PDFSherpa converts your file locally using Ghostscript compiled to WebAssembly. Nothing is uploaded, which matters for bank statements,
+      IDs and other documents you’d never want on a stranger’s server.
+    </p>
+  </Fragment>
+</ToolLayout>

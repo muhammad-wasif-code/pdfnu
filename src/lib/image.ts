@@ -104,3 +104,53 @@ export async function encodeUnder(img: Decoded, target: number, type: OutType, o
   }
   return smallest!;
 }
+
+export interface Rect { x: number; y: number; w: number; h: number; }
+
+/** Wrap a canvas so it can be passed anywhere a Decoded image is expected. */
+export function fromCanvas(c: HTMLCanvasElement): Decoded {
+  return { source: c, width: c.width, height: c.height, close() { c.width = c.height = 0; } };
+}
+
+/** Crop `rect` (in source pixels) out of `img`, optionally scaling to outW×outH with high-quality downscaling. */
+export function crop(img: Decoded, rect: Rect, outW?: number, outH?: number, background: string | null = null): HTMLCanvasElement {
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(rect.w));
+  c.height = Math.max(1, Math.round(rect.h));
+  const ctx = c.getContext('2d')!;
+  if (background) { ctx.fillStyle = background; ctx.fillRect(0, 0, c.width, c.height); }
+  ctx.drawImage(img.source, rect.x, rect.y, rect.w, rect.h, 0, 0, c.width, c.height);
+  if (!outW || !outH || (outW === c.width && outH === c.height)) return c;
+  const scaled = draw(fromCanvas(c), outW, outH, 'stretch', background);
+  c.width = c.height = 0;
+  return scaled;
+}
+
+/** Rotate an image by 90° steps, returning a canvas. */
+export function rotate90(img: Decoded, quarterTurns: number): HTMLCanvasElement {
+  const q = ((quarterTurns % 4) + 4) % 4;
+  const c = document.createElement('canvas');
+  const swap = q % 2 === 1;
+  c.width = swap ? img.height : img.width;
+  c.height = swap ? img.width : img.height;
+  const ctx = c.getContext('2d')!;
+  ctx.translate(c.width / 2, c.height / 2);
+  ctx.rotate((q * Math.PI) / 2);
+  ctx.drawImage(img.source, -img.width / 2, -img.height / 2);
+  return c;
+}
+
+/**
+ * Write a DPI value into a JPEG's JFIF header so print shops and form portals
+ * see the intended physical size (e.g. 300 DPI for passport photos).
+ */
+export async function setJpegDpi(blob: Blob, dpi: number): Promise<Blob> {
+  const b = new Uint8Array(await blob.arrayBuffer());
+  // FFD8 FFE0 len(2) 'JFIF\0' ver(2) units(1) Xdensity(2) Ydensity(2)
+  if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff && b[3] === 0xe0 && b[6] === 0x4a && b[7] === 0x46 && b[8] === 0x49 && b[9] === 0x46) {
+    b[13] = 1; // dots per inch
+    b[14] = dpi >> 8; b[15] = dpi & 255;
+    b[16] = dpi >> 8; b[17] = dpi & 255;
+  }
+  return new Blob([b], { type: 'image/jpeg' });
+}

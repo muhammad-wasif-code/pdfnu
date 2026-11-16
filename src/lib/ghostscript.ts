@@ -60,3 +60,23 @@ export function encryptArgs(userPassword: string, ownerPassword: string): string
 }
 
 export function resetGhostscript() { client?.terminate(); client = null; }
+
+/** Convert every page to grayscale (text stays vector and selectable). */
+export function grayscaleArgs(): string[] {
+  return [
+    '-sDEVICE=pdfwrite', '-dNOPAUSE', '-dQUIET', '-dBATCH', '-dSAFER', '-dAutoRotatePages=/None',
+    '-sColorConversionStrategy=Gray', '-dProcessColorModel=/DeviceGray',
+    '-sOutputFile=/out.pdf', '/in.pdf',
+  ];
+}
+
+/** Decrypt a PDF with the password that opens it (the user must already know it). */
+export function decryptArgs(password: string): string[] {
+  return [
+    '-sDEVICE=pdfwrite', '-dNOPAUSE', '-dQUIET', '-dBATCH', '-dSAFER', '-dAutoRotatePages=/None', '-dPDFSETTINGS=/default',
+    '-dDownsampleColorImages=false', '-dDownsampleGrayImages=false', '-dDownsampleMonoImages=false', '-dPassThroughJPEGImages=true',
+    '-dAutoFilterColorImages=false', '-dAutoFilterGrayImages=false', '-dColorImageFilter=/FlateEncode', '-dGrayImageFilter=/FlateEncode',
+    `-sPDFPassword=${password}`,
+    '-sOutputFile=/out.pdf', '/in.pdf',
+  ];
+}

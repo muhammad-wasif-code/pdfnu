@@ -1,0 +1,67 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PassportPhoto from '../islands/PassportPhoto';
+
+const faqs = [
+  { q: 'Which passport photo size should I choose?', a: '35×45 mm and 2×2 inch (51×51 mm) are the most common sizes worldwide, and 33×48 mm is used by some visa offices. Requirements differ by country and change over time, so always confirm the size on the official website.' },
+  { q: 'How do I print passport photos at home or a print shop?', a: 'Download the <strong>4×6″ print sheet</strong> and print it as a standard 4×6 inch (10×15 cm) photo at “actual size” / 100%, not “fit to page”. Then cut along the light gray lines.' },
+  { q: 'Can I make a photo under 20KB or 50KB for an online form?', a: 'Yes. Choose the exact pixel size the form asks for (use Custom if needed) and pick a max file size. PDFSherpa keeps the dimensions and lowers JPG quality until the file fits.' },
+  { q: 'Does it change my background to white?', a: 'Not automatically. For the best results take the photo in front of a plain white or light gray wall with even light, so no editing is needed.' },
+  { q: 'Is my photo uploaded?', a: 'No. Cropping, resizing and the print sheet are all created in your browser. Your photo never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="passport-photo-maker"
+  title="Passport Photo Maker – 35×45, 2×2 & Print Sheet | PDFSherpa"
+  description="Make passport and visa photos at 35×45 mm, 2×2 inch or custom pixel sizes, with a KB limit for online forms and a 4×6 print sheet. Free, no upload."
+  h1="Passport Photo Maker"
+  lead="Turn any photo into a passport or visa photo: crop with a face guide, get the exact size at 300 DPI, keep it under a KB limit for online forms, and print copies on a 4×6 sheet."
+  howToTitle="How to Make a Passport Photo"
+  steps={['Choose a size and select your photo.', 'Drag the box so your face fits the oval guide.', 'Click <strong>Create</strong>, then download the photo or the 4×6 print sheet.']}
+  faqs={faqs}
+  related={['resize-image', 'crop-image', 'compress-image', 'jpg-to-pdf']}
+>
+  <PassportPhoto client:load />
+
+  <Fragment slot="content">
+    <h2>What the Passport Photo Maker does</h2>
+    <p>
+      It crops your photo to the exact proportions of a passport or visa photo, scales it to the right pixel size at 300 DPI, and saves a JPG you can
+      upload to online applications. It can also lay out several copies on a standard 4×6 inch photo print, so you can print them for a few rupees or cents
+      instead of paying a studio.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Pick a size:</strong> 35×45 mm (413×531 px), 2×2 inch (600×600 px), 33×48 mm, or Custom pixels if a form specifies them.</li>
+      <li><strong>Select your photo.</strong> Phone photos are rotated correctly automatically.</li>
+      <li><strong>Position your face.</strong> Move and resize the box until your face sits inside the dashed oval, with a little space above your head.</li>
+      <li><strong>Set a file size limit</strong> if an online form needs one, for example 50KB.</li>
+      <li><strong>Create and download</strong> the single photo for forms, or the 4×6″ sheet for printing.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Tips for an accepted photo</h2>
+    <ul>
+      <li>Stand about a metre in front of a plain white or light gray wall, with no shadows behind you.</li>
+      <li>Face the camera straight on with a neutral expression, eyes open, and no hair covering your face.</li>
+      <li>Use daylight from a window in front of you, not the phone flash.</li>
+      <li>Ask someone else to take the photo from chest height, not a selfie at arm’s length, which distorts faces.</li>
+    </ul>
+    <p>
+      For form uploads, see <a href="/guides/photo-signature-size-for-online-applications">photo and signature size rules for online applications</a>.
+      Rules vary between countries and portals, so check the official requirements every time.
+    </p>
+
+    <h2>Limitations</h2>
+    <p>
+      PDFSherpa doesn’t detect faces, replace backgrounds or check compliance automatically. It gives you precise sizing and printing, while the photo
+      itself must meet the authority’s rules. Some offices only accept photos from approved studios.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Your face is personal data. PDFSherpa processes the photo entirely on your device. Nothing is uploaded, stored or used for anything else.</p>
+  </Fragment>
+</ToolLayout>
