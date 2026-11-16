@@ -1,0 +1,71 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import OrganizePdf from '../islands/OrganizePdf';
+
+const faqs = [
+  { q: 'How do I move a page?', a: 'Drag its thumbnail on a computer, or press and hold it on a phone, then drop it where you want it. The arrow buttons under each page also move it one step.' },
+  { q: 'How do I delete pages?', a: 'Tap the bin icon on a page. Changed your mind? Use <strong>Reset</strong> to bring back the original order and all pages.' },
+  { q: 'Can I rotate pages here too?', a: 'Yes. Each page has a rotate button. For rotation only, <a href="/rotate-pdf">Rotate PDF</a> is quicker.' },
+  { q: 'Will the quality change?', a: 'No. Pages are copied as they are. Nothing is re-compressed or re-rendered.' },
+  { q: 'Is my document uploaded?', a: 'No. Organizing happens inside your browser, so your PDF never leaves your device.' },
+  { q: 'Can I add pages from another PDF?', a: 'Merge the two files first with <a href="/merge-pdf">Merge PDF</a>, then organize the combined document here.' },
+];
+---
+<ToolLayout
+  slug="organize-pdf"
+  title="Organize PDF Pages – Reorder & Delete Free | PDFNU"
+  description="Reorder, delete and rotate PDF pages with drag-and-drop thumbnails. Works on phones and computers. Free and private: no upload."
+  h1="Organize PDF"
+  lead="Drag pages into a new order, delete the ones you don’t need, and rotate any that are sideways, all in one place and without uploading."
+  howToTitle="How to Organize PDF Pages"
+  steps={['Select or drop your PDF.', 'Drag pages to reorder, tap the bin to delete, tap ↻ to rotate.', 'Click <strong>Save changes</strong> and download.']}
+  faqs={faqs}
+  related={['split-pdf', 'merge-pdf', 'rotate-pdf', 'add-page-numbers']}
+>
+  <OrganizePdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Organize PDF does</h2>
+    <p>
+      Organize PDF shows every page of your document as a thumbnail you can move, delete or rotate. It’s the fastest way to fix a scan
+      that came out in the wrong order, drop blank pages, or rearrange a report before you send it.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> Thumbnails load progressively, so you can start working straight away.</li>
+      <li><strong>Reorder.</strong> Drag a page with your mouse, or press and hold for a moment on a touch screen, then drag. The badge shows each page’s new position.</li>
+      <li><strong>Delete or rotate.</strong> Use the bin and rotate buttons on each page.</li>
+      <li><strong>Save.</strong> Your organized PDF downloads with the original file name.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li>Remove the blank back sides from a double-sided scan.</li>
+      <li>Move an appendix to the end, or a summary to the front.</li>
+      <li>Delete a page with personal details before sharing a document. To remove its content for good, delete the whole page, because covering text with a box doesn’t remove it.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Encrypted PDFs need to be unlocked by their owner first. Very long documents (hundreds of pages) work, but dragging across a long
+      grid is easier on a computer. For long jumps, use <a href="/split-pdf">Split PDF</a> and <a href="/merge-pdf">Merge PDF</a>.
+    </p>
+
+    <h2>Tips</h2>
+    <ul>
+      <li><strong>Work top-down:</strong> delete unwanted pages first, then reorder. There’s less to drag around.</li>
+      <li><strong>Reset is your undo:</strong> if things get confusing, tap Reset to restore the original order, rotation and deleted pages.</li>
+      <li><strong>Check page numbers:</strong> if the document already has printed page numbers, reordering won’t change them. Add fresh numbers with <a href="/add-page-numbers">Add Page Numbers</a> afterwards.</li>
+      <li><strong>Need some pages as separate files?</strong> <a href="/split-pdf">Split PDF</a> is quicker than deleting.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>
+      PDFNU renders the thumbnails and rebuilds your PDF entirely inside your browser. Nothing is uploaded, and the tool works offline once loaded.
+    </p>
+  </Fragment>
+</ToolLayout>

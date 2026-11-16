@@ -1,0 +1,55 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: 'How can I verify that PDFNU doesn’t upload my files?', a: 'Open your browser’s developer tools (F12), go to the Network tab, then use a tool. You’ll see the page’s own code and libraries load, but no request carrying your file. You can also turn on airplane mode after the page loads and the tools still work.' },
+  { q: 'Does PDFNU collect anything at all?', a: 'The site may show ads from Google AdSense, which uses cookies as described in our <a href="/privacy">privacy policy</a>. Your files and their contents are never collected.' },
+  { q: 'Are upload-based PDF sites dangerous?', a: 'Not necessarily. Many reputable services delete files after a few hours. But you have to trust their security, retention and staff, and you can’t verify any of it. Local processing removes that trust requirement.' },
+];
+---
+<GuideLayout slug="are-online-pdf-tools-safe" faqs={faqs}>
+  <p><strong>Short answer:</strong> most online PDF tools upload your file to their servers to process it, so its safety depends on trusting a company you can’t audit. Tools that process files <em>in your browser</em>, like PDFNU, never send the document anywhere. That removes the main risk entirely, and you can verify it yourself.</p>
+
+  <h2>What happens when you upload a PDF</h2>
+  <p>On a typical upload-based PDF site, your document:</p>
+  <ol>
+    <li>travels over the internet to the provider’s server (usually encrypted with HTTPS, which is good);</li>
+    <li>is stored on their disk while it’s processed, sometimes on third-party cloud infrastructure in another country;</li>
+    <li>is kept for a retention period, often an hour to a day, sometimes longer for “recent files” features;</li>
+    <li>may appear in logs, backups or analytics, depending on how the service is built.</li>
+  </ol>
+  <p>
+    None of this is necessarily malicious. But each step is a place where a misconfiguration, a breach or an over-curious employee could expose
+    your bank statement, passport scan or medical report. You’re relying on their promises, and you have no way to check them.
+  </p>
+
+  <h2>What in-browser processing means</h2>
+  <p>
+    Modern browsers can run serious software through JavaScript and <strong>WebAssembly</strong>. PDFNU uses this to run real PDF engines, pdf-lib,
+    Mozilla’s pdf.js and Ghostscript, directly on your device. When you compress or merge a file, the bytes are read from your disk into the page’s memory,
+    processed there, and handed back to you as a download. There’s no server step, because there’s no server that could receive the file.
+  </p>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>How to check any tool yourself</h2>
+  <ul>
+    <li><strong>The airplane-mode test:</strong> load the tool page, switch off your internet, then process a file. If it works, it’s local. PDFNU passes this test once its engines are cached.</li>
+    <li><strong>The network test:</strong> on a computer, open developer tools → Network, clear the list, then process a file. Look for large outgoing requests (POST or PUT) around your file’s size.</li>
+    <li><strong>Read the privacy policy:</strong> look for “retention”, “delete after” or “upload”. Those words mean files go to a server.</li>
+  </ul>
+
+  <h2>Remaining risks, honestly</h2>
+  <ul>
+    <li><strong>Your own device:</strong> local processing can’t protect a device that already has malware. Keep your browser and system updated.</li>
+    <li><strong>Downloads:</strong> processed files go to your Downloads folder like any other file. Delete them when you no longer need them.</li>
+    <li><strong>Ads and analytics:</strong> PDFNU may show ads that set cookies. They never see your files, but they’re part of the page. See our <a href="/privacy">privacy policy</a>.</li>
+    <li><strong>Password strength:</strong> <a href="/protect-pdf">Protect PDF</a> uses standard 128-bit PDF encryption, which is good against casual access but not a substitute for a strong password.</li>
+  </ul>
+
+  <h2>A simple rule</h2>
+  <p>
+    If a document would hurt you if it leaked, such as IDs, contracts, financial or medical records, use tools that process it locally, or desktop software.
+    For everything else, upload-based tools from reputable companies are a reasonable trade-off. With PDFNU you don’t have to make that trade-off.
+  </p>
+</GuideLayout>

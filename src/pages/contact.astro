@@ -1,0 +1,18 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { CONTACT_EMAIL, SOURCE_URL } from '../data/site';
+---
+<PageLayout title="Contact PDFNU – Feedback, Bugs and Questions" description="Get in touch with the PDFNU team about bugs, feature ideas, privacy questions or partnerships. We read every message." h1="Contact" path="/contact"
+  lead="Found a bug, have an idea for a tool, or a question about privacy? We read every message.">
+  <h2>Email</h2>
+  <p>Write to <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. We usually reply within a few working days.</p>
+  <p><strong>Please don’t attach the documents you were processing.</strong> We don’t need them, and part of the point of PDFNU is that your files stay with you. A description of the problem, the tool name, your browser and device, and the file size are almost always enough.</p>
+  {SOURCE_URL && (<><h2>Bug reports and feature requests</h2><p>PDFNU is open source. You can also open an issue or pull request on <a href={SOURCE_URL} rel="noopener">our code repository</a>.</p></>)}
+  <h2>Useful details for bug reports</h2>
+  <ul>
+    <li>Which tool you used and which options you picked</li>
+    <li>Your browser and version (for example Safari on iOS 18, Chrome 131 on Windows)</li>
+    <li>File size and number of pages</li>
+    <li>The exact error message, if any</li>
+  </ul>
+</PageLayout>

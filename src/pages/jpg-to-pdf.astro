@@ -1,0 +1,68 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import JpgToPdf from '../islands/JpgToPdf';
+
+const faqs = [
+  { q: 'Which image formats can I convert?', a: 'JPG/JPEG, PNG and WebP. On iPhone, photos stored as HEIC are converted to JPG automatically when you pick them in the browser.' },
+  { q: 'Can I make the PDF smaller than 100KB?', a: 'Yes. Choose a “Keep PDF under” size and PDFNU lowers image quality and resolution just enough to fit. If it can’t fit while staying readable, it tells you and gives you the smallest readable version.' },
+  { q: 'Why are my phone photos the right way up?', a: 'PDFNU reads the rotation information your camera saves (EXIF orientation) and applies it, so portrait photos don’t end up sideways.' },
+  { q: 'Can I put several images in one PDF?', a: 'Yes. Add as many as you like. Each image becomes one page, in the order shown. Drag them to reorder.' },
+  { q: 'Are my photos uploaded?', a: 'No. Images are converted inside your browser and never leave your device. That matters for ID cards, certificates and other personal documents.' },
+  { q: 'What does “Fit image” page size mean?', a: 'Each page takes the shape of its image, with no white borders apart from the margin you choose. Use A4 or Letter when the PDF will be printed.' },
+];
+---
+<ToolLayout
+  slug="jpg-to-pdf"
+  title="JPG to PDF Converter – Free, Under 100KB Option | PDFNU"
+  description="Convert JPG, PNG and WebP images to one PDF. Choose page size and margins, or keep the PDF under 100KB for online forms. No upload, no signup."
+  h1="JPG to PDF"
+  lead="Turn one or more images into a single PDF, with each image on its own page. Set the page size and margins, or keep the file under a size limit such as 100KB."
+  howToTitle="How to Convert JPG to PDF"
+  steps={['Select or drop your JPG, PNG or WebP images.', 'Drag them into order and pick page size, margins and an optional size limit.', 'Click <strong>Convert</strong> and download your PDF.']}
+  faqs={faqs}
+  related={['compress-pdf', 'merge-pdf', 'compress-image', 'pdf-to-jpg']}
+>
+  <JpgToPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What this tool does</h2>
+    <p>
+      JPG to PDF puts your images into one PDF document, one image per page. It’s the format most application portals, schools and offices
+      ask for when you need to submit a photographed document: an ID card, a mark sheet, a signed form, a receipt.
+    </p>
+
+    <h2>How to use it</h2>
+    <ol>
+      <li><strong>Add images.</strong> Pick them from your gallery or drag them in. You can add more later.</li>
+      <li><strong>Order the pages.</strong> Drag thumbnails, or use the arrows under each one. The number badge is the page number.</li>
+      <li><strong>Choose a layout.</strong> <em>A4</em> and <em>Letter</em> centre each image on a standard page. <em>Fit image</em> makes each page the shape of its photo. Orientation <em>Auto</em> turns pages to landscape for wide images.</li>
+      <li><strong>Set a size limit if a form needs one.</strong> Pick 100KB, 200KB, 500KB or 1MB. The size budget is shared across the pages, and larger images get a bigger share.</li>
+      <li><strong>Convert and download.</strong> The PDF is named after your first image.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li><strong>Two-sided ID card for a bank form under 200KB:</strong> add the front and back photos, choose A4 and Small margins, then pick 200KB.</li>
+      <li><strong>Handwritten assignment, 6 pages:</strong> photograph each page, add them in order, choose A4 with no size limit for the clearest result.</li>
+      <li><strong>Screenshots for a bug report:</strong> choose <em>Fit image</em> so nothing gets letterboxed.</li>
+    </ul>
+    <p>
+      Need a very small file for an exam or job portal? See <a href="/guides/jpg-to-pdf-under-100kb">JPG to PDF under 100KB for online forms</a>.
+    </p>
+
+    <h2>Limitations</h2>
+    <p>
+      Very tight limits with many pages can make text in photos hard to read. As a rough rule, aim for at least 30–40KB per page. Animated images
+      and formats other than JPG, PNG and WebP aren’t supported. Transparent PNG areas appear white when a size limit is used.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>
+      The images you convert are often the most sensitive files you own. PDFNU decodes and assembles them entirely inside your browser.
+      No upload, no server copy, no account. The tool keeps working offline after your first visit.
+    </p>
+  </Fragment>
+</ToolLayout>

@@ -1,0 +1,109 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ToolIcon from '../components/ToolIcon.astro';
+import ToolCard from '../components/ToolCard.astro';
+import FAQ, { type QA } from '../components/FAQ.astro';
+import AdSlot from '../components/AdSlot.astro';
+import HowToSteps from '../components/HowToSteps.astro';
+import { getTool } from '../data/tools';
+import { guidesForTool } from '../data/guides';
+
+interface Props {
+  slug: string;
+  /** <title>, ≤ 60 chars */
+  title: string;
+  description: string;
+  h1: string;
+  /** 1–2 sentence direct answer, shown under the H1 */
+  lead: string;
+  howToTitle: string;
+  steps: string[];
+  faqs: QA[];
+  related: string[];
+}
+const { slug, title, description, h1, lead, howToTitle, steps, faqs, related } = Astro.props;
+const tool = getTool(slug);
+const relatedTools = related.map(getTool);
+const relatedGuides = guidesForTool(slug);
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: `${tool.name} – PDFNU`,
+  url: `${site}/${slug}`,
+  description,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any (runs in the browser)',
+  browserRequirements: 'Requires a modern browser with JavaScript and WebAssembly',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+---
+<BaseLayout title={title} description={description} path={`/${slug}`} jsonLd={jsonLd} ads>
+  <div class="container-page pt-5">
+    <Breadcrumbs items={[{ name: tool.name, href: `/${slug}` }]} />
+  </div>
+
+  <section class="container-page max-w-3xl pt-6 text-center sm:pt-8">
+    <div class="flex justify-center"><ToolIcon tool={tool} size="lg" /></div>
+    <h1 class="mt-4 text-[1.85rem] font-bold leading-tight tracking-tight text-ink sm:text-h1 dark:text-white">{h1}</h1>
+    <p class="mx-auto mt-2 max-w-xl text-[15px] leading-6 text-muted dark:text-gray-400">{lead}</p>
+  </section>
+
+  <!-- Tool app (Preact island) -->
+  <section class="container-page mt-6 max-w-3xl" aria-label={`${tool.name} tool`}>
+    <slot />
+  </section>
+
+  <!-- Ad below the tool result: reserved height, never overlaps controls -->
+  <div class="container-page mt-8 max-w-3xl">
+    <AdSlot variant="banner" slot="tool-below" />
+  </div>
+
+  <div class="container-page mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+    <div class="min-w-0 space-y-10">
+      <HowToSteps title={howToTitle} steps={steps} />
+
+      <article class="prose-pdfnu">
+        <slot name="content" />
+      </article>
+
+      <FAQ items={faqs} />
+
+      <section aria-labelledby="related-title">
+        <h2 id="related-title" class="mb-4 text-h3 font-semibold text-ink dark:text-white">Related Tools</h2>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {relatedTools.map((t) => <ToolCard tool={t} />)}
+        </div>
+      </section>
+
+      {relatedGuides.length > 0 && (
+        <section aria-labelledby="guides-title">
+          <h2 id="guides-title" class="mb-3 text-h3 font-semibold text-ink dark:text-white">Guides</h2>
+          <ul class="grid gap-3 sm:grid-cols-2">
+            {relatedGuides.map((g) => (
+              <li>
+                <a href={`/guides/${g.slug}`} class="card block h-full p-4 shadow-none hover:border-indigo-200 dark:hover:border-brand-light/40">
+                  <span class="block text-sm font-semibold text-ink dark:text-white">{g.title}</span>
+                  <span class="mt-1 block text-[13px] text-muted dark:text-gray-400">{g.summary}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+
+    <aside class="hidden lg:block" aria-label="Sidebar">
+      <div class="sticky top-24 space-y-4">
+        <div class="card p-5 shadow-none">
+          <p class="text-sm font-semibold text-ink dark:text-white">100% private</p>
+          <p class="mt-1 text-[13px] leading-5 text-muted dark:text-gray-400">PDFNU processes files with WebAssembly inside your browser. Nothing is uploaded, logged or stored on a server.</p>
+        </div>
+        <AdSlot variant="sidebar" slot="tool-sidebar" />
+      </div>
+    </aside>
+  </div>
+</BaseLayout>

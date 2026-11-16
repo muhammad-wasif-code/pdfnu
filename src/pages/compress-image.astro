@@ -1,0 +1,65 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import CompressImage from '../islands/CompressImage';
+
+const faqs = [
+  { q: 'How do I reduce a photo to under 20KB?', a: 'Pick the <strong>20KB</strong> chip and compress. PDFNU first lowers JPG quality, and if that isn’t enough it reduces the pixel size step by step until the file fits.' },
+  { q: 'Will the image dimensions change?', a: 'Only if they have to. Large photos often need fewer pixels to reach 20–50KB. The result shows the final width × height. If a form needs exact dimensions, use <a href="/resize-image">Resize Image</a> with a max size instead.' },
+  { q: 'JPG or WebP?', a: 'JPG works everywhere, including government and exam portals. WebP is about 25–35% smaller at the same quality, but some older sites don’t accept it.' },
+  { q: 'Can I compress many images at once?', a: 'Yes. Add as many as you like. Each one is compressed to the same target, and you can download them individually or as a .zip.' },
+  { q: 'Are my photos uploaded?', a: 'No. Compression uses your browser’s built-in image encoder. Photos never leave your device.' },
+  { q: 'Why is my PNG converted to JPG?', a: 'PNG is lossless and can’t hit small KB targets for photos. JPG and WebP can. Transparent areas become white.' },
+];
+---
+<ToolLayout
+  slug="compress-image"
+  title="Compress Image to 20KB, 50KB, 100KB – Free | PDFNU"
+  description="Reduce JPG, PNG or WebP images to an exact size like 20KB, 50KB or 100KB for online forms. Batch support, no upload, no signup."
+  h1="Compress Image"
+  lead="Shrink photos and signatures to an exact file size like 20KB, 50KB or 100KB, with the best quality that fits. Your images stay on your device."
+  howToTitle="How to Compress an Image"
+  steps={['Select or drop one or more images.', 'Choose a target size (20KB–200KB) and format.', 'Click <strong>Compress</strong> and download.']}
+  faqs={faqs}
+  related={['resize-image', 'jpg-to-pdf', 'compress-pdf', 'pdf-to-jpg']}
+>
+  <CompressImage client:load />
+
+  <Fragment slot="content">
+    <h2>What Compress Image does</h2>
+    <p>
+      Online application forms often ask for a photo “under 50KB” or a signature “under 20KB”. Compress Image hits those limits
+      precisely: it searches for the highest quality that fits and only reduces the image’s pixel size if quality alone isn’t enough.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Add images.</strong> JPG, PNG and WebP are supported. Phone photos are rotated correctly automatically.</li>
+      <li><strong>Pick a target:</strong> 20KB, 30KB, 50KB, 100KB or 200KB. This is a maximum: results are as close as possible without going over.</li>
+      <li><strong>Pick a format.</strong> JPG is safest for forms. WebP is smaller for websites.</li>
+      <li><strong>Compress</strong> and save each image, or download all as a .zip. Each result shows the new size, the percentage saved and the final dimensions.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li>A 3.4 MB phone selfie for a 50KB photo field typically ends up around 600–900 px wide at good quality.</li>
+      <li>A scanned signature for a 20KB limit: crop it tightly first with <a href="/resize-image">Resize Image</a>, then compress. Less empty space means sharper ink.</li>
+      <li>Product photos for a website: 100–200KB as WebP keeps pages fast.</li>
+    </ul>
+    <p>More tips: <a href="/guides/reduce-image-size-to-20kb-50kb">how to reduce image size to 20KB or 50KB</a>.</p>
+
+    <h2>Limitations</h2>
+    <p>
+      Extremely detailed images may need a large reduction in dimensions to reach 20KB. When a target can’t be reached even at the smallest readable
+      size (64 px), PDFNU says so and gives you its best attempt. Animated GIFs and HEIC files aren’t supported directly, but iPhones convert HEIC to JPG when you pick photos in the browser.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>
+      Photos of you, your ID and your signature shouldn’t be sent to a stranger’s server. PDFNU compresses them using your browser’s own encoder,
+      entirely on your device.
+    </p>
+  </Fragment>
+</ToolLayout>

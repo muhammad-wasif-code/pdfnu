@@ -1,0 +1,59 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: 'Does compressing a PDF reduce text quality?', a: 'No. Text and vector graphics are stored as instructions, not pixels, so they stay perfectly sharp. Only images are affected by lossy compression.' },
+  { q: 'Can I compress a PDF twice to make it even smaller?', a: 'Running the same lossy settings again rarely helps much and slightly reduces image quality each time. Choose a stronger level or a size target instead.' },
+  { q: 'What does DPI mean for images in a PDF?', a: 'Dots per inch of the image at its printed size on the page. 300 dpi is print quality; 150 dpi looks sharp on screens; 72–96 dpi is the minimum for readable on-screen text in scans.' },
+];
+---
+<GuideLayout slug="pdf-compression-explained" faqs={faqs}>
+  <p><strong>Short answer:</strong> <em>lossless</em> compression makes a PDF smaller without changing anything you can see, by storing the same data more efficiently. <em>Lossy</em> compression throws away detail you’re unlikely to notice, mostly by lowering image resolution and JPEG quality. Text-heavy PDFs barely shrink because they’re already efficient; image-heavy PDFs often shrink by 70–90% with lossy compression.</p>
+
+  <h2>What’s inside a PDF</h2>
+  <p>A PDF is a container of objects. The ones that matter for size are:</p>
+  <ul>
+    <li><strong>Text and vector graphics:</strong> drawing instructions like “put these letters here in this font”. Tiny and infinitely sharp.</li>
+    <li><strong>Fonts:</strong> embedded so the document looks the same everywhere. Usually subset (only the characters used), but not always.</li>
+    <li><strong>Images:</strong> photos, scans, logos. Almost always the biggest part.</li>
+    <li><strong>Structure:</strong> the cross-reference table, metadata, bookmarks and form fields. Usually small, sometimes bloated.</li>
+  </ul>
+
+  <h2>Lossless compression</h2>
+  <p>
+    Lossless means the result is identical in content. Techniques include packing many small objects into compressed <em>object streams</em>,
+    re-compressing streams with better settings, removing unused objects and duplicate images, and subsetting fonts. PDFNU’s first stage does this.
+    It often saves 5–30% on documents exported from office apps, and almost nothing on PDFs that were already optimized.
+  </p>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Lossy compression</h2>
+  <p>Lossy compression changes images to save space. Two settings do most of the work:</p>
+  <ul>
+    <li><strong>Downsampling (resolution):</strong> a scan at 300 dpi has four times as many pixels as the same scan at 150 dpi. Halving dpi roughly quarters the image data. On a phone or laptop screen, 150 dpi is indistinguishable from 300.</li>
+    <li><strong>JPEG quality:</strong> JPEG discards fine detail the eye is less sensitive to. Moving from very high to medium quality often halves file size with little visible change. Pushed too far, it causes blocky “artifacts” around text edges.</li>
+  </ul>
+  <p>PDFNU’s levels map to these settings: <strong>High Quality</strong> keeps about 220 dpi, <strong>Recommended</strong> about 150 dpi, and <strong>Smallest</strong> about 96 dpi.</p>
+
+  <h2>Rasterizing: the last resort</h2>
+  <p>
+    When a strict size target can’t be met any other way, a page can be <em>rasterized</em>, meaning turned into a single image and then JPEG-compressed.
+    This guarantees a predictable size per page, but text becomes pixels: it can no longer be selected, searched or read aloud by screen readers.
+    PDFNU only does this for size targets, never below 72 dpi, and always warns you.
+  </p>
+
+  <h2>Why your PDF didn’t shrink</h2>
+  <ul>
+    <li>It’s mostly text and vectors. There’s nothing lossy compression can remove.</li>
+    <li>Its images were already compressed at screen resolution.</li>
+    <li>It uses large embedded fonts, common with CJK languages, that can’t be removed without changing how the document looks.</li>
+  </ul>
+  <p>In these cases PDFNU keeps your original file rather than giving you a bigger or worse one.</p>
+
+  <h2>Try it</h2>
+  <p>
+    Open <a href="/compress-pdf">Compress PDF</a>, try the three levels, and compare. Each run is local and quick, so experimenting costs nothing. For
+    upload limits, see <a href="/guides/compress-pdf-to-200kb">compress a PDF to 200KB</a> and <a href="/guides/compress-pdf-to-100kb">to 100KB</a>.
+  </p>
+</GuideLayout>

@@ -1,0 +1,50 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: 'Do I need to install an app?', a: 'No. PDFNU works in Safari, Chrome, Samsung Internet and other modern mobile browsers. You can add it to your home screen so it opens like an app and works offline.' },
+  { q: 'Where is the merged file saved?', a: 'On iPhone it goes to Files → Downloads (or Safari asks where to save it). On Android it goes to your Downloads folder and appears in the notification shade.' },
+  { q: 'Can I merge PDFs from WhatsApp or email?', a: 'Yes. Save the attachments to Files (iPhone) or Downloads (Android) first, then select them in PDFNU.' },
+];
+---
+<GuideLayout slug="merge-pdf-on-phone" faqs={faqs}>
+  <p><strong>Short answer:</strong> open <a href="/merge-pdf">Merge PDF</a> in your phone’s browser, tap <strong>Select PDFs</strong>, choose your files, press and hold a card to drag it into order, then tap <strong>Merge</strong>. The combined PDF downloads straight to your phone. No app, no account, and nothing is uploaded.</p>
+
+  <h2>On iPhone and iPad</h2>
+  <ol>
+    <li>Open <a href="/merge-pdf">pdfnu.com/merge-pdf</a> in Safari (or Chrome).</li>
+    <li>Tap <strong>Select PDFs</strong> → <strong>Choose Files</strong>. The Files app opens.</li>
+    <li>Tap <strong>Select</strong> (top right), tick every PDF you want, and tap <strong>Open</strong>. Files in iCloud Drive download first.</li>
+    <li>Your files appear as cards with their first page. <strong>Press and hold</strong> a card for a moment, then drag it to a new position. Or use the ‹ › arrows under each card.</li>
+    <li>Tap <strong>Merge</strong>, then <strong>Download</strong>. Safari shows a download icon in the address bar. The file is in Files → Downloads.</li>
+  </ol>
+
+  <h2>On Android</h2>
+  <ol>
+    <li>Open <a href="/merge-pdf">pdfnu.com/merge-pdf</a> in Chrome or Samsung Internet.</li>
+    <li>Tap <strong>Select PDFs</strong>. In the file picker, long-press the first PDF, then tap the others to select several at once, and tap <strong>Select</strong>.</li>
+    <li>Press and hold a card to drag it into order.</li>
+    <li>Tap <strong>Merge</strong> → <strong>Download</strong>. Find the file in Downloads or tap the notification.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Tips</h2>
+  <ul>
+    <li><strong>Missing files in the picker?</strong> Attachments from WhatsApp, Gmail or Outlook need to be saved first. Use the share button → <em>Save to Files</em> (iPhone) or <em>Download</em> (Android).</li>
+    <li><strong>Add files in batches:</strong> you can tap <strong>Add PDFs</strong> again to add from another folder.</li>
+    <li><strong>Too big to send?</strong> Run the merged file through <a href="/compress-pdf">Compress PDF</a>. Scanned documents usually shrink by more than half.</li>
+    <li><strong>Need only some pages?</strong> After merging, open <a href="/organize-pdf">Organize PDF</a> to delete or reorder individual pages.</li>
+    <li><strong>Install it:</strong> in Safari tap Share → <em>Add to Home Screen</em>; in Chrome tap ⋮ → <em>Install app</em>. PDFNU then opens full-screen and works offline.</li>
+  </ul>
+
+  <h2>Troubleshooting</h2>
+  <ul>
+    <li><strong>“Password-protected” error:</strong> the PDF is encrypted. Open it with its password in your PDF app and save an unprotected copy.</li>
+    <li><strong>Page freezes with huge files:</strong> phones have less memory than computers. Merge in two batches, or compress large scans first.</li>
+    <li><strong>Can’t find the download:</strong> on iPhone check Files → Browse → Downloads; on Android open the Files app → Downloads.</li>
+  </ul>
+
+  <h2>Why this is private</h2>
+  <p>Merging happens inside your phone’s browser. The PDFs are never uploaded, so even sensitive documents like contracts or medical forms are safe to combine here.</p>
+</GuideLayout>

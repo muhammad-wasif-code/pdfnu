@@ -1,0 +1,29 @@
+---
+/** Visible FAQ accordion + FAQPage JSON-LD (content is visible, so schema is legit). */
+export interface QA { q: string; a: string; }
+interface Props { items: QA[]; title?: string; headingLevel?: 'h2' | 'h3'; viewAllHref?: string; schema?: boolean; }
+const { items, title = 'Frequently Asked Questions', headingLevel: H = 'h2', viewAllHref, schema = true } = Astro.props;
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a.replace(/<[^>]+>/g, '') } })),
+};
+---
+<section aria-labelledby="faq-title">
+  <div class="mb-4 flex items-end justify-between gap-4">
+    <H id="faq-title" class="text-xl font-bold tracking-tight text-ink sm:text-h3 dark:text-white">{title}</H>
+    {viewAllHref && <a href={viewAllHref} class="shrink-0 whitespace-nowrap text-sm font-semibold text-brand hover:underline dark:text-brand-light">View all →</a>}
+  </div>
+  <div class="space-y-2.5">
+    {items.map((i) => (
+      <details class="faq group card px-4 shadow-none sm:px-5">
+        <summary class="flex min-h-12 cursor-pointer items-center justify-between gap-4 py-3 text-sm font-medium text-ink sm:text-[15px] dark:text-gray-100">
+          {i.q}
+          <svg viewBox="0 0 20 20" class="h-4 w-4 shrink-0 text-gray-500 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg>
+        </summary>
+        <div class="pb-4 text-sm leading-6 text-muted dark:text-gray-400" set:html={i.a} />
+      </details>
+    ))}
+  </div>
+  {schema && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+</section>

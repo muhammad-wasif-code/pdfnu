@@ -1,0 +1,62 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import WatermarkPdf from '../islands/WatermarkPdf';
+
+const faqs = [
+  { q: 'Can I use my logo as a watermark?', a: 'Yes. Choose <strong>Image / logo</strong> and pick a PNG, JPG or WebP. Transparent PNG logos look best. Set the size and opacity, then place it.' },
+  { q: 'How do I make a diagonal “CONFIDENTIAL” stamp?', a: 'Keep the default text, choose the 45° angle and the center position. Tick <strong>Repeat across page</strong> for a tiled pattern that’s harder to crop out.' },
+  { q: 'Can a watermark be removed?', a: 'A watermark is drawn onto the page, so it can’t be removed with a simple click. Determined people with PDF editing software can still edit it. Watermarks deter copying; they don’t make copying impossible.' },
+  { q: 'Which characters can I use in text watermarks?', a: 'Latin letters, numbers and common symbols. Characters outside that set (for example Chinese or emoji) are replaced with “?”, because the built-in PDF fonts don’t include them. Use an image watermark for other scripts.' },
+  { q: 'Is my PDF uploaded?', a: 'No. The watermark is added inside your browser and your document never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="watermark-pdf"
+  title="Add Watermark to PDF – Text or Logo, Free | PDFNU"
+  description="Stamp text or a logo on every page of a PDF. Set opacity, position, angle and tiling with a live preview. Free, private, no upload."
+  h1="Watermark PDF"
+  lead="Add a text stamp like “CONFIDENTIAL” or your logo to every page. Adjust opacity, position and angle with a live preview, all on your device."
+  howToTitle="How to Watermark a PDF"
+  steps={['Select or drop your PDF.', 'Type your text or choose a logo, then set opacity, position and angle.', 'Click <strong>Add watermark</strong> and download.']}
+  faqs={faqs}
+  related={['add-page-numbers', 'protect-pdf', 'organize-pdf', 'compress-pdf']}
+>
+  <WatermarkPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Watermark PDF does</h2>
+    <p>
+      A watermark marks every page of a document with a visible label: <em>DRAFT</em>, <em>CONFIDENTIAL</em>, <em>COPY</em>, your company logo,
+      or a note such as “For visa application only”. It shows the status of a document and discourages people from reusing it elsewhere.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> A preview of page 1 appears.</li>
+      <li><strong>Choose text or image.</strong> For text, set the wording, size and colour. For an image, pick a logo and size.</li>
+      <li><strong>Adjust the look.</strong> Opacity around 20–35% keeps the page readable. Pick one of seven positions or tick <em>Repeat across page</em>. Choose 0°, 45° or −45°.</li>
+      <li><strong>Apply and download.</strong> The watermark goes on every page, upright even on rotated pages.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li><strong>Sharing ID copies:</strong> tile the text “Only for ABC Bank KYC, 2026” at 25% opacity, so the copy can’t be reused somewhere else.</li>
+      <li><strong>Client drafts:</strong> a large gray “DRAFT” at 45° in the center.</li>
+      <li><strong>Branding:</strong> a small logo in the bottom-right corner at 60% opacity.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Text watermarks use the standard Helvetica font, which covers Western European characters. For other scripts, make an image of the text and use
+      image mode. A watermark is a deterrent, not real protection. To stop people opening the file at all, use <a href="/protect-pdf">Protect PDF</a>.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>
+      Documents you watermark are usually sensitive by definition. PDFNU adds the watermark locally with pdf-lib, and nothing is uploaded or stored.
+    </p>
+  </Fragment>
+</ToolLayout>

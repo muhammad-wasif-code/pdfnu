@@ -1,0 +1,71 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import MergePdf from '../islands/MergePdf';
+
+const faqs = [
+  { q: 'How many PDFs can I merge at once?', a: 'There’s no fixed limit. Because merging happens on your device, the practical limit is your device’s memory. Dozens of normal documents are no problem, even on a phone.' },
+  { q: 'Can I change the order of the files?', a: 'Yes. Drag the cards on a computer, or press and hold a card and then drag it on a phone. You can also use the arrow buttons under each card.' },
+  { q: 'Will merging reduce the quality?', a: 'No. Pages are copied exactly as they are, so text stays selectable and images keep their original quality.' },
+  { q: 'Can I merge password-protected PDFs?', a: 'Only after removing the password. Open the file with its password in your PDF reader, save an unprotected copy, and add that copy.' },
+  { q: 'Are my files uploaded to a server?', a: 'No. PDFNU merges the files inside your browser. They never leave your device, and the tool works offline after your first visit.' },
+  { q: 'Can I merge just some pages from each file?', a: 'Merge the files first, then open the result in <a href="/organize-pdf">Organize PDF</a> to delete or reorder individual pages.' },
+];
+---
+<ToolLayout
+  slug="merge-pdf"
+  title="Merge PDF Files Online Free – Combine PDFs | PDFNU"
+  description="Combine multiple PDFs into one file in seconds. Drag to reorder, then merge right in your browser. No upload, no signup, no watermark."
+  h1="Merge PDF"
+  lead="Combine several PDFs into one document in seconds. Add your files, drag them into order, and merge. Everything happens on your device."
+  howToTitle="How to Merge PDF Files"
+  steps={['Select or drop two or more PDFs.', 'Drag the files into the order you want.', 'Click <strong>Merge</strong> and download your combined PDF.']}
+  faqs={faqs}
+  related={['split-pdf', 'organize-pdf', 'compress-pdf', 'jpg-to-pdf']}
+>
+  <MergePdf client:load />
+
+  <Fragment slot="content">
+    <h2>What does Merge PDF do?</h2>
+    <p>
+      Merge PDF joins several PDF documents into a single file, in the order you choose. It’s the quickest way to send one attachment
+      instead of five, combine scanned pages into a single application, or put a cover letter, CV and certificates together for an upload portal.
+    </p>
+    <p>
+      PDFNU copies each page exactly as it is. Nothing is re-compressed or re-rendered, so text stays sharp and searchable,
+      links keep working, and the merged file is roughly the sum of the originals.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Add your files.</strong> Tap <em>Select PDFs</em> or drop them on the box. You can add more at any time.</li>
+      <li><strong>Arrange them.</strong> Each card shows the first page, the file name and the page count. Drag a card to move it. On phones, press and hold first. The numbered badge shows the final order.</li>
+      <li><strong>Merge and download.</strong> The combined PDF is created instantly in your browser. It’s named after your first file, for example <code>contract-merged.pdf</code>.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li><strong>Job applications:</strong> merge your CV, cover letter and certificates into one PDF when the form allows only a single upload.</li>
+      <li><strong>Scanned paperwork:</strong> phone scanners often save one PDF per page. Merge them back into one document.</li>
+      <li><strong>Reports:</strong> combine a title page, the main report and appendices exported from different apps.</li>
+    </ul>
+    <p>
+      If the merged file is too big for an upload limit, run it through <a href="/compress-pdf">Compress PDF</a> next. Most scanned documents shrink by more than half.
+      On a phone? Read <a href="/guides/merge-pdf-on-phone">how to merge PDF files on your phone</a>.
+    </p>
+
+    <h2>Limitations</h2>
+    <p>
+      Password-protected or restricted PDFs can’t be merged until you save an unprotected copy. Interactive form fields from different files
+      may conflict if they share the same names. Very large batches are limited by your device’s memory rather than by PDFNU.
+    </p>
+
+    <h2>Private by design</h2>
+    <p>
+      Most online mergers upload every file to a server. PDFNU runs the whole merge inside your browser with the open-source pdf-lib library,
+      so your documents are never transmitted, stored or seen by anyone. Once the page has loaded, you can even switch off Wi-Fi and it keeps working.
+    </p>
+  </Fragment>
+</ToolLayout>

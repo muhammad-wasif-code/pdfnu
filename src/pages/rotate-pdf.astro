@@ -1,0 +1,71 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import RotatePdf from '../islands/RotatePdf';
+
+const faqs = [
+  { q: 'Can I rotate just one page?', a: 'Yes. Tap a page to turn it 90° clockwise, or use the ↺ button on the page to turn it counter-clockwise. Other pages stay as they are.' },
+  { q: 'How do I rotate every page at once?', a: 'Use <strong>All left</strong> or <strong>All right</strong> above the pages. You can still adjust single pages afterwards.' },
+  { q: 'Is the rotation permanent?', a: 'Yes. The saved PDF stores the new orientation, so it opens the right way in every PDF reader, on every device.' },
+  { q: 'Does rotating reduce quality?', a: 'No. PDFNU only changes the page’s rotation setting. Text and images aren’t re-rendered, so nothing is lost.' },
+  { q: 'Are my files uploaded?', a: 'No. Rotation happens in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="rotate-pdf"
+  title="Rotate PDF Pages Online Free – Single or All | PDFNU"
+  description="Rotate one page or every page of a PDF and save it permanently. Tap to turn pages 90°, preview with thumbnails. Free, no upload, no signup."
+  h1="Rotate PDF"
+  lead="Fix sideways or upside-down pages in seconds. Rotate a single page or the whole document and save it permanently, without losing any quality."
+  howToTitle="How to Rotate a PDF"
+  steps={['Select or drop your PDF.', 'Tap pages to rotate them, or use <strong>All left / All right</strong>.', 'Click <strong>Apply rotation</strong> and download.']}
+  faqs={faqs}
+  related={['organize-pdf', 'split-pdf', 'merge-pdf', 'compress-pdf']}
+>
+  <RotatePdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Rotate PDF does</h2>
+    <p>
+      Scanners and phone apps often save pages sideways, especially when a document mixes portrait and landscape pages. Rotate PDF lets you
+      turn individual pages, or all of them, by 90°, 180° or 270°. The new orientation is saved inside the PDF, so it opens the right way for
+      everyone you send it to.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> Every page appears as a thumbnail.</li>
+      <li><strong>Rotate.</strong> Tap a page to turn it clockwise. Tap the ↺ button to go the other way. Rotated pages are highlighted and show their angle.</li>
+      <li><strong>Apply and download.</strong> The file keeps its original name.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li>A scanned contract where page 4 is a landscape table: tap page 4 once.</li>
+      <li>A document that was scanned upside down: tap <em>All right</em> twice for 180°.</li>
+      <li>Photos converted to PDF that came out sideways: rotate them here, or convert again with <a href="/jpg-to-pdf">JPG to PDF</a>, which reads your camera’s orientation automatically.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Rotation works in 90° steps. It can’t straighten a slightly tilted scan. Password-protected PDFs must be unlocked by their owner first.
+      To reorder or delete pages as well, use <a href="/organize-pdf">Organize PDF</a>, which can also rotate.
+    </p>
+
+    <h2>Tips</h2>
+    <ul>
+      <li><strong>Check before you send.</strong> Thumbnails show each page exactly as readers will see it, so a quick scroll catches any page you missed.</li>
+      <li><strong>Mixed documents:</strong> rotate only the landscape pages, such as tables, charts and spreadsheets, and leave portrait text pages alone. Readers then scroll naturally.</li>
+      <li><strong>Viewing vs saving:</strong> rotating in a PDF viewer often only changes your view. Here the rotation is saved in the file, so it’s permanent for everyone.</li>
+      <li><strong>Large scans:</strong> rotating doesn’t change the file size. To make it smaller, run <a href="/compress-pdf">Compress PDF</a> afterwards.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>
+      Rotating a page only changes one setting in the file. There’s no reason to upload your document anywhere, and PDFNU doesn’t.
+      Everything runs locally in your browser.
+    </p>
+  </Fragment>
+</ToolLayout>

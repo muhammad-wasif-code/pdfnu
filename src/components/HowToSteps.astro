@@ -1,0 +1,26 @@
+---
+interface Props { title: string; steps: string[]; }
+const { title, steps } = Astro.props;
+---
+<div class="card grid items-center gap-6 p-5 shadow-none sm:p-6 md:grid-cols-[1fr_auto]">
+  <div>
+    <h2 class="text-h3 font-semibold text-ink dark:text-white">{title}</h2>
+    <ol class="mt-4 space-y-3">
+      {steps.map((s, i) => (
+        <li class="flex items-start gap-3 text-[15px] text-gray-700 dark:text-gray-300">
+          <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand text-xs font-bold text-white">{i + 1}</span>
+          <span set:html={s} />
+        </li>
+      ))}
+    </ol>
+  </div>
+  <svg viewBox="0 0 160 120" class="hidden h-28 w-40 md:block" aria-hidden="true">
+    <rect x="0" y="0" width="160" height="120" rx="16" class="fill-brand-soft dark:fill-white/5" />
+    <rect x="34" y="22" width="52" height="68" rx="6" fill="#C7D2FE" transform="rotate(-8 60 56)" />
+    <rect x="44" y="26" width="52" height="68" rx="6" fill="#A5B4FC" />
+    <rect x="54" y="30" width="52" height="68" rx="6" fill="#fff" stroke="#818CF8" stroke-width="1.5" />
+    <path d="M63 46h28M63 54h34M63 62h22" stroke="#818CF8" stroke-width="3" stroke-linecap="round" />
+    <path d="M110 76h18m0 0-6-6m6 6-6 6" stroke="#4F46E5" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+    <rect x="128" y="66" width="20" height="26" rx="3" fill="#fff" stroke="#4F46E5" stroke-width="1.5" />
+  </svg>
+</div>

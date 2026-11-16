@@ -1,0 +1,64 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ProtectPdf from '../islands/ProtectPdf';
+
+const faqs = [
+  { q: 'What kind of encryption does PDFNU use?', a: 'Standard PDF password security with a 128-bit key (security handler revision 3, RC4). Every PDF reader supports it, including Adobe Acrobat, Preview, Chrome and phone apps. For highly sensitive data, also use an encrypted channel or an AES-256 tool.' },
+  { q: 'What if I forget the password?', a: 'It can’t be recovered: not by us, and not by PDFNU. We never see your password or your file. Keep an unprotected copy somewhere safe, or store the password in a password manager.' },
+  { q: 'Can PDFNU remove a password or unlock a PDF?', a: 'No. PDFNU doesn’t crack or remove passwords. If you know the password, open the file in your PDF reader and save or print an unprotected copy.' },
+  { q: 'Does protecting a PDF change its quality?', a: 'No. Images are passed through unchanged and text stays selectable. The file is rewritten only to add encryption.' },
+  { q: 'Is my password sent anywhere?', a: 'No. The password and the PDF stay in your browser. Encryption runs locally with a WebAssembly build of Ghostscript.' },
+];
+---
+<ToolLayout
+  slug="protect-pdf"
+  title="Protect PDF with Password – Encrypt PDF Free | PDFNU"
+  description="Add a password to your PDF so only people who know it can open the file. 128-bit encryption, done in your browser. No upload, no signup."
+  h1="Protect PDF"
+  lead="Lock a PDF with a password so only people who know it can open the file. Encryption happens on your device, and neither your file nor your password is uploaded."
+  howToTitle="How to Password-Protect a PDF"
+  steps={['Select or drop your PDF.', 'Type a password twice.', 'Click <strong>Protect PDF</strong> and download the locked file.']}
+  faqs={faqs}
+  related={['watermark-pdf', 'compress-pdf', 'merge-pdf', 'split-pdf']}
+>
+  <ProtectPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Protect PDF does</h2>
+    <p>
+      Protect PDF encrypts your document with a password. Anyone who opens it, in any PDF reader, is asked for that password before they see a single page.
+      It’s a simple way to add a layer of security before emailing payslips, tax forms, medical reports or contracts.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> The first time, PDFNU downloads its PDF engine (once, then it’s cached for offline use).</li>
+      <li><strong>Choose a password</strong> and type it twice. The meter shows roughly how strong it is. Longer is better: three random words beat a short, complex password.</li>
+      <li><strong>Protect and download.</strong> The locked file keeps its original name.</li>
+      <li><strong>Share the password separately</strong>, for example by phone or a different messaging app, never in the same email as the file.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li>An accountant emailing a client’s tax return protects it with a password agreed by phone.</li>
+      <li>HR sends payslips locked with each employee’s staff ID plus date of birth.</li>
+      <li>You keep scanned passports on a cloud drive and lock them first.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      PDFNU uses 128-bit RC4 encryption, the most widely compatible PDF standard. It keeps casual readers out, but it isn’t as strong as modern AES-256
+      against a determined attacker with time to spare. Passwords must use standard keyboard characters. If a PDF is already protected,
+      unlock it in your reader first. Interactive form fields may be flattened in some documents.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>
+      An online tool that asks for your password and your file at the same time should run entirely on your device, and this one does. The PDF and
+      password stay in your browser’s memory and are discarded when you close the tab. Read more in <a href="/guides/are-online-pdf-tools-safe">is it safe to use online PDF tools?</a>
+    </p>
+  </Fragment>
+</ToolLayout>

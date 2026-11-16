@@ -1,0 +1,64 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: 'What is the difference between pixels and KB?', a: 'Pixels are the image’s dimensions (for example 413 × 531). KB is the file size on disk. A form can limit either or both, and you change them with different tools: Resize Image for pixels, Compress Image for KB.' },
+  { q: 'Does DPI matter for online uploads?', a: 'Usually not on its own. Upload checks typically look at pixel dimensions and file size. When a portal gives sizes in centimetres or inches, convert them to pixels using the DPI it states.' },
+  { q: 'Why does the portal reject my photo even though it’s the right size?', a: 'Common reasons: wrong file type (PNG instead of JPG), size outside a minimum–maximum range, wrong aspect ratio, or a background colour rule. Re-read the instructions carefully.' },
+];
+---
+<GuideLayout slug="photo-signature-size-for-online-applications" faqs={faqs}>
+  <p><strong>Short answer:</strong> read the exact rules on the official application portal, then use <a href="/resize-image">Resize Image</a> to set the pixel dimensions and a max KB, or <a href="/compress-image">Compress Image</a> if only the file size matters. Requirements differ between organisations and change from year to year, so <strong>always check the official portal; limits change</strong>.</p>
+
+  <p>
+    This guide doesn’t list official numbers for specific exams or employers, because they’re updated often and a wrong number costs you an
+    application. Instead, it explains how to read any requirement and meet it exactly.
+  </p>
+
+  <h2>The four things a requirement can specify</h2>
+  <ul>
+    <li><strong>Dimensions:</strong> in pixels (“200 × 230 px”), or in physical units (“3.5 × 4.5 cm”) with a resolution (“at 200 DPI”).</li>
+    <li><strong>File size:</strong> a maximum (“under 50KB”) and sometimes a minimum (“at least 10KB”).</li>
+    <li><strong>Format:</strong> usually JPG/JPEG. Some portals reject PNG or a file renamed from PNG to .jpg.</li>
+    <li><strong>Content rules:</strong> background colour, face size, recent photo, signature in black ink on white paper, and so on.</li>
+  </ul>
+
+  <h2>Converting physical sizes to pixels</h2>
+  <p>If the portal gives centimetres or inches, convert with this formula:</p>
+  <p><strong>pixels = size in inches × DPI</strong> (and 1 inch = 2.54 cm)</p>
+  <p>
+    Example: a photo 3.5 cm wide at 300 DPI is 3.5 ÷ 2.54 × 300 ≈ 413 pixels. That’s why PDFNU’s “Passport 35×45 mm” preset is 413 × 531 px.
+    If your portal states a different DPI, use its number instead.
+  </p>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Meeting a photo requirement, step by step</h2>
+  <ol>
+    <li>Take the photo against a plain background in even light, with your face centred and some space above your head.</li>
+    <li>Open <a href="/resize-image">Resize Image</a> and select the photo.</li>
+    <li>Type the required width and height. If the shape differs from your photo, choose <strong>Crop to fill</strong> and check the preview to make sure your head isn’t cut off.</li>
+    <li>Choose <strong>JPG</strong> and enter the maximum KB in <strong>Max size</strong>.</li>
+    <li>Resize, download, and compare the file’s pixel size and KB against the rules once more.</li>
+  </ol>
+
+  <h2>Meeting a signature requirement</h2>
+  <ol>
+    <li>Sign with a dark pen on plain white paper, larger than you normally would.</li>
+    <li>Photograph or scan it in good light, filling the frame.</li>
+    <li>In <a href="/resize-image">Resize Image</a>, set the required dimensions. Signatures are usually wide strips, so choose <strong>Add white border</strong> if your crop is a different shape.</li>
+    <li>Set the max KB and resize. If there’s only a KB rule, <a href="/compress-image">Compress Image</a> with the 20KB or 30KB chip is quicker.</li>
+  </ol>
+
+  <h2>If there’s a minimum size</h2>
+  <p>
+    Some portals reject files that are too small, for example “between 10KB and 50KB”. If your result is under the minimum, resize again without a
+    max KB, or with a higher one. Larger pixel dimensions or higher quality both increase the file size.
+  </p>
+
+  <h2>Keep your documents private</h2>
+  <p>
+    Your photo and signature are identity data. PDFNU resizes and compresses them inside your browser, so they’re never uploaded to us or anyone else.
+    The only place they go is the official portal you upload them to.
+  </p>
+</GuideLayout>

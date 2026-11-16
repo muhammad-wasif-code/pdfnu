@@ -1,0 +1,66 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { CONTACT_EMAIL, LEGAL_UPDATED } from '../data/site';
+const updated = new Date(LEGAL_UPDATED).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<PageLayout title="Privacy Policy – PDFNU" description="PDFNU processes your files locally in your browser and never uploads them. Read how we handle cookies, Google AdSense, consent and your rights." h1="Privacy Policy" path="/privacy"
+  lead={`Last updated: ${updated}. The short version: your files never leave your device. The site itself uses a few cookies for ads, with your consent where the law requires it.`}>
+  <h2>1. Your files</h2>
+  <p>
+    Every PDFNU tool processes files <strong>locally in your web browser</strong> using JavaScript and WebAssembly. The files you select, their contents,
+    their names and the results are <strong>never uploaded</strong> to PDFNU or to anyone else, and we have no ability to see them. They exist only in your
+    browser’s memory while the page is open and in the downloads you choose to save. Passwords you type into Protect PDF are also processed only on your device.
+  </p>
+
+  <h2>2. Information we don’t collect</h2>
+  <p>PDFNU has no accounts, no sign-up and no analytics or tracking scripts of our own. We don’t sell personal data.</p>
+
+  <h2>3. Hosting and server logs</h2>
+  <p>
+    The website is served by Cloudflare. When your browser requests a page, Cloudflare processes technical data such as your IP address, browser
+    type and requested URL to deliver the page and protect the site against abuse. This data doesn’t include your files. See
+    <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare’s privacy policy</a>.
+  </p>
+
+  <h2>4. Storage on your device</h2>
+  <ul>
+    <li><strong>Theme preference:</strong> if you switch between light and dark mode, the choice is saved in your browser’s local storage.</li>
+    <li><strong>Offline cache:</strong> a service worker stores the site’s pages, code and processing engines on your device so the tools load quickly and work offline. It never stores your files.</li>
+  </ul>
+  <p>You can clear both at any time by clearing site data in your browser settings.</p>
+
+  <h2>5. Advertising (Google AdSense)</h2>
+  <p>
+    PDFNU is funded by ads served by Google AdSense. Google and its partners may use cookies and similar technologies to show ads, limit how often you see them,
+    measure performance and, with your consent where required, personalise ads based on your visits to this and other websites.
+    Learn more in <a href="https://policies.google.com/technologies/partner-sites" rel="noopener">how Google uses information from sites that use its services</a>.
+  </p>
+  <ul>
+    <li><strong>EEA, UK and Switzerland:</strong> before any non-essential cookies are used, a consent message from Google’s certified consent management platform lets you accept, reject or customise. Until you choose, ads run in a limited, non-personalised mode.</li>
+    <li><strong>Change your choice:</strong> use the “Privacy choices” link in the footer (shown where available) or clear this site’s cookies.</li>
+    <li><strong>Opt out of personalised ads:</strong> visit <a href="https://adssettings.google.com" rel="noopener">Google Ads Settings</a> or <a href="https://www.aboutads.info/choices/" rel="noopener">aboutads.info</a>.</li>
+  </ul>
+  <p>Ads never have access to the files you process.</p>
+
+  <h2>6. Legal bases (GDPR / UK GDPR)</h2>
+  <p>
+    Delivering the website and protecting it from abuse relies on our legitimate interest. Advertising cookies and personalised ads rely on your consent,
+    which you can withdraw at any time. Because we don’t receive your files, they aren’t processed by us under any legal basis.
+  </p>
+
+  <h2>7. Your rights</h2>
+  <p>
+    Depending on where you live, you may have rights to access, correct, delete or object to the processing of personal data, and to complain to your
+    data protection authority. As we hold almost no personal data, most requests concern advertising cookies, which you control through the consent
+    choices above. For anything else, contact us.
+  </p>
+
+  <h2>8. Children</h2>
+  <p>PDFNU isn’t directed at children under 13 (or the minimum age in your country) and doesn’t knowingly collect their personal data.</p>
+
+  <h2>9. Changes</h2>
+  <p>We’ll update this page if our practices change, and revise the date at the top.</p>
+
+  <h2>10. Contact</h2>
+  <p>Questions about privacy: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
+</PageLayout>

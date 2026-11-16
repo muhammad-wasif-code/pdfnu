@@ -1,0 +1,65 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ResizeImage from '../islands/ResizeImage';
+
+const faqs = [
+  { q: 'How do I resize a photo to exact pixels?', a: 'Type the width and height. With the lock on, the other side updates to keep proportions. Unlock it to set both freely, then choose whether to crop, add a white border or stretch.' },
+  { q: 'What size is a passport photo in pixels?', a: 'A 35×45 mm photo at 300 DPI is 413×531 px, and a 2×2 inch photo at 300 DPI is 600×600 px. Many countries and portals use their own rules, so always check the official requirements.' },
+  { q: 'Can I resize and keep the file under a KB limit?', a: 'Yes. Enter a value in <strong>Max size (KB)</strong>. PDFNU keeps the exact dimensions and lowers JPG/WebP quality until the file fits.' },
+  { q: 'Will resizing make my photo blurry?', a: 'Making images smaller keeps them sharp, because PDFNU uses high-quality, multi-step downscaling. Making small images much larger can’t add detail, so they’ll look soft.' },
+  { q: 'Are my images uploaded?', a: 'No. Resizing happens in your browser and the image never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="resize-image"
+  title="Resize Image to Exact Pixels – Passport Photo Size | PDFNU"
+  description="Resize photos to exact pixel dimensions, with presets for passport photos and signatures. Crop, pad or stretch, and set a max KB. Free, no upload."
+  h1="Resize Image"
+  lead="Change an image to exact pixel dimensions, or pick a passport or signature preset. Crop to fill, add a border, or keep proportions, all inside your browser."
+  howToTitle="How to Resize an Image"
+  steps={['Select or drop your image.', 'Choose a preset or type width and height in pixels.', 'Click <strong>Resize image</strong> and download.']}
+  faqs={faqs}
+  related={['compress-image', 'jpg-to-pdf', 'pdf-to-jpg', 'compress-pdf']}
+>
+  <ResizeImage client:load />
+
+  <Fragment slot="content">
+    <h2>What Resize Image does</h2>
+    <p>
+      Resize Image changes the width and height of a picture in pixels. Use it to meet an upload rule like “photo 413 × 531 px”, to shrink a camera
+      photo for email, or to make a square image for social media.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open an image.</strong> Its current size appears next to the file name.</li>
+      <li><strong>Pick a preset</strong> such as <em>Passport 35×45 mm</em> or <em>2×2 inch</em>, or type your own width and height. The 25%, 50% and 75% buttons scale proportionally.</li>
+      <li><strong>Decide how to handle a shape change.</strong> <em>Crop to fill</em> trims the edges evenly (best for portraits). <em>Add white border</em> keeps the whole image. <em>Stretch</em> distorts it to fit.</li>
+      <li><strong>Choose a format</strong> and, if the form has a limit, a <em>Max size</em> in KB.</li>
+      <li><strong>Resize and download.</strong> The file name includes the new size, for example <code>photo-413x531.jpg</code>.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li><strong>Exam form photo:</strong> Passport preset, Crop to fill, JPG, Max size 50KB.</li>
+      <li><strong>Signature:</strong> Signature strip preset (300×100), Add white border, Max size 20KB.</li>
+      <li><strong>Email attachment:</strong> 50% scale, JPG. A 12-megapixel photo becomes 3 megapixels and loads instantly.</li>
+    </ul>
+    <p>
+      Requirements differ between portals and change over time. See <a href="/guides/photo-signature-size-for-online-applications">photo and signature size rules for online applications</a>,
+      and always confirm the numbers on the official website.
+    </p>
+
+    <h2>Limitations</h2>
+    <p>
+      Maximum output is 12,000 px per side and 60 megapixels, to stay within phone memory limits. Presets don’t detect faces. Center your photo
+      first if <em>Crop to fill</em> cuts off the top of your head. PNG output has no quality setting, so a KB limit switches the output to JPG.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Passport photos and signatures are identity documents. PDFNU resizes them locally with the browser’s canvas, and nothing is uploaded.</p>
+  </Fragment>
+</ToolLayout>

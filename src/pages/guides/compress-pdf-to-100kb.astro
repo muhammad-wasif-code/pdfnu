@@ -1,0 +1,51 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: 'Can every PDF be compressed to 100KB?', a: 'No. A one or two page document almost always can. Long scanned documents often can’t without becoming unreadable. PDFNU tells you when that happens instead of handing you a blurry file.' },
+  { q: 'Why did PDFNU convert my pages to images?', a: 'For very small targets, turning each page into a compressed JPEG is sometimes the only way to fit. Text then can’t be selected, but it stays readable. You’re always warned when this happens.' },
+  { q: 'Is the 100KB target exact?', a: 'It’s a maximum. The result is as large as possible without going over 100 × 1024 bytes, so it passes 100KB checks on any portal.' },
+];
+---
+<GuideLayout slug="compress-pdf-to-100kb" faqs={faqs}>
+  <p><strong>Short answer:</strong> open <a href="/compress-pdf?target=100">Compress PDF</a>, choose the <strong>100KB</strong> target and compress. For one or two pages that’s nearly always enough. For longer scans, remove unneeded pages first or split the file, because 100KB is a very tight budget.</p>
+
+  <h2>How tight is 100KB?</h2>
+  <p>
+    100KB is roughly one medium-quality photo. If your PDF has five scanned pages, each page gets about 20KB. That’s enough for a clear grayscale page
+    of printed text at screen resolution, but not for a detailed color photo. Setting realistic expectations saves a lot of frustration:
+  </p>
+  <ul>
+    <li><strong>Text-based PDFs</strong> (exported from Word, Google Docs, etc.): usually far below 100KB already, unless they contain pictures.</li>
+    <li><strong>1–2 scanned pages:</strong> fit comfortably with good readability.</li>
+    <li><strong>3–6 scanned pages:</strong> usually fit, with softer images.</li>
+    <li><strong>10+ scanned pages:</strong> often only fit by rasterizing at low resolution, so check readability carefully.</li>
+  </ul>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/compress-pdf?target=100">Compress PDF</a> with the 100KB target already selected.</li>
+    <li>Choose your file and press <strong>Compress to under 100KB</strong>.</li>
+    <li>Read the result card. Green means you’re under 100KB. An amber note means the target wasn’t reachable at a readable quality, and you’re given the smallest readable version.</li>
+    <li>Open the downloaded file and zoom in on small print before uploading.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Tricks that make 100KB possible</h2>
+  <ul>
+    <li><strong>Crop before you convert.</strong> If your PDF came from phone photos, crop each photo to the paper edge, then rebuild the PDF with <a href="/jpg-to-pdf?limit=100">JPG to PDF</a> using its built-in 100KB limit. Desk and shadows waste bytes.</li>
+    <li><strong>Delete pages the portal didn’t ask for.</strong> Instructions pages, blank pages, duplicate copies. Use <a href="/organize-pdf">Organize PDF</a>.</li>
+    <li><strong>Upload separately.</strong> If the form has multiple upload fields, <a href="/split-pdf">split</a> the PDF and give each part its own 100KB.</li>
+    <li><strong>Scan in grayscale.</strong> Color scans of black-and-white documents are wasteful.</li>
+  </ul>
+
+  <h2>What PDFNU does behind the scenes</h2>
+  <p>
+    The compressor first tries a lossless rewrite. If that’s not enough, it re-compresses images with Ghostscript at decreasing resolutions (about
+    150, 110, then 72 dpi). Only if the file still doesn’t fit does it render pages to JPEG and lower quality step by step, never below a readable
+    floor of 72 dpi. If the target still can’t be met, it stops there rather than giving you something unreadable. For the theory, see
+    <a href="/guides/pdf-compression-explained">PDF compression explained</a>.
+  </p>
+  <p>All of this runs on your device. Your PDF isn’t uploaded at any point.</p>
+</GuideLayout>

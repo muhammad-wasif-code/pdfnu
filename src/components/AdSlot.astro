@@ -1,0 +1,21 @@
+---
+/**
+ * Reserved-height ad container → zero layout shift. Renders nothing visible
+ * (just the reserved space with a subtle label) when no AdSense client is configured.
+ * Never place inside/over the drop zone or action buttons.
+ */
+interface Props { slot?: string; variant?: 'inline' | 'sidebar' | 'banner'; class?: string; }
+const { slot = '', variant = 'inline', class: cls = '' } = Astro.props;
+const client = import.meta.env.PUBLIC_ADSENSE_CLIENT as string | undefined;
+const size = {
+  inline: 'min-h-[280px]',
+  banner: 'min-h-[100px] sm:min-h-[90px]',
+  sidebar: 'min-h-[600px] w-[300px]',
+}[variant];
+---
+{client ? (
+  <aside class={`ad-slot relative flex items-center justify-center overflow-hidden rounded-card ${size} ${cls}`} aria-label="Advertisement">
+    <span class="absolute left-2 top-1 text-[10px] uppercase tracking-wider text-gray-400">Advertisement</span>
+    <ins class="adsbygoogle block w-full" style="display:block" data-ad-client={client} data-ad-slot={slot} data-ad-format={variant === 'sidebar' ? 'vertical' : 'auto'} data-full-width-responsive="true"></ins>
+  </aside>
+) : null}

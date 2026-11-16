@@ -1,0 +1,43 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import FAQ from '../components/FAQ.astro';
+import { SOURCE_URL } from '../data/site';
+const faqs = [
+  { q: 'Is PDFNU really free?', a: 'Yes. Every tool is free with no signup, no watermark and no daily limits. The site is supported by a small number of ads that never cover the tools.' },
+  { q: 'Are my files uploaded?', a: 'No. Every tool processes files inside your browser using JavaScript and WebAssembly. Your documents are never sent to a server, and we couldn’t see them if we wanted to.' },
+  { q: 'Can I use it offline?', a: 'Yes. After your first visit, PDFNU caches its pages and engines on your device, so the tools work without an internet connection. You can also install it to your home screen.' },
+  { q: 'Does it work on my phone?', a: 'Yes. PDFNU is built mobile-first and works in modern versions of Safari, Chrome, Edge, Firefox and Samsung Internet.' },
+  { q: 'Is there a file size limit?', a: 'There’s no fixed limit. Because processing happens on your device, the practical limit is your device’s memory. Most phones handle files of 100 MB or more; computers handle much larger ones.' },
+  { q: 'Which browsers are supported?', a: 'Any recent browser with WebAssembly support: Chrome/Edge 100+, Safari 16.4+, Firefox 110+. Older browsers may not run every tool.' },
+  { q: 'Can PDFNU unlock or crack password-protected PDFs?', a: 'No, and it never will. PDFNU only works on files you can already open. To remove a password you know, open the file in your PDF reader and save an unprotected copy.' },
+  { q: 'Is PDFNU open source?', a: 'Yes, under the GNU AGPL-3.0 license, because it includes Ghostscript. Anyone can inspect exactly what the code does with files.' },
+];
+---
+<PageLayout title="About PDFNU – Private, In-Browser PDF Tools" description="PDFNU is a free set of PDF and image tools that run entirely in your browser. Learn how it works, why files never leave your device, and FAQs." h1="About PDFNU" path="/about"
+  lead="PDFNU is a free set of PDF and image tools that run entirely in your browser. Fast, simple, and your files never leave your device.">
+  <h2>Why we built it</h2>
+  <p>
+    Shrinking a PDF for an upload form or merging two scans shouldn’t mean sending your passport, payslip or medical report to a stranger’s server.
+    Yet that’s how most online PDF tools work. PDFNU takes a different approach: the tools come to your file, instead of your file going to the tools.
+  </p>
+  <h2>How it works</h2>
+  <p>
+    Modern browsers can run full-featured software through WebAssembly. PDFNU uses well-known open-source engines, <strong>pdf-lib</strong> for editing,
+    Mozilla’s <strong>pdf.js</strong> for rendering, and <strong>Ghostscript</strong> for compression and encryption, all running locally on your phone or computer.
+    Files are read into the page’s memory, processed, and handed back to you as a download.
+  </p>
+  <ul>
+    <li><strong>Private:</strong> no uploads, no file storage, no accounts.</li>
+    <li><strong>Fast:</strong> no waiting for uploads and downloads. Most jobs finish in seconds.</li>
+    <li><strong>Offline:</strong> after the first visit, tools keep working without internet.</li>
+    <li><strong>No limits:</strong> no daily caps or file-count limits. Your device’s memory is the only ceiling.</li>
+  </ul>
+  <h2>Open source</h2>
+  <p>
+    PDFNU is free software licensed under the GNU Affero General Public License v3.0.
+    {SOURCE_URL ? <>The full source code is available at <a href={SOURCE_URL} rel="noopener">{SOURCE_URL.replace(/^https?:\/\//, '')}</a>.</> : 'The full source code is published alongside the site.'}
+  </p>
+  <h2>How we keep the lights on</h2>
+  <p>PDFNU shows a few ads from Google AdSense. They never cover the tools and they never see your files. See our <a href="/privacy">privacy policy</a> for details.</p>
+  <div slot="after" id="faq" class="mt-12 scroll-mt-24"><FAQ items={faqs} /></div>
+</PageLayout>

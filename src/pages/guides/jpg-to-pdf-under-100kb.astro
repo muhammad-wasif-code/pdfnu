@@ -1,0 +1,55 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: 'How many photos can fit in a 100KB PDF?', a: 'For clear, readable document pages, aim for about 30–50KB per page, so two or three photos. More pages are possible but text gets harder to read.' },
+  { q: 'Should I choose A4 or Fit image?', a: 'A4 is safest for forms because officers may print it. Fit image avoids white borders and is fine for on-screen viewing.' },
+  { q: 'My photo comes out sideways. What do I do?', a: 'PDFNU reads your camera’s rotation data automatically. If a photo is still sideways, the camera didn’t save that data. Fix it afterwards with <a href="/rotate-pdf">Rotate PDF</a>.' },
+];
+---
+<GuideLayout slug="jpg-to-pdf-under-100kb" faqs={faqs}>
+  <p><strong>Short answer:</strong> open <a href="/jpg-to-pdf?limit=100">JPG to PDF</a>, add your photos in order, choose <strong>A4</strong> and the <strong>100KB</strong> limit, then convert. PDFNU shares the 100KB budget across your pages, giving larger photos a larger share, and tells you if the result can’t stay readable.</p>
+
+  <h2>Before you start: take a better photo</h2>
+  <p>Most of the work happens before you open any tool. A good phone photo of a document compresses three or four times better than a bad one.</p>
+  <ul>
+    <li><strong>Flat and square:</strong> hold the phone directly above the page, not at an angle.</li>
+    <li><strong>Even light:</strong> daylight near a window, no flash glare, no shadow of your hand or phone.</li>
+    <li><strong>Fill the frame:</strong> get close enough that the paper fills the photo. Background pixels are wasted bytes.</li>
+    <li><strong>Plain background:</strong> a dark table behind white paper helps edges stay crisp.</li>
+  </ul>
+  <p>If your phone’s camera app has a document or scan mode, use it. It crops and flattens automatically.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/jpg-to-pdf?limit=100">JPG to PDF</a> (the 100KB limit is pre-selected from this link).</li>
+    <li>Tap <strong>Select images</strong> and pick your photos. On iPhone, HEIC photos are converted to JPG automatically.</li>
+    <li>Drag the thumbnails into the right order. The badge number is the page number.</li>
+    <li>Choose <strong>A4</strong> (or Letter in the US) and <strong>Small</strong> margins.</li>
+    <li>Press <strong>Convert</strong>. The result shows the final size and a green “Under 100 KB ✓” if it fits.</li>
+    <li>Open the PDF, zoom in, and check that names, numbers and signatures are readable.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>If text becomes hard to read</h2>
+  <ul>
+    <li><strong>Reduce the page count:</strong> does the form really need both sides of your ID? Many accept the front only.</li>
+    <li><strong>Crop tighter:</strong> use <a href="/resize-image">Resize Image</a> with “Crop to fill” to trim edges first.</li>
+    <li><strong>Ask for more room:</strong> if there are separate upload fields, convert each document to its own PDF.</li>
+    <li><strong>Try 200KB</strong> if the portal allows “up to 200KB”. Many people pick 100KB out of habit.</li>
+  </ul>
+
+  <h2>Common form requirements, and the catch</h2>
+  <p>
+    Application portals often ask for “PDF, maximum 100KB” or “between 50KB and 100KB”. If there’s a minimum size too, and your PDF is too
+    small, convert again with the 200KB limit or no limit. Requirements vary between portals and change over time, so always read the
+    instructions on the official site rather than relying on a number you saw elsewhere.
+  </p>
+
+  <h2>Private by default</h2>
+  <p>
+    Photos of mark sheets, ID cards and certificates are exactly the kind of files that shouldn’t sit on someone else’s server. PDFNU converts
+    them inside your browser. Nothing is uploaded, and it works offline after your first visit.
+  </p>
+</GuideLayout>

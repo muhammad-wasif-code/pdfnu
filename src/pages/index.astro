@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ToolCard from '../components/ToolCard.astro';
+import TrustBadges from '../components/TrustBadges.astro';
+import HeroArt from '../components/HeroArt.astro';
+import FAQ from '../components/FAQ.astro';
+import { tools } from '../data/tools';
+
+const why = [
+  { title: 'Your Privacy First', text: 'Files stay on your device.', d: 'M12 2.5 4.5 5.4v5.9c0 4.6 3.2 8.8 7.5 10.2 4.3-1.4 7.5-5.6 7.5-10.2V5.4L12 2.5Zm3.7 7.2-4.6 4.6a.9.9 0 0 1-1.3 0l-2.3-2.3a.9.9 0 1 1 1.3-1.3l1.7 1.7 3.9-3.9a.9.9 0 1 1 1.3 1.2Z', fill: true },
+  { title: 'Blazing Fast', text: 'No uploads, no waits.', d: 'M13.2 2.3a.7.7 0 0 1 1.2.6L13 10h5.3a.7.7 0 0 1 .5 1.2l-8 10.5a.7.7 0 0 1-1.2-.6L11 14H5.7a.7.7 0 0 1-.5-1.2l8-10.5Z', fill: true },
+  { title: 'Works Offline', text: 'No internet needed after first visit.', d: 'M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 16a5 5 0 0 1 6.8 0M12 19.5h.01', fill: false },
+  { title: 'No Limits', text: 'Use as much as you want.', d: 'M6.5 8.5a3.5 3.5 0 1 0 0 7c2.5 0 3.5-2 5.5-3.5s3-3.5 5.5-3.5a3.5 3.5 0 1 1 0 7c-2.5 0-3.5-2-5.5-3.5S9 8.5 6.5 8.5Z', fill: false },
+];
+
+const faqs = [
+  { q: 'Is PDFNU really free?', a: 'Yes. Every tool is free with no signup, no watermark and no daily limits. The site is supported by a small number of non-intrusive ads.' },
+  { q: 'Are my files uploaded?', a: 'No. PDFNU processes your files entirely inside your browser using WebAssembly and JavaScript. Nothing is sent to a server, so your documents never leave your device.' },
+  { q: 'Can I use it offline?', a: 'Yes. After your first visit the app is cached on your device, so the tools keep working even without an internet connection.' },
+  { q: 'Does it work on my phone?', a: 'Yes. PDFNU is built mobile-first and works in modern browsers on iPhone, Android, tablets and desktops.' },
+  { q: 'Is there a file size limit?', a: 'There is no fixed limit. Because processing happens on your device, the practical limit depends on your device’s memory. Most phones handle files of 100 MB or more.' },
+];
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'PDFNU', url: site + '/' },
+  { '@context': 'https://schema.org', '@type': 'Organization', name: 'PDFNU', url: site + '/', logo: site + '/icon-512.png' },
+];
+---
+<BaseLayout
+  title="PDFNU – Free PDF Tools That Never Upload Your Files"
+  description="Compress, merge, split and convert PDFs and images for free. Every PDFNU tool runs in your browser, so your files never leave your device. No signup."
+  path="/"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="hero-glow pointer-events-none absolute -right-40 -top-40 h-[34rem] w-[34rem]" aria-hidden="true"></div>
+    <div class="container-page relative grid items-center gap-8 pb-8 pt-8 sm:pt-12 md:grid-cols-[1.25fr_.75fr] md:pb-10 md:pt-14">
+      <div>
+        <h1 class="text-[2rem] font-extrabold leading-[1.15] tracking-tight text-ink sm:text-[2.5rem] sm:leading-[1.15] lg:text-[2.85rem] dark:text-white">
+          Every PDF tool you need.
+          <span class="block text-brand dark:text-brand-light">Fast, free, and your files never leave your device.</span>
+        </h1>
+
+        <form class="mt-6 max-w-xl" role="search" action="#tools" onsubmit="return false">
+          <label for="tool-search" class="sr-only">Search tools</label>
+          <div class="flex items-center rounded-control border border-line bg-white shadow-soft focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/10 dark:border-white/10 dark:bg-night-2">
+            <svg viewBox="0 0 24 24" class="ml-4 h-5 w-5 shrink-0 text-gray-400 md:order-last md:mr-4 md:ml-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+            <input id="tool-search" type="search" autocomplete="off" placeholder="Search tools..." class="h-12 min-w-0 flex-1 bg-transparent px-3 text-[15px] text-ink outline-none placeholder:text-gray-400 md:px-4 dark:text-white" />
+          </div>
+        </form>
+
+        <TrustBadges class="mt-5" />
+      </div>
+      <div class="hidden md:block"><HeroArt /></div>
+    </div>
+  </section>
+
+  <!-- Tools -->
+  <section id="tools" class="container-page" aria-labelledby="tools-title">
+    <h2 id="tools-title" class="sr-only">All PDF and image tools</h2>
+    <div id="tool-grid" class="grid grid-cols-3 gap-2.5 sm:gap-4 md:grid-cols-4">
+      {tools.map((t) => <ToolCard tool={t} />)}
+    </div>
+    <p id="no-results" class="hidden py-10 text-center text-sm text-muted" role="status">No matching tools. Try “compress” or “merge”.</p>
+  </section>
+
+  <!-- Why PDFNU -->
+  <section class="container-page mt-10 sm:mt-12" aria-labelledby="why-title">
+    <div class="rounded-card bg-brand-soft/80 px-5 py-8 sm:px-8 dark:bg-white/[.04]">
+      <h2 id="why-title" class="text-center text-xl font-bold tracking-tight text-ink sm:text-h3 dark:text-white">Why PDFNU?</h2>
+      <ul class="mt-6 grid gap-5 sm:grid-cols-2 md:grid-cols-4 md:gap-4">
+        {why.map((w) => (
+          <li class="flex items-start gap-3 md:flex-col md:items-center md:text-center">
+            <svg viewBox="0 0 24 24" class="h-7 w-7 shrink-0 text-brand dark:text-brand-light" fill={w.fill ? 'currentColor' : 'none'} stroke={w.fill ? 'none' : 'currentColor'} stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={w.d} /></svg>
+            <div>
+              <h3 class="text-sm font-semibold text-ink dark:text-white">{w.title}</h3>
+              <p class="mt-0.5 text-[13px] text-gray-600 dark:text-gray-400">{w.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <div class="container-page mt-10 max-w-6xl sm:mt-12">
+    <FAQ items={faqs} viewAllHref="/about#faq" />
+  </div>
+</BaseLayout>
+
+<script>
+  // Live tool filter (progressive enhancement; the grid works without JS).
+  const input = document.getElementById('tool-search') as HTMLInputElement;
+  const cards = [...document.querySelectorAll<HTMLAnchorElement>('[data-tool]')];
+  const empty = document.getElementById('no-results')!;
+  input.addEventListener('input', () => {
+    const terms = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const c of cards) {
+      const ok = terms.every((t) => c.dataset.keywords!.includes(t));
+      c.hidden = !ok;
+      if (ok) shown++;
+    }
+    empty.classList.toggle('hidden', shown > 0);
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const first = cards.find((c) => !c.hidden);
+      if (first && input.value.trim()) location.href = first.href;
+    }
+  });
+</script>

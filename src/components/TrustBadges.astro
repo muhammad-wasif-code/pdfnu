@@ -1,0 +1,18 @@
+---
+interface Props { class?: string; }
+const { class: cls = '' } = Astro.props;
+const items = [
+  { label: 'No upload', color: 'text-emerald-600 dark:text-emerald-400', d: 'M12 2.5 4.5 5.4v5.9c0 4.6 3.2 8.8 7.5 10.2 4.3-1.4 7.5-5.6 7.5-10.2V5.4L12 2.5Zm3.7 7.2-4.6 4.6a.9.9 0 0 1-1.3 0l-2.3-2.3a.9.9 0 1 1 1.3-1.3l1.7 1.7 3.9-3.9a.9.9 0 1 1 1.3 1.2Z' },
+  { label: 'No signup', color: 'text-amber-500', d: 'M7.5 10V7.5a4.5 4.5 0 0 1 9 0V10h.5A2 2 0 0 1 19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h.5Zm2 0h5V7.5a2.5 2.5 0 0 0-5 0V10Z' },
+  { label: 'No watermark', color: 'text-amber-500', d: 'M13.2 2.3a.7.7 0 0 1 1.2.6L13 10h5.3a.7.7 0 0 1 .5 1.2l-8 10.5a.7.7 0 0 1-1.2-.6L11 14H5.7a.7.7 0 0 1-.5-1.2l8-10.5Z' },
+  { label: 'Free forever', color: 'text-pink-500', d: 'M12 20.5s-8-4.6-8-10.6A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 2.9c0 6-8 10.6-8 10.6Z' },
+];
+---
+<ul class={`flex flex-wrap gap-x-5 gap-y-2.5 text-[13px] font-medium text-gray-700 dark:text-gray-300 ${cls}`} aria-label="Why it's safe">
+  {items.map((i) => (
+    <li class="flex items-center gap-1.5">
+      <svg viewBox="0 0 24 24" class={`h-[18px] w-[18px] ${i.color}`} fill="currentColor" aria-hidden="true"><path d={i.d} /></svg>
+      {i.label}
+    </li>
+  ))}
+</ul>

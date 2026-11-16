@@ -1,0 +1,55 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: 'Why does my 20KB image look blurry?', a: 'A large photo can’t keep all its pixels at 20KB, so either quality or size drops. Crop away background first, so the remaining pixels are spent on what matters (your face or signature).' },
+  { q: 'Is JPG or PNG better for small sizes?', a: 'JPG, almost always. PNG is lossless and can’t compress photos to small KB sizes. For signatures on pure white, JPG at a small size works well too.' },
+  { q: 'What if the form needs exact pixels AND a KB limit?', a: 'Use <a href="/resize-image">Resize Image</a>: set the width and height, then fill in Max size (KB). It keeps the exact dimensions and only lowers quality.' },
+];
+---
+<GuideLayout slug="reduce-image-size-to-20kb-50kb" faqs={faqs}>
+  <p><strong>Short answer:</strong> open <a href="/compress-image?target=20">Compress Image</a>, pick the <strong>20KB</strong> or <strong>50KB</strong> chip, and compress. PDFNU finds the highest quality that fits and shrinks the pixel size only if it has to. For the sharpest result, crop tightly first.</p>
+
+  <h2>Why 20KB is hard and 50KB is easy</h2>
+  <p>
+    A modern phone photo is 12 megapixels and 2–5 MB. To reach 50KB, you need about 50–100 times less data. That’s easy if the image becomes around
+    600–900 pixels wide, which is still plenty for a form photo. 20KB is harder: you’ll typically end up around 300–500 pixels wide. That’s fine for a
+    face or signature that fills the frame, but not for a full-body photo with lots of background.
+  </p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li><strong>Crop first</strong> (optional but recommended): in <a href="/resize-image">Resize Image</a>, choose a preset or custom size with <em>Crop to fill</em> so your face or signature fills the frame.</li>
+    <li>Open <a href="/compress-image?target=50">Compress Image</a> and select one or more images.</li>
+    <li>Pick <strong>20KB</strong>, <strong>30KB</strong> or <strong>50KB</strong>, and keep the format on <strong>JPG</strong> for government and exam portals.</li>
+    <li>Press <strong>Compress</strong>. Each result shows the new size, percentage saved and final dimensions.</li>
+    <li>Save each file, or download all as a .zip.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Tips for signatures</h2>
+  <ul>
+    <li>Sign with a thick black or dark blue pen on clean white paper.</li>
+    <li>Photograph in daylight to avoid grey, noisy backgrounds. Noise costs bytes.</li>
+    <li>Crop close around the signature with a small margin.</li>
+    <li>A signature usually fits in under 20KB at about 300–400 pixels wide while staying crisp.</li>
+  </ul>
+
+  <h2>Tips for photos</h2>
+  <ul>
+    <li>Use a plain, light background. Patterned walls are expensive to compress.</li>
+    <li>Make sure the face is well lit and in focus. Blur doesn’t compress well, and it looks worse after compression.</li>
+    <li>If the form gives exact dimensions, resize to those first, then compress with <a href="/resize-image">Resize Image</a>’s Max size.</li>
+  </ul>
+
+  <h2>Minimums matter too</h2>
+  <p>
+    Some portals require a size <em>between</em> two values, for example 10–50KB. If your result is below the minimum, compress again with a
+    larger target. Always check the official instructions; requirements change. See
+    <a href="/guides/photo-signature-size-for-online-applications">photo and signature size rules</a> for how to read them.
+  </p>
+
+  <h2>Private, even for ID photos</h2>
+  <p>PDFNU uses your browser’s own image encoder. Photos are never uploaded, logged or stored. They go only where you upload them yourself.</p>
+</GuideLayout>

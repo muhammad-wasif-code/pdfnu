@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>PDFNU — Fast, free PDF tools</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        colors: {
+          brand: { DEFAULT: '#4F46E5', dark: '#4338CA', soft: '#EEF2FF' },
+          ink: '#111827', muted: '#667085', line: '#E5E7EB'
+        },
+        boxShadow: {
+          soft: '0 8px 30px rgba(17,24,39,.06)',
+          lift: '0 14px 36px rgba(79,70,229,.13)'
+        },
+        borderRadius: { xl2: '1rem' }
+      }}
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    :focus-visible { outline: 3px solid #A5B4FC; outline-offset: 3px; }
+    .drop-active { border-color:#4F46E5!important; background:#EEF2FF!important; }
+    .dark .drop-active { background:#24234a!important; }
+    .tool-card { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .tool-card:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(79,70,229,.12); border-color:#C7D2FE; }
+    .hide { display:none!important; }
+  </style>
+</head>
+<body class="bg-white text-gray-900 dark:bg-[#0B1020] dark:text-gray-100">
+  <header class="sticky top-0 z-40 border-b border-gray-100/90 bg-white/90 backdrop-blur-xl dark:border-white/10 dark:bg-[#0B1020]/90">
+    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+      <a href="#home" class="flex items-center gap-2.5" aria-label="PDFNU home">
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-brand text-white shadow-sm">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3.8h7l4 4V20H7a2 2 0 0 1-2-2V5.8a2 2 0 0 1 2-2Z"/><path d="M14 4v5h5M8.5 14h7M8.5 17h5"/></svg>
+        </span>
+        <span class="text-xl font-extrabold tracking-tight">PDF<span class="text-brand">NU</span></span>
+      </a>
+      <nav class="hidden items-center gap-8 text-sm font-medium text-gray-600 dark:text-gray-300 md:flex">
+        <a href="#tools" class="hover:text-brand">All tools</a>
+        <a href="#why" class="hover:text-brand">Why PDFNU</a>
+        <a href="#faq" class="hover:text-brand">FAQ</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <a href="#compress" class="hidden rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark sm:inline-flex">Compress PDF</a>
+        <button id="themeToggle" class="grid h-10 w-10 place-items-center rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-white/15 dark:text-gray-200 dark:hover:bg-white/10" aria-label="Toggle dark mode">
+          <svg id="themeIcon" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="relative overflow-hidden">
+      <div class="pointer-events-none absolute -right-28 -top-24 h-96 w-96 rounded-full bg-indigo-100/70 blur-3xl dark:bg-indigo-900/20"></div>
+      <div class="relative mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 pt-16 sm:px-6 md:grid-cols-[1.15fr_.85fr] md:pb-24 md:pt-24">
+        <div>
+          <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 dark:border-indigo-400/20 dark:bg-indigo-400/10 dark:text-indigo-200">
+            <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Private by design
+          </div>
+          <h1 class="max-w-2xl text-4xl font-extrabold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Every PDF tool you need. <span class="text-brand">Fast, free, and private.</span></h1>
+          <p class="mt-5 max-w-xl text-base leading-7 text-gray-600 dark:text-gray-300 sm:text-lg">Simple tools to work with PDFs and images. Your files stay on your device — never uploaded to a server.</p>
+          <div class="mt-8 flex max-w-xl items-center gap-3 rounded-2xl border border-gray-200 bg-white p-2 shadow-soft dark:border-white/10 dark:bg-white/5">
+            <svg viewBox="0 0 24 24" class="ml-2 h-5 w-5 shrink-0 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+            <input id="toolSearch" type="search" placeholder="Search tools…" class="min-w-0 flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-gray-400" aria-label="Search PDF tools">
+            <a href="#tools" class="rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark">Find a tool</a>
+          </div>
+          <div class="mt-6 flex flex-wrap gap-x-5 gap-y-3 text-xs font-semibold text-gray-600 dark:text-gray-300">
+            <span>✓ No upload</span><span>✓ No signup</span><span>✓ No watermark</span><span>✓ Free tools</span>
+          </div>
+        </div>
+        <div class="mx-auto hidden w-full max-w-md md:block">
+          <div class="relative rounded-[2rem] border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-violet-100 p-8 shadow-soft dark:border-white/10 dark:from-indigo-950/50 dark:via-[#11182c] dark:to-violet-950/40">
+            <div class="absolute right-8 top-8 h-24 w-24 rounded-full bg-indigo-300/30 blur-2xl"></div>
+            <div class="relative mx-auto grid aspect-square max-w-[260px] place-items-center rounded-[2.5rem] bg-white shadow-lift dark:bg-white/10">
+              <div class="grid h-44 w-36 place-items-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-700 text-white shadow-xl shadow-indigo-500/30">
+                <svg viewBox="0 0 80 90" class="h-24 w-24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h30l16 16v55H18z"/><path d="M48 8v18h16M28 44h26M28 55h26M28 66h18"/></svg>
+                <span class="-mt-5 text-xl font-extrabold tracking-widest">PDF</span>
+              </div>
+            </div>
+            <div class="mt-7 flex justify-center gap-2"><span class="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 shadow-sm dark:bg-white/10 dark:text-gray-200">Fast</span><span class="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 shadow-sm dark:bg-white/10 dark:text-gray-200">Private</span><span class="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 shadow-sm dark:bg-white/10 dark:text-gray-200">Simple</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tools" class="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <div class="mb-7 flex items-end justify-between gap-4"><div><p class="text-sm font-semibold text-brand">PDFNU TOOLKIT</p><h2 class="mt-2 text-3xl font-bold tracking-tight">What do you need to do?</h2><p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Pick a tool and get straight to work.</p></div><span id="toolCount" class="text-sm text-gray-400">12 tools</span></div>
+      <div id="toolGrid" class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+        <a href="#compress" data-name="compress pdf reduce file size" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-rose-50 text-xl dark:bg-rose-400/10">🗜️</span><h3 class="mt-4 font-bold">Compress PDF</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Reduce file size, keep quality.</p></a>
+        <a href="#merge" data-name="merge pdf combine files" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-blue-50 text-xl dark:bg-blue-400/10">🧩</span><h3 class="mt-4 font-bold">Merge PDF</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Combine PDFs in seconds.</p></a>
+        <a href="#compress" data-name="split pdf extract pages" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-emerald-50 text-xl dark:bg-emerald-400/10">✂️</span><h3 class="mt-4 font-bold">Split PDF</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Extract the pages you need.</p></a>
+        <a href="#compress" data-name="jpg to pdf convert images" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-amber-50 text-xl dark:bg-amber-400/10">🖼️</span><h3 class="mt-4 font-bold">JPG to PDF</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Turn images into a PDF.</p></a>
+        <a href="#compress" data-name="pdf to jpg extract images" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-violet-50 text-xl dark:bg-violet-400/10">📷</span><h3 class="mt-4 font-bold">PDF to JPG</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Export pages as images.</p></a>
+        <a href="#compress" data-name="rotate pdf pages" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-cyan-50 text-xl dark:bg-cyan-400/10">🔄</span><h3 class="mt-4 font-bold">Rotate PDF</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Fix page orientation.</p></a>
+        <a href="#merge" data-name="organize pages reorder pdf" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-green-50 text-xl dark:bg-green-400/10">▦</span><h3 class="mt-4 font-bold">Organize Pages</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Reorder or remove pages.</p></a>
+        <a href="#compress" data-name="watermark pdf" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-pink-50 text-xl dark:bg-pink-400/10">💧</span><h3 class="mt-4 font-bold">Watermark</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Add a text or image mark.</p></a>
+        <a href="#compress" data-name="protect pdf password security" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-indigo-50 text-xl dark:bg-indigo-400/10">🛡️</span><h3 class="mt-4 font-bold">Protect PDF</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Add password protection.</p></a>
+        <a href="#compress" data-name="page numbers pdf" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-orange-50 text-xl dark:bg-orange-400/10">🔢</span><h3 class="mt-4 font-bold">Page Numbers</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Number pages your way.</p></a>
+        <a href="#compress" data-name="compress image reduce image size" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-teal-50 text-xl dark:bg-teal-400/10">🌄</span><h3 class="mt-4 font-bold">Compress Image</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Make images lighter.</p></a>
+        <a href="#compress" data-name="resize image dimensions" class="tool-card rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-white/[.04] sm:p-5"><span class="grid h-11 w-11 place-items-center rounded-xl bg-purple-50 text-xl dark:bg-purple-400/10">↔️</span><h3 class="mt-4 font-bold">Resize Image</h3><p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">Change image dimensions.</p></a>
+      </div>
+      <p id="noResults" class="hide py-12 text-center text-sm text-gray-500">No matching tools. Try another search.</p>
+    </section>
+
+    <section id="why" class="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+      <div class="rounded-3xl bg-gray-50 px-6 py-10 dark:bg-white/[.04] sm:px-10">
+        <div class="mx-auto max-w-xl text-center"><p class="text-sm font-semibold text-brand">THE PDFNU DIFFERENCE</p><h2 class="mt-2 text-3xl font-bold tracking-tight">Your files. Your device. Your call.</h2><p class="mt-3 text-sm leading-6 text-gray-500 dark:text-gray-400">Useful PDF tools without the usual friction.</p></div>
+        <div class="mt-9 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div><span class="text-2xl">🔒</span><h3 class="mt-3 font-bold">Privacy first</h3><p class="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">Files are processed locally in your browser.</p></div>
+          <div><span class="text-2xl">⚡</span><h3 class="mt-3 font-bold">Feels instant</h3><p class="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">A focused interface, fewer steps, no clutter.</p></div>
+          <div><span class="text-2xl">📡</span><h3 class="mt-3 font-bold">Works offline</h3><p class="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">Local processing can work without uploading files.</p></div>
+          <div><span class="text-2xl">∞</span><h3 class="mt-3 font-bold">No account needed</h3><p class="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">Open a tool and get started right away.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="compress" class="mx-auto max-w-5xl scroll-mt-24 px-4 py-16 sm:px-6">
+      <div class="text-center"><p class="text-sm font-semibold text-brand">PDF TOOL</p><h2 class="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Compress PDF</h2><p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-500 dark:text-gray-400">Reduce the size of your PDF while keeping it clear and easy to share.</p></div>
+      <div class="mt-9 rounded-3xl border border-gray-200 bg-white p-4 shadow-soft dark:border-white/10 dark:bg-white/[.04] sm:p-8">
+        <div id="dropzone" class="rounded-2xl border-2 border-dashed border-indigo-200 bg-indigo-50/50 px-4 py-10 text-center transition dark:border-indigo-300/30 dark:bg-indigo-400/[.04] sm:py-14">
+          <div class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-white text-brand shadow-sm dark:bg-white/10"><svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+          <h3 class="mt-4 text-lg font-bold">Drag and drop your PDF here</h3><p class="mt-1 text-sm text-gray-500 dark:text-gray-400">or choose a file from your device</p>
+          <input id="fileInput" type="file" accept="application/pdf,.pdf" class="hide">
+          <button id="selectFile" class="mt-5 min-h-12 rounded-xl bg-brand px-7 text-sm font-semibold text-white hover:bg-brand-dark">Select PDF</button>
+          <p class="mt-3 text-xs text-gray-400">PDF files only · Processed in your browser in the production app</p>
+        </div>
+        <div id="fileInfo" class="hide mt-5 flex items-center justify-between gap-3 rounded-xl border border-gray-200 p-4 dark:border-white/10">
+          <div class="flex min-w-0 items-center gap-3"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-rose-50 text-rose-600">PDF</span><div class="min-w-0"><p id="fileName" class="truncate text-sm font-semibold"></p><p id="fileSize" class="text-xs text-gray-500"></p></div></div><button id="removeFile" class="rounded-lg px-3 py-2 text-sm font-semibold text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10">Remove</button>
+        </div>
+        <div class="mt-6"><p class="mb-3 text-sm font-bold">Choose compression level</p><div class="grid grid-cols-3 gap-2"><button data-quality="small" class="quality rounded-xl border border-brand bg-indigo-50 p-3 text-left dark:bg-indigo-400/10"><span class="block text-sm font-bold">Smallest</span><span class="mt-1 block text-xs text-gray-500">More compression</span></button><button data-quality="recommended" class="quality rounded-xl border border-gray-200 p-3 text-left dark:border-white/10"><span class="block text-sm font-bold">Recommended</span><span class="mt-1 block text-xs text-gray-500">Balanced</span></button><button data-quality="high" class="quality rounded-xl border border-gray-200 p-3 text-left dark:border-white/10"><span class="block text-sm font-bold">High quality</span><span class="mt-1 block text-xs text-gray-500">Less compression</span></button></div></div>
+        <div class="mt-5"><p class="mb-3 text-sm font-bold">Target size <span class="font-normal text-gray-400">(optional)</span></p><div class="flex flex-wrap gap-2"><button class="size-chip rounded-full border border-gray-200 px-4 py-2 text-xs font-semibold dark:border-white/10">100 KB</button><button class="size-chip rounded-full border border-gray-200 px-4 py-2 text-xs font-semibold dark:border-white/10">200 KB</button><button class="size-chip rounded-full border border-gray-200 px-4 py-2 text-xs font-semibold dark:border-white/10">500 KB</button><button class="size-chip rounded-full border border-gray-200 px-4 py-2 text-xs font-semibold dark:border-white/10">1 MB</button><button class="size-chip rounded-full border border-gray-200 px-4 py-2 text-xs font-semibold dark:border-white/10">2 MB</button></div></div>
+        <div class="mt-6 flex items-center gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-xs font-semibold text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-200"><span>✓</span> Your files never leave your device.</div>
+        <button id="compressBtn" class="mt-5 min-h-12 w-full rounded-xl bg-brand px-6 text-sm font-bold text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-40" disabled>Compress PDF</button>
+        <div id="result" class="hide mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-400/20 dark:bg-emerald-400/[.06]">
+          <div class="flex items-center gap-2 font-bold text-emerald-800 dark:text-emerald-200"><span>✓</span> Demo result state</div>
+          <p class="mt-2 text-sm text-emerald-900 dark:text-emerald-100">File selected successfully. This HTML is a visual prototype; actual PDF compression is not implemented.</p>
+          <div class="mt-4 grid grid-cols-2 gap-3"><div class="rounded-xl bg-white/80 p-3 dark:bg-white/5"><p class="text-xs text-gray-500">Original size</p><p id="beforeSize" class="mt-1 font-bold"></p></div><div class="rounded-xl bg-white/80 p-3 dark:bg-white/5"><p class="text-xs text-gray-500">Output</p><p class="mt-1 font-bold">Not generated</p></div></div>
+          <button id="downloadBtn" class="mt-4 min-h-12 w-full rounded-xl border border-emerald-300 bg-white px-5 text-sm font-bold text-emerald-800 opacity-50 dark:bg-white/5 dark:text-emerald-200" disabled>Download (not available in prototype)</button>
+        </div>
+      </div>
+      <div class="mt-12 grid gap-8 md:grid-cols-2">
+        <div><h3 class="text-xl font-bold">How to compress a PDF</h3><ol class="mt-4 space-y-4 text-sm text-gray-600 dark:text-gray-300"><li class="flex gap-3"><span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-indigo-50 font-bold text-brand dark:bg-indigo-400/10">1</span> Select or drop your PDF file.</li><li class="flex gap-3"><span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-indigo-50 font-bold text-brand dark:bg-indigo-400/10">2</span> Choose the quality that fits your needs.</li><li class="flex gap-3"><span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-indigo-50 font-bold text-brand dark:bg-indigo-400/10">3</span> Compress and save your optimized file.</li></ol></div>
+        <div class="rounded-2xl bg-gray-50 p-5 dark:bg-white/[.04]"><h3 class="font-bold">Built around your privacy</h3><p class="mt-2 text-sm leading-6 text-gray-500 dark:text-gray-400">The intended production architecture uses client-side PDF libraries so documents are processed locally. Verify every tool's implementation and dependencies before making privacy claims live.</p></div>
+      </div>
+    </section>
+
+    <section id="merge" class="mx-auto max-w-5xl px-4 pb-16 sm:px-6">
+      <div class="rounded-3xl border border-gray-200 p-6 dark:border-white/10 sm:p-8"><div class="flex flex-wrap items-center justify-between gap-3"><div><h2 class="text-2xl font-bold">Merge PDF</h2><p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Arrange your files before combining them.</p></div><span class="rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 dark:bg-blue-400/10 dark:text-blue-200">Organize</span></div><div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4"><div class="rounded-xl border border-gray-200 p-4 text-center dark:border-white/10"><div class="mx-auto grid h-24 w-16 place-items-center rounded border bg-gray-50 text-xs font-bold text-gray-400 dark:border-white/10 dark:bg-white/5">PDF 01</div><p class="mt-2 text-xs font-semibold">Document-1.pdf</p><p class="text-xs text-gray-400">2.4 MB</p></div><div class="rounded-xl border border-gray-200 p-4 text-center dark:border-white/10"><div class="mx-auto grid h-24 w-16 place-items-center rounded border bg-gray-50 text-xs font-bold text-gray-400 dark:border-white/10 dark:bg-white/5">PDF 02</div><p class="mt-2 text-xs font-semibold">Document-2.pdf</p><p class="text-xs text-gray-400">1.8 MB</p></div><div class="rounded-xl border border-dashed border-gray-300 p-4 text-center dark:border-white/20"><div class="mx-auto grid h-24 w-16 place-items-center rounded border border-dashed text-2xl text-gray-300">+</div><p class="mt-2 text-xs font-semibold text-gray-500">Add another PDF</p></div></div><p class="mt-4 text-xs text-gray-400">Production interaction: enable drag-and-drop sorting and PDF thumbnails with a client-side PDF library.</p></div>
+    </section>
+
+    <section id="faq" class="mx-auto max-w-3xl px-4 py-12 sm:px-6"><h2 class="text-center text-3xl font-bold">Frequently asked questions</h2><div class="mt-7 divide-y divide-gray-200 dark:divide-white/10"><details class="py-4"><summary class="cursor-pointer font-semibold">Are PDFNU tools free?</summary><p class="mt-2 text-sm leading-6 text-gray-500">The product is designed to offer its core PDF tools for free. Confirm the final feature and usage policy before launch.</p></details><details class="py-4"><summary class="cursor-pointer font-semibold">Are my files uploaded?</summary><p class="mt-2 text-sm leading-6 text-gray-500">The intended implementation processes files locally in the browser. The live product must be audited to verify this claim.</p></details><details class="py-4"><summary class="cursor-pointer font-semibold">Can I use PDFNU on my phone?</summary><p class="mt-2 text-sm leading-6 text-gray-500">Yes. The layout is responsive and designed for touch screens.</p></details></div></section>
+  </main>
+  <footer class="border-t border-gray-100 dark:border-white/10"><div class="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 text-sm text-gray-500 sm:px-6 md:flex-row md:items-center md:justify-between"><a href="#home" class="font-extrabold text-gray-900 dark:text-white">PDF<span class="text-brand">NU</span></a><p>Fast. Private. Free.</p><nav class="flex flex-wrap gap-5"><a href="#why" class="hover:text-brand">About</a><a href="mailto:hello@pdfnu.example" class="hover:text-brand">Contact</a><a href="#faq" class="hover:text-brand">Privacy</a><a href="#faq" class="hover:text-brand">Terms</a><a href="#tools" class="hover:text-brand">Guides</a></nav></div></footer>
+
+<script>
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  if (localStorage.getItem('pdfnu-theme') === 'dark') root.classList.add('dark');
+  themeToggle.addEventListener('click', () => {
+    root.classList.toggle('dark');
+    localStorage.setItem('pdfnu-theme', root.classList.contains('dark') ? 'dark' : 'light');
+  });
+
+  const search = document.getElementById('toolSearch');
+  const cards = [...document.querySelectorAll('.tool-card')];
+  search.addEventListener('input', () => {
+    const q = search.value.trim().toLowerCase();
+    let shown = 0;
+    cards.forEach(card => {
+      const match = card.dataset.name.includes(q);
+      card.classList.toggle('hide', !match);
+      if (match) shown++;
+    });
+    document.getElementById('toolCount').textContent = `${shown} tools`;
+    document.getElementById('noResults').classList.toggle('hide', shown !== 0);
+  });
+
+  const input = document.getElementById('fileInput');
+  const zone = document.getElementById('dropzone');
+  const fileInfo = document.getElementById('fileInfo');
+  const compressBtn = document.getElementById('compressBtn');
+  let selectedFile = null;
+  const formatSize = bytes => bytes < 1024*1024 ? `${(bytes/1024).toFixed(0)} KB` : `${(bytes/1024/1024).toFixed(2)} MB`;
+  document.getElementById('selectFile').addEventListener('click', () => input.click());
+  input.addEventListener('change', () => setFile(input.files[0]));
+  function setFile(file) {
+    if (!file) return;
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) { alert('Please select a PDF file.'); return; }
+    selectedFile = file;
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = formatSize(file.size);
+    document.getElementById('beforeSize').textContent = formatSize(file.size);
+    fileInfo.classList.remove('hide');
+    compressBtn.disabled = false;
+    document.getElementById('result').classList.add('hide');
+  }
+  ['dragenter','dragover'].forEach(evt => zone.addEventListener(evt, e => { e.preventDefault(); zone.classList.add('drop-active'); }));
+  ['dragleave','drop'].forEach(evt => zone.addEventListener(evt, e => { e.preventDefault(); zone.classList.remove('drop-active'); }));
+  zone.addEventListener('drop', e => setFile(e.dataTransfer.files[0]));
+  document.getElementById('removeFile').addEventListener('click', () => {
+    selectedFile = null; input.value = ''; fileInfo.classList.add('hide'); compressBtn.disabled = true; document.getElementById('result').classList.add('hide');
+  });
+  document.querySelectorAll('.quality').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('.quality').forEach(b => b.className = 'quality rounded-xl border border-gray-200 p-3 text-left dark:border-white/10');
+    btn.className = 'quality rounded-xl border border-brand bg-indigo-50 p-3 text-left dark:bg-indigo-400/10';
+  }));
+  document.querySelectorAll('.size-chip').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('.size-chip').forEach(b => b.classList.remove('border-brand','bg-indigo-50','text-brand'));
+    btn.classList.add('border-brand','bg-indigo-50','text-brand');
+  }));
+  compressBtn.addEventListener('click', () => {
+    if (!selectedFile) return;
+    document.getElementById('result').classList.remove('hide');
+    document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+</script>
+</body>
+</html>

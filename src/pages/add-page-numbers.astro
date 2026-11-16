@@ -1,0 +1,70 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import AddPageNumbers from '../islands/AddPageNumbers';
+
+const faqs = [
+  { q: 'Can I skip the cover page?', a: 'Yes. Tick “Don’t number the first page”. Numbering then starts on page 2 with your start number.' },
+  { q: 'Can numbering start at a number other than 1?', a: 'Yes. Set <strong>Start at</strong> to any number, which is handy when your PDF continues from another document.' },
+  { q: 'Which formats are available?', a: 'Four: <code>1</code>, <code>Page 1</code>, <code>1 / 10</code> and <code>Page 1 of 10</code>.' },
+  { q: 'Will numbers appear correctly on landscape or rotated pages?', a: 'Yes. PDFNU places numbers relative to how each page is displayed, so they sit upright in the chosen corner even on rotated pages.' },
+  { q: 'Is my document uploaded?', a: 'No. Page numbers are added in your browser and the file never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="add-page-numbers"
+  title="Add Page Numbers to PDF Online Free | PDFNU"
+  description="Number the pages of a PDF in seconds. Choose the position, format (1, Page 1, 1 of 10) and start number, or skip the cover. Free, no upload."
+  h1="Add Page Numbers"
+  lead="Number the pages of any PDF. Pick a corner, a format like “Page 1 of 10” and a start number, and skip the cover page if you like. It all runs on your device."
+  howToTitle="How to Add Page Numbers"
+  steps={['Select or drop your PDF.', 'Choose position, format, start number and size.', 'Click <strong>Add page numbers</strong> and download.']}
+  faqs={faqs}
+  related={['organize-pdf', 'watermark-pdf', 'merge-pdf', 'split-pdf']}
+>
+  <AddPageNumbers client:load />
+
+  <Fragment slot="content">
+    <h2>What this tool does</h2>
+    <p>
+      Add Page Numbers stamps a number on each page of your PDF, in the position and style you choose. It’s useful for theses, reports,
+      legal bundles and merged documents, anything people need to reference by page.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> A preview of the first page appears.</li>
+      <li><strong>Choose a format:</strong> <code>1</code>, <code>Page 1</code>, <code>1 / 10</code> or <code>Page 1 of 10</code>.</li>
+      <li><strong>Choose a position</strong> using the grid: top or bottom, left, center or right.</li>
+      <li><strong>Set the start number and size.</strong> Tick the cover option if page 1 shouldn’t be numbered.</li>
+      <li><strong>Apply and download.</strong> Your file keeps its name.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li><strong>Thesis:</strong> skip the cover, start at 1, bottom center, format <code>1</code>.</li>
+      <li><strong>Court bundle:</strong> top right, <code>Page 1 of 120</code>, size L.</li>
+      <li><strong>Second volume of a report:</strong> start at 57 so numbering continues from volume one.</li>
+    </ul>
+    <p>Combining several files first? Use <a href="/merge-pdf">Merge PDF</a>, then number the merged document so the count runs straight through.</p>
+
+    <h2>Limitations</h2>
+    <p>
+      Numbers use Helvetica in dark gray. If a page already has content in the chosen corner, the number may overlap it, so pick another position.
+      Roman numerals aren’t supported yet. Password-protected PDFs must be unlocked first.
+    </p>
+
+    <h2>Tips for a professional result</h2>
+    <ul>
+      <li><strong>Bottom center</strong> is the most common choice for reports and theses. <strong>Top right</strong> or <strong>bottom right</strong> works well for legal bundles and anything that will be stapled.</li>
+      <li>Use <code>Page 1 of 10</code> when pages may be printed and separated. Readers can tell immediately if a page is missing.</li>
+      <li>Keep size <strong>M</strong> for normal documents and <strong>L</strong> for slides or scanned pages viewed on phones.</li>
+      <li>Numbering a merged file? Merge first, then number, so the sequence runs through all documents.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>Everything happens locally in your browser with pdf-lib. Your PDF isn’t uploaded, logged or kept.</p>
+  </Fragment>
+</ToolLayout>

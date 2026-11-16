@@ -1,0 +1,112 @@
+---
+import '../styles/global.css';
+import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Absolute path, e.g. "/compress-pdf". Defaults to current path. */
+  path?: string;
+  ogImage?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  /** Load the AdSense script on this page (only if PUBLIC_ADSENSE_CLIENT is set). */
+  ads?: boolean;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { title, description, path, ogImage = '/og.png', type = 'website', noindex = false, ads = false, jsonLd } = Astro.props;
+const site = (Astro.site?.toString() ?? 'https://pdfnu.com/').replace(/\/$/, '');
+const canonical = site + (path ?? (Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'));
+const ogUrl = ogImage.startsWith('http') ? ogImage : site + ogImage;
+const adClient = import.meta.env.PUBLIC_ADSENSE_CLIENT as string | undefined;
+const lds = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="theme-color" content="#ffffff" />
+    <!-- Set theme before paint → no flash -->
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          var d = t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+          if (d) { document.documentElement.classList.add('dark'); document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0b1020'); }
+        } catch (e) {}
+      })();
+    </script>
+    <link rel="preload" href={interWoff2} as="font" type="font/woff2" crossorigin />
+    <style is:inline set:html={`@font-face{font-family:'Inter Variable';font-style:normal;font-display:swap;font-weight:100 900;src:url(${interWoff2}) format('woff2-variations');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}`} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="PDFNU" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+
+    {lds.map((ld) => <script type="application/ld+json" set:html={JSON.stringify(ld)} />)}
+
+    {adClient && <meta name="google-adsense-account" content={adClient} />}
+    {ads && adClient && (
+      <script is:inline define:vars={{ adClient }}>
+        // AdSense loads after the page is interactive so it never hurts LCP/TBT.
+        // In the EEA/UK/CH, Google's certified consent platform (enabled in AdSense → Privacy & messaging)
+        // is delivered by this same tag and asks for consent before personalised ads.
+        addEventListener('load', function () {
+          (window.requestIdleCallback || setTimeout)(function () {
+            var s = document.createElement('script');
+            s.async = true; s.crossOrigin = 'anonymous';
+            s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + adClient;
+            s.onload = function () {
+              document.querySelectorAll('ins.adsbygoogle').forEach(function () { (window.adsbygoogle = window.adsbygoogle || []).push({}); });
+              // Reveal the "Privacy choices" footer link once Google's consent tool is available
+              window.googlefc = window.googlefc || {}; window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
+              window.googlefc.callbackQueue.push({ CONSENT_API_READY: function () {
+                document.querySelectorAll('[data-privacy-choices]').forEach(function (b) {
+                  b.hidden = false;
+                  b.addEventListener('click', function () { window.googlefc.showRevocationMessage(); });
+                });
+              } });
+            };
+            document.head.appendChild(s);
+          }, 1500);
+        });
+      </script>
+    )}
+    <script is:inline>
+      if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+        addEventListener('load', function () { navigator.serviceWorker && navigator.serviceWorker.register('/sw.js').catch(function () {}); });
+      }
+    </script>
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <a href="#main" class="sr-only z-50 rounded-lg bg-brand px-4 py-2 text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3">Skip to content</a>
+    <Header />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

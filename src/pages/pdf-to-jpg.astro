@@ -1,0 +1,72 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PdfToJpg from '../islands/PdfToJpg';
+
+const faqs = [
+  { q: 'Which DPI should I choose?', a: '<strong>150 DPI</strong> is right for screens, messages and most uploads. Choose <strong>300 DPI</strong> for printing or zooming into small text. <strong>72 DPI</strong> gives the smallest files.' },
+  { q: 'Can I convert only some pages?', a: 'Yes. Type pages or ranges such as <code>1-3, 5</code> in the Pages box. Leave it empty to convert every page.' },
+  { q: 'How do I get all the images at once?', a: 'When there’s more than one page, PDFNU bundles the JPGs into a single .zip. You can also save pages one by one from the list.' },
+  { q: 'Are images inside the PDF extracted at original quality?', a: 'PDFNU renders each page as you see it, including text and graphics, rather than pulling out embedded photos. For the sharpest results, use 300 DPI and Maximum quality.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Pages are rendered by pdf.js inside your browser. The PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="pdf-to-jpg"
+  title="PDF to JPG Converter – High Quality, Free | PDFNU"
+  description="Convert PDF pages to JPG images at 72, 150 or 300 DPI. Pick pages, choose quality, and download one image or a zip. No upload, no signup."
+  h1="PDF to JPG"
+  lead="Turn PDF pages into JPG images at the resolution you need. Convert every page or just a few, then download one image or a zip."
+  howToTitle="How to Convert PDF to JPG"
+  steps={['Select or drop your PDF.', 'Choose resolution (DPI), quality and, optionally, which pages.', 'Click <strong>Convert to JPG</strong> and download the image or .zip.']}
+  faqs={faqs}
+  related={['jpg-to-pdf', 'compress-image', 'split-pdf', 'compress-pdf']}
+>
+  <PdfToJpg client:load />
+
+  <Fragment slot="content">
+    <h2>What PDF to JPG does</h2>
+    <p>
+      This tool renders each page of your PDF as an image, just as it looks on screen, and saves it as a JPG. Use it when a website accepts
+      images but not PDFs, to post a page on social media, or to put a page into a presentation.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong></li>
+      <li><strong>Pick a resolution.</strong> DPI means dots per inch. An A4 page at 150 DPI becomes about 1240 × 1754 pixels, and at 300 DPI about 2480 × 3508.</li>
+      <li><strong>Pick a quality.</strong> High is a good balance. Maximum keeps fine detail at a larger file size.</li>
+      <li><strong>Optionally choose pages</strong> with ranges like <code>2-4, 7</code>.</li>
+      <li><strong>Convert and download.</strong> Files are named <code>yourfile-page-1.jpg</code>, <code>yourfile-page-2.jpg</code> and so on.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li>Upload page 1 of a certificate to a portal that only accepts JPG: Pages <code>1</code>, 150 DPI, High.</li>
+      <li>Share slides from a PDF deck in a chat app: all pages, 150 DPI, then save the ones you want from the list.</li>
+      <li>Need the image under a size limit? Run it through <a href="/compress-image">Compress Image</a> afterwards.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      300 DPI on very large pages (posters, engineering drawings) needs a lot of memory. PDFNU caps the canvas size to stay stable on phones,
+      which may lower the effective resolution on huge pages. Password-protected PDFs must be unlocked first.
+    </p>
+
+    <h2>Choosing the right settings</h2>
+    <ul>
+      <li><strong>Text documents</strong> (contracts, forms): 150 DPI and High quality give crisp, readable images of a few hundred KB each.</li>
+      <li><strong>Photos and brochures:</strong> 150–300 DPI with High or Maximum quality to keep colour gradients smooth.</li>
+      <li><strong>Upload portals with size limits:</strong> start at 150 DPI, then use <a href="/compress-image">Compress Image</a> to hit an exact KB limit.</li>
+      <li><strong>Printing:</strong> 300 DPI and Maximum quality.</li>
+    </ul>
+    <p>Each image keeps the page’s proportions, so landscape pages produce landscape images.</p>
+
+    <h2>Privacy</h2>
+    <p>
+      Conversion runs in your browser with Mozilla’s open-source pdf.js engine. Your document isn’t uploaded or stored anywhere.
+    </p>
+  </Fragment>
+</ToolLayout>
