@@ -1,0 +1,2 @@
+# Common sitemap URL some crawlers and SEO tools check first
+/sitemap.xml /sitemap-index.xml 301
