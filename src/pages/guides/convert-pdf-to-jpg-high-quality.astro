@@ -1,0 +1,46 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Which resolution should I choose?", a: "150 DPI is right for sharing and viewing on screens. Choose 300 DPI for printing or when you need to zoom into small text. 72 DPI keeps files tiny." },
+  { q: "Can I convert only some pages?", a: "Yes. Choose the pages you want before converting. Each page becomes one JPG." },
+  { q: "How do I get many JPGs at once?", a: "When several pages are converted, Download all saves them together as a .zip file." },
+];
+---
+<GuideLayout slug="convert-pdf-to-jpg-high-quality" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/pdf-to-jpg">PDF to JPG</a>, select your PDF, choose a resolution (150 DPI for screens, 300 DPI for print), pick the pages, and click <strong>Convert to JPG</strong>. Each page becomes a separate image. Several pages download as a .zip.</p>
+
+  <h2>Choosing resolution and quality</h2>
+  <ul>
+    <li><strong>72 DPI:</strong> small files for quick previews or chat apps.</li>
+    <li><strong>150 DPI:</strong> sharp on phones and laptops. The best default.</li>
+    <li><strong>300 DPI:</strong> print quality and readable small print. Files are about four times larger than 150 DPI.</li>
+  </ul>
+  <p>The JPG quality setting (Medium, High, Maximum) trades file size for detail. High is a good balance. Use Maximum for text-heavy pages you will zoom into.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/pdf-to-jpg">pdfsherpa.com/pdf-to-jpg</a>.</li>
+    <li>Select the PDF.</li>
+    <li>Choose resolution, quality and the pages to convert.</li>
+    <li>Click <strong>Convert to JPG</strong>. Save single images, or <strong>Download all</strong> as a .zip.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Uses</h2>
+  <ul>
+    <li>Post a page of a document on social media or in a chat that doesn’t accept PDFs.</li>
+    <li>Upload a certificate to a portal that only accepts images.</li>
+    <li>Put a page into a presentation or a document as a picture.</li>
+  </ul>
+
+  <h2>Page images vs the photos inside a PDF</h2>
+  <p>
+    PDF to JPG takes a picture of the whole page. If you want the original photos that are inside the PDF, at their own resolution, use
+    <a href="/extract-images-from-pdf">Extract Images</a> instead. To make a JPG smaller afterwards, use <a href="/compress-image">Compress Image</a>.
+  </p>
+
+  <h2>Privacy</h2>
+  <p>Pages are rendered by pdf.js in your browser. Neither the PDF nor the images are uploaded.</p>
+</GuideLayout>

@@ -1,0 +1,43 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Can I use my logo as a watermark?", a: "Yes. Choose Image / logo as the watermark type and select a PNG or JPG. A PNG with a transparent background looks best." },
+  { q: "How do I make a watermark that covers the whole page?", a: "Tick Repeat across page. The text or logo is tiled over every page, which makes it much harder to crop out." },
+  { q: "Can a watermark be removed?", a: "A determined person with editing software can sometimes remove it. A tiled, semi-transparent watermark over the content is the hardest to remove cleanly." },
+];
+---
+<GuideLayout slug="add-watermark-to-pdf" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/watermark-pdf">Watermark</a>, select your PDF, type your text (like <em>CONFIDENTIAL</em> or <em>DRAFT</em>) or choose a logo, set size, angle, opacity and position, then click <strong>Add watermark</strong>. It is added to every page.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/watermark-pdf">pdfsherpa.com/watermark-pdf</a> and select the PDF.</li>
+    <li>Choose <strong>Text</strong> or <strong>Image / logo</strong>.</li>
+    <li>Set the colour, size and angle. 45° diagonal text is the classic look.</li>
+    <li>Set the opacity. 20–35% is visible without hiding the content.</li>
+    <li>Pick a position, or tick <strong>Repeat across page</strong> to tile it.</li>
+    <li>Check the preview, then click <strong>Add watermark</strong> and download.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Which watermark to use</h2>
+  <ul>
+    <li><strong>DRAFT:</strong> documents that are not final, so nobody treats them as signed versions.</li>
+    <li><strong>CONFIDENTIAL:</strong> internal documents shared with a limited group.</li>
+    <li><strong>A copy notice:</strong> for ID copies, write what the copy is for, for example <em>For rental application only</em>. This makes misuse harder.</li>
+    <li><strong>Your logo:</strong> brochures, price lists, portfolios and sample work.</li>
+  </ul>
+
+  <h2>Tips</h2>
+  <ul>
+    <li>Tiled watermarks are harder to crop out than one watermark in a corner.</li>
+    <li>Use a light grey or your brand colour at low opacity so text stays readable.</li>
+    <li>Add the watermark before compressing, then use <a href="/compress-pdf">Compress PDF</a> if the file is too large.</li>
+    <li>For stronger protection, add a password with <a href="/protect-pdf">Protect PDF</a> as well.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>The watermark is added in your browser. Your PDF and logo are never uploaded.</p>
+</GuideLayout>

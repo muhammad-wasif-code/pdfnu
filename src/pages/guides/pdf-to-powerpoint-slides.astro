@@ -1,0 +1,46 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Can I edit the text in the slides?", a: "The page appears as a picture, so its text can’t be edited. You can add new text boxes, notes and shapes on top." },
+  { q: "Will the slides be the right shape?", a: "Yes. The slide size matches the first page of the PDF, so 16:9 slides exported as PDF come back as 16:9 slides." },
+  { q: "Does it work with Google Slides?", a: "Yes. Upload the .pptx to Google Drive and open it with Google Slides. It also opens in Keynote and LibreOffice." },
+];
+---
+<GuideLayout slug="pdf-to-powerpoint-slides" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/pdf-to-powerpoint">PDF to PowerPoint</a>, select the PDF, choose Standard or High quality, and click <strong>Convert to PowerPoint</strong>. Every page becomes a slide that looks exactly like the PDF.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/pdf-to-powerpoint">pdfsherpa.com/pdf-to-powerpoint</a>.</li>
+    <li>Select the PDF.</li>
+    <li>Choose <strong>Standard</strong> for a smaller file, or <strong>High</strong> for projectors and large screens.</li>
+    <li>Click <strong>Convert to PowerPoint</strong> and download the .pptx.</li>
+    <li>Open it in PowerPoint, Google Slides or Keynote.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Good uses</h2>
+  <ul>
+    <li><strong>Presenting a PDF deck:</strong> use slideshow mode and presenter notes.</li>
+    <li><strong>Teaching:</strong> add arrows, highlights and questions on top of each page.</li>
+    <li><strong>Reusing slides:</strong> copy a few slides into your own presentation.</li>
+  </ul>
+
+  <h2>Why pages become pictures</h2>
+  <p>
+    Rebuilding editable text from a PDF usually breaks the layout: fonts change and lines overlap. Placing each page as an image keeps every slide
+    exactly as designed. If you need the words, copy them with <a href="/pdf-to-text">PDF to Text</a> and paste them into a text box.
+  </p>
+
+  <h2>Tips</h2>
+  <ul>
+    <li>Remove pages you don’t need first with <a href="/delete-pdf-pages">Delete Pages</a>. Fewer slides means a smaller file.</li>
+    <li>High quality on a long PDF makes a large file. Standard is fine for most screens.</li>
+    <li>Add speaker notes in PowerPoint under each slide to present without reading from the page.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Pages are rendered and the .pptx is built in your browser. Your PDF is never uploaded.</p>
+</GuideLayout>

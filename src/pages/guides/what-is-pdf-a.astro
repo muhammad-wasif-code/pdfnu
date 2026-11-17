@@ -1,0 +1,53 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "What is the difference between PDF and PDF/A?", a: "PDF/A is a stricter version of PDF. Everything needed to display the document, such as fonts and colour information, must be inside the file, and features like JavaScript are not allowed." },
+  { q: "Which PDF/A version should I use?", a: "Use the version the court, university or office asks for. PDF/A-2b is widely accepted and is what PDFSherpa creates." },
+  { q: "Can a PDF/A have a password?", a: "No. Encryption is not allowed in PDF/A, because an archive must be readable in the future without a key." },
+];
+---
+<GuideLayout slug="what-is-pdf-a" faqs={faqs}>
+<p><strong>Short answer:</strong> PDF/A is the archive version of PDF (ISO 19005). It stores fonts and colour information inside the file so the document looks the same in decades. To convert, open <a href="/pdf-to-pdfa">PDF to PDF/A</a>, select the file and click <strong>Convert to PDF/A</strong>.</p>
+
+  <h2>Why PDF/A exists</h2>
+  <p>
+    A normal PDF can depend on fonts installed on the computer that opens it, link to outside content, or contain scripts. In twenty years, those may be
+    missing and the document may look different or not open. PDF/A forbids anything that depends on the outside world, so the file is self-contained.
+  </p>
+
+  <h2>Who asks for PDF/A</h2>
+  <ul>
+    <li>Courts with electronic filing.</li>
+    <li>Universities, for theses and dissertations.</li>
+    <li>Government tenders and public archives.</li>
+    <li>Companies that must keep invoices and contracts for many years.</li>
+  </ul>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>The versions in brief</h2>
+  <ul>
+    <li><strong>PDF/A-1:</strong> the first version (2005), most restrictive. No transparency.</li>
+    <li><strong>PDF/A-2:</strong> adds transparency, JPEG 2000 and better compression. Widely accepted.</li>
+    <li><strong>PDF/A-3:</strong> like PDF/A-2, but allows attached files.</li>
+    <li>The letter <strong>b</strong> (basic) means the document will look the same. <strong>a</strong> (accessible) adds tagged structure for screen readers.</li>
+  </ul>
+
+  <h2>How to convert</h2>
+  <ol>
+    <li>Open <a href="/pdf-to-pdfa">pdfsherpa.com/pdf-to-pdfa</a> and select the PDF.</li>
+    <li>Click <strong>Convert to PDF/A</strong>. The first time, the PDF engine downloads once.</li>
+    <li>Download the file, saved with <code>-pdfa</code> in its name.</li>
+  </ol>
+
+  <h2>If the file is rejected</h2>
+  <ul>
+    <li>Check which version the portal wants. If it requires PDF/A-1 or PDF/A-3, ask whether PDF/A-2 is accepted.</li>
+    <li>Damaged source files can fail validation. Try <a href="/repair-pdf">Repair PDF</a> first, then convert again.</li>
+    <li>Remove passwords with <a href="/unlock-pdf">Unlock PDF</a> before converting.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Conversion runs in your browser with Ghostscript. Your document is never uploaded.</p>
+</GuideLayout>

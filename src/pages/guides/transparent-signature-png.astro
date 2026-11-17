@@ -1,0 +1,51 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "What does a transparent signature mean?", a: "Only the ink is kept. The paper around it is removed, so the signature can sit on any document without a white box around it." },
+  { q: "My signature looks faint or broken after cleaning. What can I do?", a: "Lower the background removal strength, or take a new photo with a darker pen and better light." },
+  { q: "Can I use it to sign a PDF?", a: "Yes. Download the PNG and upload it in Sign PDF, or go straight there with the Sign PDF button." },
+];
+---
+<GuideLayout slug="transparent-signature-png" faqs={faqs}>
+<p><strong>Short answer:</strong> sign on white paper with a dark pen, take a photo, and open <a href="/signature-cleaner">Signature Cleaner</a>. The paper is removed automatically. Choose <strong>Transparent PNG</strong> for documents or <strong>White JPG</strong> for forms, and download.</p>
+
+  <h2>Taking a good photo</h2>
+  <ul>
+    <li>Use a black or dark blue pen, a little thicker than usual. Gel pens and markers work well.</li>
+    <li>Sign on plain white paper with no lines.</li>
+    <li>Photograph it in daylight, straight from above, without your phone’s shadow on the page.</li>
+    <li>Fill most of the photo with the signature.</li>
+  </ul>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/signature-cleaner">pdfsherpa.com/signature-cleaner</a> and select the photo.</li>
+    <li>Adjust <strong>Background removal strength</strong> until the paper is gone and the ink stays solid.</li>
+    <li>Pick an ink colour: original, black or blue.</li>
+    <li>Choose the background: <strong>Transparent PNG</strong> or <strong>White JPG</strong>.</li>
+    <li>If a form has a size limit, choose 10KB, 20KB or 50KB.</li>
+    <li>Download.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>PNG or JPG?</h2>
+  <ul>
+    <li><strong>Transparent PNG:</strong> for placing on PDFs, letters and documents. No white rectangle shows over lines or text.</li>
+    <li><strong>White JPG:</strong> for job and exam portals that ask for a signature image in JPG with a size limit.</li>
+  </ul>
+
+  <h2>Where to use it</h2>
+  <ul>
+    <li>Sign PDFs with <a href="/sign-pdf">Sign PDF</a> using the Upload option.</li>
+    <li>Add it to a document with <a href="/edit-pdf">Edit PDF</a> as an image.</li>
+    <li>Resize to exact pixels for a form with <a href="/resize-image">Resize Image</a>.</li>
+  </ul>
+
+  <h2>Keep your signature safe</h2>
+  <p>
+    A clean signature image can be misused if it falls into the wrong hands. PDFSherpa processes it in your browser and never uploads it.
+    Don’t post it publicly, and only send it to people and portals you trust.
+  </p>
+</GuideLayout>

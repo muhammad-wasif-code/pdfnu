@@ -1,0 +1,50 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Do I need a scanner app?", a: "No. Open Scan to PDF in your phone’s browser and tap Take a photo. It works on iPhone and Android." },
+  { q: "How do I get a white background like a real scanner?", a: "Keep the Document look selected. It evens out shadows, turns the paper white and makes text dark." },
+  { q: "How do I make the PDF smaller?", a: "Use the Document or Gray look, crop close to the paper, and run the result through Compress PDF if a portal has a size limit." },
+];
+---
+<GuideLayout slug="scan-documents-with-phone" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/scan-to-pdf">Scan to PDF</a> on your phone, tap <strong>Take a photo</strong> for each page, crop or rotate if needed, keep the <strong>Document</strong> look, and tap <strong>Create PDF</strong>. No app needed.</p>
+
+  <h2>Setting up for a clean scan</h2>
+  <ul>
+    <li><strong>Light:</strong> daylight near a window is best. Avoid a lamp directly above, which casts your phone’s shadow.</li>
+    <li><strong>Background:</strong> put white paper on a dark table so its edges are easy to crop.</li>
+    <li><strong>Angle:</strong> hold the phone flat, straight above the page.</li>
+    <li><strong>Focus:</strong> tap the text on screen before taking the photo.</li>
+  </ul>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/scan-to-pdf">pdfsherpa.com/scan-to-pdf</a> in Safari or Chrome.</li>
+    <li>Tap <strong>Take a photo</strong> and photograph the first page.</li>
+    <li>Tap <strong>Add page</strong> for each further page, or <strong>From gallery</strong> for photos you already took.</li>
+    <li>Use ✂ to crop away the table, ↻ to rotate, and the arrows to change the order.</li>
+    <li>Choose a look: <strong>Document</strong>, <strong>Gray</strong>, <strong>Colour</strong> or <strong>Original</strong>.</li>
+    <li>Pick A4, Letter or the photo’s size, then tap <strong>Create PDF</strong>.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Which look to choose</h2>
+  <ul>
+    <li><strong>Document:</strong> forms, letters, printed pages. White paper, dark text, smallest file.</li>
+    <li><strong>Gray:</strong> pages with pencil or light handwriting.</li>
+    <li><strong>Colour:</strong> stamps, coloured forms, ID cards and photos.</li>
+    <li><strong>Original:</strong> no changes at all.</li>
+  </ul>
+
+  <h2>After scanning</h2>
+  <ul>
+    <li>Need to sign it? Use <a href="/sign-pdf">Sign PDF</a>.</li>
+    <li>Upload limit? Use <a href="/compress-pdf">Compress PDF</a>.</li>
+    <li>Need to add more pages later? Scan them and combine with <a href="/merge-pdf">Merge PDF</a>.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Photos are processed on your phone and the PDF is created there. Nothing is uploaded.</p>
+</GuideLayout>

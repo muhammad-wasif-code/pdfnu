@@ -1,0 +1,49 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "What size is a passport photo?", a: "Many countries, including the UK, the EU and much of Asia, use 35×45 mm. The United States uses 2×2 inches (51×51 mm). Always check the official rules for your country and application." },
+  { q: "How many pixels is a 35×45 mm photo?", a: "At 300 DPI, a 35×45 mm photo is 413×531 pixels. PDFSherpa sets this automatically when you choose 35×45 mm." },
+  { q: "Can I print passport photos at home?", a: "Yes. Download the 4×6 inch print sheet, which holds several copies, and print it at a photo shop or on photo paper at actual size." },
+];
+---
+<GuideLayout slug="passport-photo-size-guide" faqs={faqs}>
+<p><strong>Short answer:</strong> most passport and visa photos are <strong>35×45 mm</strong>. The US uses <strong>2×2 inches</strong>. Open <a href="/passport-photo-maker">Passport Photo</a>, choose the size, place your face inside the oval, and download a photo for online forms plus a 4×6 inch sheet for printing.</p>
+
+  <h2>Common sizes</h2>
+  <ul>
+    <li><strong>35×45 mm</strong> (413×531 px at 300 DPI): used by many countries for passports, visas and ID cards.</li>
+    <li><strong>2×2 inch</strong> (600×600 px): United States passports and visas, and some other countries.</li>
+    <li><strong>33×48 mm</strong>: used for some visas, for example Chinese visas.</li>
+    <li><strong>Custom pixels:</strong> exam and job portals often ask for an exact pixel size and a KB limit.</li>
+  </ul>
+  <p>Rules change, so always confirm the size, background colour and head size on the official website for your application.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Take a photo against a plain, light wall in daylight, facing the camera, with a neutral expression.</li>
+    <li>Open <a href="/passport-photo-maker">pdfsherpa.com/passport-photo-maker</a> and select the photo.</li>
+    <li>Choose the size. Drag and zoom so your face fits the oval guide.</li>
+    <li>Set a maximum file size if the form has one, for example 50KB.</li>
+    <li>Download the photo for forms, and the print sheet if you need paper copies.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Rules most countries share</h2>
+  <ul>
+    <li>Plain light background, no shadows.</li>
+    <li>Face straight, eyes open, mouth closed.</li>
+    <li>No glasses glare. Many countries no longer allow glasses at all.</li>
+    <li>A recent photo, usually taken within the last six months.</li>
+  </ul>
+
+  <h2>Other photo jobs</h2>
+  <p>
+    For free-form cropping, for example a profile picture or a document photo, use <a href="/crop-image">Crop Image</a>. For an exact pixel size and KB limit,
+    see <a href="/guides/photo-signature-size-for-online-applications">photo and signature size rules</a>.
+  </p>
+
+  <h2>Privacy</h2>
+  <p>Your photo is processed in your browser and never uploaded.</p>
+</GuideLayout>

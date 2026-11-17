@@ -1,0 +1,40 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Why not just choose black and white in the print dialog?", a: "That works on some printers, but many still use colour ink to make dark grey. Converting the PDF itself guarantees no colour is used, and the file can be shared too." },
+  { q: "Does it make the PDF smaller?", a: "Often yes, especially for colour scans and photos. Text-only PDFs may stay about the same size." },
+  { q: "Will text still be selectable?", a: "Yes. Only colours change. Text and drawings stay sharp and selectable." },
+];
+---
+<GuideLayout slug="print-pdf-black-and-white" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/grayscale-pdf">Grayscale PDF</a>, select your file and click <strong>Convert to grayscale</strong>. Every colour becomes a shade of grey, text stays sharp, and the file is ready to print without colour ink.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/grayscale-pdf">pdfsherpa.com/grayscale-pdf</a>.</li>
+    <li>Select the PDF.</li>
+    <li>Click <strong>Convert to grayscale</strong>. The first time, the PDF engine downloads once.</li>
+    <li>Download the black and white PDF and print it.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>When grayscale helps</h2>
+  <ul>
+    <li><strong>Saving ink:</strong> slides and handouts with coloured backgrounds use a lot of colour cartridge.</li>
+    <li><strong>Upload rules:</strong> some offices and portals ask for black and white scans.</li>
+    <li><strong>Smaller files:</strong> a grey image stores one channel instead of three, so colour scans often shrink.</li>
+    <li><strong>Consistent prints:</strong> what you see on screen is what the printer produces.</li>
+  </ul>
+
+  <h2>Tips</h2>
+  <ul>
+    <li>Highlighted text turns light grey. Check that highlights are still visible before printing many copies.</li>
+    <li>For even smaller files, run the result through <a href="/compress-pdf">Compress PDF</a>.</li>
+    <li>Keep the colour original. Colour can’t be restored from a grayscale file.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Conversion runs in your browser with Ghostscript. The PDF is never uploaded.</p>
+</GuideLayout>

@@ -1,0 +1,45 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Why do downloaded images save as WebP?", a: "Many websites serve WebP because it is smaller. Some apps, older software and upload forms don’t accept it, so converting to JPG or PNG fixes that." },
+  { q: "JPG or PNG: which should I pick?", a: "JPG for photos, because files are small. PNG for screenshots, logos and anything with sharp text or a transparent background." },
+  { q: "Can I convert many images at once?", a: "Yes. Select several images and they are converted one after another. Save them individually." },
+];
+---
+<GuideLayout slug="convert-webp-to-jpg" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/image-converter">Image Converter</a>, select your images, choose <strong>JPG</strong>, <strong>PNG</strong> or <strong>WebP</strong>, and click <strong>Change format</strong>. Save the converted files. It works for WebP to JPG, PNG to JPG, JPG to PNG and more.</p>
+
+  <h2>Which format to use</h2>
+  <ul>
+    <li><strong>JPG:</strong> photos. Smallest files, accepted everywhere. No transparency.</li>
+    <li><strong>PNG:</strong> screenshots, logos, signatures and graphics with text. Keeps transparency and sharp edges, but files are bigger.</li>
+    <li><strong>WebP:</strong> websites. Smaller than JPG at the same quality, but not every app accepts it.</li>
+  </ul>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/image-converter">pdfsherpa.com/image-converter</a>.</li>
+    <li>Select one or more images.</li>
+    <li>Choose the format to convert to and, for JPG or WebP, the quality.</li>
+    <li>Click <strong>Change format</strong> and save the results.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Common fixes</h2>
+  <ul>
+    <li><strong>“File type not supported” on a form:</strong> convert to JPG.</li>
+    <li><strong>A transparent logo turned black or white:</strong> convert to PNG, not JPG, which has no transparency.</li>
+    <li><strong>A PNG photo is several MB:</strong> convert it to JPG. It often becomes ten times smaller.</li>
+  </ul>
+
+  <h2>Next steps</h2>
+  <p>
+    Need a specific KB size? Use <a href="/compress-image">Compress Image</a>. Need exact pixels? Use <a href="/resize-image">Resize Image</a>.
+    Want the images in one document? Use <a href="/jpg-to-pdf">JPG to PDF</a>.
+  </p>
+
+  <h2>Privacy</h2>
+  <p>Images are converted in your browser and never uploaded.</p>
+</GuideLayout>

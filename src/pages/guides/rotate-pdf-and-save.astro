@@ -1,0 +1,46 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Why does my PDF go back to sideways after I rotate it in my viewer?", a: "Most viewers only rotate the view, not the file. Rotate PDF saves the new orientation into the file so it opens the right way everywhere." },
+  { q: "Can I rotate just one page?", a: "Yes. Each page has its own rotate button. Turn only the sideways pages and leave the others as they are." },
+  { q: "Does rotating change quality?", a: "No. Rotation only changes a page setting, so text and images are untouched." },
+];
+---
+<GuideLayout slug="rotate-pdf-and-save" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/rotate-pdf">Rotate PDF</a>, select your file, tap the rotate button on each sideways page (or <strong>↻ All right</strong> for every page), then save. The new orientation is stored in the file, so it opens correctly on every phone and computer.</p>
+
+  <h2>Why rotating in a PDF viewer doesn’t stick</h2>
+  <p>
+    The rotate button in Chrome, Edge, Preview or most phone viewers only turns the page on your screen. When you send the file, it arrives sideways
+    again. To fix it for everyone, the rotation has to be saved into the PDF itself. That is what Rotate PDF does.
+  </p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/rotate-pdf">pdfsherpa.com/rotate-pdf</a>.</li>
+    <li>Select or drop the PDF. Thumbnails of all pages appear.</li>
+    <li>Tap a page to turn it 90° clockwise, or use the counter-clockwise button in its corner. Tap again for 180°.</li>
+    <li>To turn every page, use <strong>↻ All right</strong>. Use <strong>Reset</strong> to start over.</li>
+    <li>Click <strong>Apply rotation</strong> and download.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Common situations</h2>
+  <ul>
+    <li><strong>Scanned documents</strong> where a landscape page was fed in the wrong way.</li>
+    <li><strong>Phone photos</strong> turned into a PDF that came out sideways.</li>
+    <li><strong>Mixed documents</strong> with a few wide tables between portrait pages. Rotate only those pages.</li>
+  </ul>
+
+  <h2>Tips</h2>
+  <ul>
+    <li>Rotation is lossless, so you can rotate as often as you like without blurring anything.</li>
+    <li>Want to rotate and also reorder or delete pages? <a href="/organize-pdf">Organize PDF</a> does all three.</li>
+    <li>If you are creating the PDF from photos, <a href="/jpg-to-pdf">JPG to PDF</a> straightens photo orientation automatically.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>The file is rotated in your browser and never uploaded.</p>
+</GuideLayout>

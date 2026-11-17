@@ -1,0 +1,44 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Why can’t I select text in my PDF?", a: "The PDF is probably a scan or a photo, so the text is part of an image. Text can only be copied from PDFs that contain real text." },
+  { q: "Why is copied text broken into short lines?", a: "PDFs store text line by line. PDF to Text joins it per page. For paragraphs and headings that flow properly, use PDF to Markdown." },
+  { q: "Can I extract text from a protected PDF?", a: "Unlock it first with its password using Unlock PDF, then extract." },
+];
+---
+<GuideLayout slug="copy-text-from-pdf" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/pdf-to-text">PDF to Text</a> and select the PDF. All text is extracted in seconds. Tap <strong>Copy all text</strong> or <strong>Download .txt</strong>.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/pdf-to-text">pdfsherpa.com/pdf-to-text</a>.</li>
+    <li>Select the PDF. Every page is read automatically.</li>
+    <li>Check the word count and preview. Turn page markers on or off.</li>
+    <li>Copy everything, or download a .txt file.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Copying from a PDF viewer vs extracting</h2>
+  <p>
+    Selecting text in a viewer works for a few lines, but on long documents it often grabs headers, page numbers and broken lines, and on a phone
+    it is slow. Extracting gets the text of every page at once, ready to paste into a document, email or translator.
+  </p>
+
+  <h2>Which tool for which job</h2>
+  <ul>
+    <li><a href="/pdf-to-text">PDF to Text</a>: plain text, for search, translation or pasting anywhere.</li>
+    <li><a href="/pdf-to-markdown">PDF to Markdown</a>: keeps headings, lists and paragraphs. Best for notes apps and AI chat tools.</li>
+    <li><a href="/compare-pdf">Compare PDF</a>: when you want to know what changed between two versions.</li>
+  </ul>
+
+  <h2>If no text is found</h2>
+  <p>
+    The PDF is a scan, so its words are pixels. Text recognition (OCR) is needed for those files. Until then, you can still read the scan,
+    and use <a href="/pdf-to-jpg">PDF to JPG</a> if you need images of the pages.
+  </p>
+
+  <h2>Privacy</h2>
+  <p>Text is extracted in your browser with pdf.js. Your PDF is never uploaded.</p>
+</GuideLayout>

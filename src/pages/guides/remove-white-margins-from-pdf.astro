@@ -1,0 +1,48 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Is there an automatic way to remove margins?", a: "Yes. Tap Auto-detect margins and the crop box fits around the content of the page you are viewing." },
+  { q: "Will cropping make text bigger on my phone?", a: "Yes. With less white space around the content, phone and e-reader screens zoom in further, so text looks larger." },
+  { q: "Is cropped content deleted?", a: "No. Cropping hides what is outside the box but it stays in the file. Use Redact PDF to remove private content." },
+];
+---
+<GuideLayout slug="remove-white-margins-from-pdf" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/crop-pdf">Crop PDF</a>, select the PDF, tap <strong>✨ Auto-detect margins</strong>, adjust the corners if needed, and click <strong>Crop PDF</strong>. Apply it to all pages or only the current one.</p>
+
+  <h2>Why remove margins?</h2>
+  <ul>
+    <li><strong>Reading on a phone or e-reader:</strong> wide margins waste screen space and make text tiny.</li>
+    <li><strong>Printing larger:</strong> cropped pages scale up to fill the paper.</li>
+    <li><strong>Cleaner scans:</strong> remove dark scanner edges and the shadow of the scanner lid.</li>
+    <li><strong>Sharing one part:</strong> cut a page down to a single table or chart.</li>
+  </ul>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/crop-pdf">pdfsherpa.com/crop-pdf</a> and select the PDF.</li>
+    <li>Tap <strong>Auto-detect margins</strong>, or drag the round handles to set the area to keep.</li>
+    <li>Use the page arrows to check other pages still fit inside the box.</li>
+    <li>Choose <strong>All pages</strong> or <strong>Only this page</strong>.</li>
+    <li>Click <strong>Crop PDF</strong> and download.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Tips</h2>
+  <ul>
+    <li>Auto-detect looks at the page on screen. Choose a page with full-width content, such as a page with a wide table, before applying the crop to all pages.</li>
+    <li>Leave a small border so nothing touches the edge when printed.</li>
+    <li>If pages have different layouts, crop them one at a time.</li>
+    <li>Cropping doesn’t make the file smaller. Use <a href="/compress-pdf">Compress PDF</a> for that.</li>
+  </ul>
+
+  <h2>Cropping is not redaction</h2>
+  <p>
+    Content outside the crop box is hidden, not deleted, and can be restored by other software. To remove names, numbers or addresses,
+    use <a href="/redact-pdf">Redact PDF</a>.
+  </p>
+
+  <h2>Privacy</h2>
+  <p>Cropping happens in your browser and the PDF is never uploaded.</p>
+</GuideLayout>

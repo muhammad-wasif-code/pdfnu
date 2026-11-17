@@ -1,0 +1,40 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Can I start numbering from a number other than 1?", a: "Yes. Set Start at to any number, for example 5 if the first pages of your document are a cover and contents." },
+  { q: "Which formats are available?", a: "Plain numbers (1), Page 1, Page 1 of 10, or 1 / 10. Choose the position, such as bottom centre or top right." },
+  { q: "Will numbers appear correctly on landscape or rotated pages?", a: "Yes. Numbers are placed upright according to how each page is shown." },
+];
+---
+<GuideLayout slug="add-page-numbers-to-pdf" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/add-page-numbers">Page Numbers</a>, select your PDF, pick a format (like <em>Page 1 of 10</em>), a position and text size, and click <strong>Add page numbers</strong>. Download the numbered PDF.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/add-page-numbers">pdfsherpa.com/add-page-numbers</a> and select the PDF.</li>
+    <li>Choose a format: <code>1</code>, <code>Page 1</code>, <code>Page 1 of 10</code> or <code>1 / 10</code>.</li>
+    <li>Pick where numbers go, for example bottom centre or bottom right.</li>
+    <li>Set the text size and, if needed, the number to start at.</li>
+    <li>Check the preview, then click <strong>Add page numbers</strong>.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Which style to choose</h2>
+  <ul>
+    <li><strong>Theses and reports:</strong> a plain number at the bottom centre is the most common academic style.</li>
+    <li><strong>Contracts and legal documents:</strong> <em>Page 1 of 10</em> shows that no page is missing.</li>
+    <li><strong>Printed booklets:</strong> bottom right or bottom left depending on the binding side.</li>
+  </ul>
+
+  <h2>Tips</h2>
+  <ul>
+    <li>Merging several files? Do it first with <a href="/merge-pdf">Merge PDF</a>, then number the combined document once.</li>
+    <li>If the cover should not have a number, remove it with <a href="/delete-pdf-pages">Delete Pages</a>, number the rest starting at 2, then merge the cover back in front.</li>
+    <li>Check that numbers don’t overlap a footer that is already printed on the pages. Move them to the top if needed.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Numbers are added in your browser and your PDF is never uploaded.</p>
+</GuideLayout>

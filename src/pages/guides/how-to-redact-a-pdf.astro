@@ -1,0 +1,56 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Is a black box drawn in a PDF editor a redaction?", a: "No. A box drawn on top only hides text visually. The words stay in the file and can be copied, searched or revealed by deleting the box." },
+  { q: "How can I check that redaction worked?", a: "Open the redacted PDF, try to select the hidden text, and search for a word you redacted. Nothing should be found." },
+  { q: "Can I redact a scanned PDF?", a: "Yes, by drawing boxes by hand. Search doesn’t work on scans because their text is part of an image." },
+];
+---
+<GuideLayout slug="how-to-redact-a-pdf" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/redact-pdf">Redact PDF</a>, draw boxes over private information or search a word and tap <strong>Mark all</strong>, then click <strong>Redact</strong>. Pages with boxes are rebuilt so the covered text is removed from the file, not just hidden.</p>
+
+  <h2>Why covering isn’t enough</h2>
+  <p>
+    Many documents have leaked because someone drew black rectangles over text and sent the PDF. The rectangles were on top, but the text was still
+    underneath: anyone could copy it out. Real redaction deletes the information itself. PDFSherpa does this by turning each redacted page into an image
+    with the boxes burned in, and building a new PDF without that page’s original text.
+  </p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/redact-pdf">pdfsherpa.com/redact-pdf</a> and select the PDF.</li>
+    <li>Drag on the page to draw a box. Tap a box to move, resize or delete it.</li>
+    <li>To find text everywhere, type it in the search field, like a phone number or a name, and tap <strong>Mark all</strong>.</li>
+    <li>Go through the pages and check each box covers the whole word.</li>
+    <li>Leave <strong>Also remove document info</strong> ticked to clear the title and author.</li>
+    <li>Click <strong>Redact</strong> and download.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>What to redact</h2>
+  <ul>
+    <li>Account, card and ID numbers.</li>
+    <li>Home addresses, phone numbers and email addresses.</li>
+    <li>Names of other people, signatures and photos of faces.</li>
+    <li>Salaries, prices and anything under a confidentiality agreement.</li>
+  </ul>
+
+  <h2>Check your result</h2>
+  <ol>
+    <li>Open the redacted file.</li>
+    <li>Try to select text under a box. You should get nothing.</li>
+    <li>Use search (Ctrl+F) for a redacted word. It should not be found.</li>
+  </ol>
+
+  <h2>Good to know</h2>
+  <ul>
+    <li>Redacted pages become images, so their remaining text can’t be selected. Other pages stay unchanged.</li>
+    <li>To remove a whole page, <a href="/delete-pdf-pages">Delete Pages</a> is simpler.</li>
+    <li>Keep the original file in a safe place. Redaction can’t be undone in the new file.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Redaction runs in your browser. Your document and your search words are never uploaded.</p>
+</GuideLayout>

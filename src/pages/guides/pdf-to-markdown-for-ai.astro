@@ -1,0 +1,43 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Why give an AI Markdown instead of a PDF?", a: "Markdown keeps the document’s structure in plain text: headings, lists and paragraphs. It is compact, easy for AI tools to read and easy for you to check and edit first." },
+  { q: "Does it work with Notion and Obsidian?", a: "Yes. Download the .md file and import it, or copy the Markdown and paste it. Headings and lists keep their formatting." },
+  { q: "Are tables converted?", a: "Tables come out as plain lines of text. Check them after converting if the table matters." },
+];
+---
+<GuideLayout slug="pdf-to-markdown-for-ai" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/pdf-to-markdown">PDF to Markdown</a>, select the PDF, and copy the result or download the .md file. Larger text becomes headings, bullets become lists, and paragraphs are joined back together.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/pdf-to-markdown">pdfsherpa.com/pdf-to-markdown</a>.</li>
+    <li>Select the PDF. Pages are read in a few seconds.</li>
+    <li>Check the preview and the number of headings found.</li>
+    <li>Tap <strong>Copy Markdown</strong> or <strong>Download .md</strong>.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Using it with AI chat tools</h2>
+  <ul>
+    <li>Paste the Markdown and ask a clear question, for example <em>Summarise section 3 in five bullet points</em>.</li>
+    <li>For long documents, paste one section at a time. Headings make it easy to split.</li>
+    <li>Remove parts the AI doesn’t need, like reference lists, to stay within message limits.</li>
+    <li>Don’t paste private or confidential documents into online AI services. Converting with PDFSherpa is private, but the AI service you paste into may not be.</li>
+  </ul>
+
+  <h2>Using it in notes apps</h2>
+  <ul>
+    <li><strong>Obsidian, Logseq:</strong> save the .md file into your vault folder.</li>
+    <li><strong>Notion:</strong> Import → Markdown, or paste straight into a page.</li>
+    <li><strong>GitHub and wikis:</strong> paste into a README or wiki page.</li>
+  </ul>
+
+  <h2>Limits</h2>
+  <p>Bold and italic styling isn’t detected and multi-column layouts may mix columns. Scanned PDFs have no text to convert.</p>
+
+  <h2>Privacy</h2>
+  <p>Conversion happens in your browser. Your PDF is never uploaded.</p>
+</GuideLayout>

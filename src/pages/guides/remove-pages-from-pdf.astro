@@ -1,0 +1,47 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "How do I delete one page from a PDF?", a: "Open Delete Pages, tap the page so a red mark appears, and click Delete. Download the new PDF without that page." },
+  { q: "Can I delete many pages at once?", a: "Yes. Tap each page, or type a list like 2, 5-7, 10 and press Select. Then delete them all in one go." },
+  { q: "Is the deleted page really gone?", a: "Yes. Removed pages are not included in the new file at all, unlike covering them with a white box." },
+];
+---
+<GuideLayout slug="remove-pages-from-pdf" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/delete-pdf-pages">Delete Pages</a>, select your PDF, tap the pages you want gone (or type <code>2, 5-7</code>), and click <strong>Delete</strong>. You download a new PDF without those pages. Your original file stays unchanged.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/delete-pdf-pages">pdfsherpa.com/delete-pdf-pages</a>.</li>
+    <li>Select or drop the PDF. A thumbnail of every page appears.</li>
+    <li>Tap each page to remove. A red ✕ marks it. Tap again to keep it.</li>
+    <li>For long documents, type pages and ranges into the box, for example <code>1, 4-6, 12</code>, and press Select.</li>
+    <li>Click <strong>Delete</strong> and download. The result shows the page count before and after.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>When people remove pages</h2>
+  <ul>
+    <li><strong>Blank pages</strong> from double-sided scanning. These are often every second page, so type <code>2, 4, 6, 8</code>.</li>
+    <li><strong>Instruction pages</strong> at the start of a form that the portal doesn’t need.</li>
+    <li><strong>Private pages</strong>, like a page with bank details, before forwarding a document.</li>
+    <li><strong>Duplicates</strong> created when merging files.</li>
+  </ul>
+
+  <h2>Delete, extract or organize?</h2>
+  <ul>
+    <li><a href="/delete-pdf-pages">Delete Pages</a>: remove a few pages, keep the rest.</li>
+    <li><a href="/extract-pdf-pages">Extract Pages</a>: keep a few pages, drop the rest.</li>
+    <li><a href="/organize-pdf">Organize PDF</a>: delete, reorder and rotate pages in one place by dragging.</li>
+  </ul>
+
+  <h2>Removing pages vs hiding content</h2>
+  <p>
+    Deleting a page removes it from the file completely. Drawing a white or black box over it does not, because the text underneath stays in the PDF
+    and can be copied. If you need to hide only part of a page, use <a href="/redact-pdf">Redact PDF</a>, which removes the covered text for real.
+  </p>
+
+  <h2>Privacy</h2>
+  <p>Pages are removed in your browser. The PDF is never uploaded, which matters most when the page you are removing is a private one.</p>
+</GuideLayout>

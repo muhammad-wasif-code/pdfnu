@@ -1,0 +1,48 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Does it show changes in formatting?", a: "No. It compares the words. Changes in fonts, colours, spacing or images alone are not reported." },
+  { q: "Can I compare a scanned PDF?", a: "No. Comparison needs real text in both files, and scans contain pictures of text." },
+  { q: "How do I share the result?", a: "Download the HTML report. It opens in any browser and shows removed words in red and added words in green." },
+];
+---
+<GuideLayout slug="compare-two-pdf-files" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/compare-pdf">Compare PDF</a>, add the original and the new version, and click <strong>Compare PDFs</strong>. Every removed word shows in red and every added word in green, with page numbers. Download the report to share it.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/compare-pdf">pdfsherpa.com/compare-pdf</a>.</li>
+    <li>Add the <strong>original</strong> PDF in the first box.</li>
+    <li>Add the <strong>new version</strong> in the second box.</li>
+    <li>Click <strong>Compare PDFs</strong>.</li>
+    <li>Read the list of changes, or click <strong>Download report</strong>.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>When to compare</h2>
+  <ul>
+    <li><strong>Before signing a contract:</strong> check the final version against the one you agreed to. A changed amount or date is easy to miss.</li>
+    <li><strong>Offer letters:</strong> compare the draft with the final letter.</li>
+    <li><strong>Edited papers and reports:</strong> see what a co-author or editor changed.</li>
+    <li><strong>Updated terms:</strong> see what a company changed in its new policy.</li>
+  </ul>
+
+  <h2>Reading the results</h2>
+  <ul>
+    <li>Each change shows a few words before and after, so you can find it in the document.</li>
+    <li>The page number refers to the original. If pages moved, both page numbers are shown.</li>
+    <li>Line breaks and spacing are ignored, so text that only moved to a new line is not a change.</li>
+  </ul>
+
+  <h2>Tips</h2>
+  <ul>
+    <li>Put the older file first. Otherwise additions show as removals.</li>
+    <li>If one version is a scan, ask the sender for the original digital PDF.</li>
+    <li>To share only the changed pages, use <a href="/extract-pdf-pages">Extract Pages</a>.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Both documents are compared in your browser and never uploaded, which makes it safe for contracts and drafts.</p>
+</GuideLayout>

@@ -1,0 +1,50 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Why does my PDF say it is damaged?", a: "Usually the download or email attachment was interrupted, or the program that saved it crashed. The file’s index is broken even though most content is still there." },
+  { q: "Can every damaged PDF be repaired?", a: "No. If part of the file was never downloaded, those pages are gone. Repair recovers what is still in the file." },
+  { q: "Will repair change my document?", a: "The first method rebuilds the file structure without touching content. Deep recovery rewrites the file and may drop form fields or links." },
+];
+---
+<GuideLayout slug="fix-pdf-that-wont-open" faqs={faqs}>
+<p><strong>Short answer:</strong> first, download the PDF again. A broken download is the most common cause. If that doesn’t help, open <a href="/repair-pdf">Repair PDF</a> and select the file. It rebuilds the PDF’s structure, tries a deeper recovery if needed, and shows how many pages it recovered.</p>
+
+  <h2>Quick checks first</h2>
+  <ol>
+    <li><strong>Download it again</strong> from the original email or website and wait until the download is fully finished.</li>
+    <li><strong>Try another viewer.</strong> If it opens in Chrome but not in another app, the app is the problem, not the file.</li>
+    <li><strong>Check the size.</strong> A PDF of 0 KB or a few KB that should be large didn’t download properly.</li>
+    <li><strong>Check the name.</strong> A file ending in .pdf that is really a Word or image file won’t open as a PDF.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Repairing the file</h2>
+  <ol>
+    <li>Open <a href="/repair-pdf">pdfsherpa.com/repair-pdf</a> and select the damaged PDF.</li>
+    <li>PDFSherpa checks how many pages open, then rebuilds the file losslessly.</li>
+    <li>If that isn’t enough, a deep recovery with Ghostscript reads whatever is still readable.</li>
+    <li>Download the repaired file and check its pages.</li>
+  </ol>
+
+  <h2>Typical error messages</h2>
+  <ul>
+    <li>“The file is damaged and could not be repaired.”</li>
+    <li>“Failed to load PDF document.”</li>
+    <li>Blank pages, or fewer pages than expected.</li>
+  </ul>
+
+  <h2>Avoiding it next time</h2>
+  <ul>
+    <li>Don’t open or move a file while it is still downloading or syncing.</li>
+    <li>Eject USB drives safely before removing them.</li>
+    <li>Keep backups of important documents in email or cloud storage.</li>
+  </ul>
+
+  <h2>Password-protected files</h2>
+  <p>Repair never changes protected PDFs. If you know the password, unlock it first with <a href="/unlock-pdf">Unlock PDF</a>.</p>
+
+  <h2>Privacy</h2>
+  <p>Repair runs in your browser and the file is never uploaded.</p>
+</GuideLayout>

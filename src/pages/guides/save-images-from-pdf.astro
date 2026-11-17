@@ -1,0 +1,42 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Are the images saved at full quality?", a: "Yes. Each picture is saved at the resolution stored in the PDF, not the smaller size it is shown at on the page." },
+  { q: "Why are no images found?", a: "The PDF may contain only text and drawn shapes, which are not images. Use PDF to JPG to save whole pages as pictures instead." },
+  { q: "Why do I get one big image per page?", a: "That PDF is a scan. A scanner stores each page as one picture, so that is what gets saved." },
+];
+---
+<GuideLayout slug="save-images-from-pdf" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/extract-images-from-pdf">Extract Images</a> and select the PDF. Every page is scanned for pictures automatically. Save the ones you want, or click <strong>Download all</strong> for a .zip. Photos come out as JPG and images with transparency as PNG.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/extract-images-from-pdf">pdfsherpa.com/extract-images-from-pdf</a>.</li>
+    <li>Select or drop your PDF. Progress shows as each page is checked.</li>
+    <li>Browse the gallery. Each image shows its page number and size in pixels.</li>
+    <li>Tap <strong>Save</strong> on an image, or <strong>Download all</strong>.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Why not just take a screenshot?</h2>
+  <p>
+    A screenshot captures the picture at your screen’s size, often much smaller than the original, and includes anything drawn on top of it.
+    Extracting saves the actual image file stored inside the PDF, usually at a much higher resolution.
+  </p>
+
+  <h2>Good to know</h2>
+  <ul>
+    <li>A logo repeated on every page is saved once, not fifty times.</li>
+    <li>Tiny graphics under 24 pixels, like icons, are skipped.</li>
+    <li>Charts drawn with lines and shapes are not images. Capture them with <a href="/pdf-to-jpg">PDF to JPG</a>, then crop with <a href="/crop-image">Crop Image</a>.</li>
+    <li>Large images can be made smaller with <a href="/compress-image">Compress Image</a>.</li>
+  </ul>
+
+  <h2>Use images responsibly</h2>
+  <p>Only reuse pictures you own or have permission to use. Product photos, book illustrations and stock images are usually protected by copyright.</p>
+
+  <h2>Privacy</h2>
+  <p>Images are read by pdf.js inside your browser. Your PDF is never uploaded.</p>
+</GuideLayout>
