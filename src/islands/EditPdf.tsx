@@ -228,7 +228,7 @@ export default function EditPdf() {
                   <button type="button" class={`${iconBtn} text-danger`} onClick={() => { setItems((c) => c.filter((x) => x.id !== selected.id)); setSel(null); }} aria-label="Delete shape">🗑</button>
                 </div>
                 {selected.opacity >= 0.95 && (
-                  <p class="text-xs text-amber-800 dark:text-amber-200">A shape only <strong>covers</strong> content. The text underneath is still in the file. To remove it for real, <a class="underline" href="/delete-pdf-pages">delete the page</a>.</p>
+                  <p class="text-xs text-amber-800 dark:text-amber-200">A shape only <strong>covers</strong> content. The text underneath is still in the file. To remove it for real, use <a class="underline" href="/redact-pdf">Redact PDF</a>.</p>
                 )}
               </div>
             )}

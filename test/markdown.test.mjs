@@ -1,0 +1,38 @@
+// PDF → Markdown on a generated document (pdf.js legacy build in Node).
+import { build } from 'esbuild';
+import assert from 'node:assert/strict';
+import { PDFDocument, StandardFonts } from 'pdf-lib';
+await build({ entryPoints: ['src/lib/markdown.ts'], bundle: true, format: 'esm', platform: 'node', outfile: 'test/out/markdown.mjs', logLevel: 'error' });
+const md = await import('../test/out/markdown.mjs');
+const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+
+const doc = await PDFDocument.create();
+const f = await doc.embedFont(StandardFonts.Helvetica);
+const p = doc.addPage([595, 842]);
+let y = 780;
+const line = (t, size, x = 50, gap = 1.4) => { p.drawText(t, { x, y, size, font: f }); y -= size * gap; };
+line('Annual Report', 24, 50, 1.8);
+line('Introduction', 16, 50, 1.6);
+line('This report explains how the project went this year and what we', 11);
+line('plan to do next. It is written for every-', 11);
+line('one on the team.', 11, 50, 2.4);
+line('• First point', 11);
+line('• Second point that is long', 11);
+line('  and wraps', 11, 62, 2.4);
+line('1. Step one', 11);
+line('2. Step two', 11, 50, 2.4);
+line('-5% change is not a list', 11);
+line('3', 9);
+const bytes = await doc.save();
+const pdf = await pdfjs.getDocument({ data: bytes, isEvalSupported: false }).promise;
+const out = md.toMarkdown(await md.readLines(pdf));
+console.log(out);
+assert.match(out, /^# Annual Report$/m);
+assert.match(out, /^## Introduction$/m);
+assert.match(out, /^This report explains how the project went this year and what we plan to do next\. It is written for everyone on the team\.$/m);
+assert.match(out, /^- First point$/m);
+assert.match(out, /^- Second point that is long and wraps$/m);
+assert.match(out, /^1\. Step one\n2\. Step two$/m); assert.match(out, /^- First point\n- Second/m);
+assert.match(out, /^-5% change is not a list$/m);
+assert.doesNotMatch(out, /^3$/m);
+console.log('✓ markdown: headings, paragraphs, hyphenation, bullets, numbered lists, page numbers');

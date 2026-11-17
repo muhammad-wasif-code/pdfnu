@@ -89,3 +89,25 @@ export function repairArgs(): string[] {
     '-sOutputFile=/out.pdf', '/in.pdf',
   ];
 }
+
+/**
+ * PDF/A-2b for archiving: embeds fonts, adds an sRGB output intent and XMP metadata.
+ * The ICC profile comes from Ghostscript's built-in ROM file system.
+ */
+export function pdfaArgs(): string[] {
+  const def = [
+    '/ICCProfile (%rom%iccprofiles/srgb.icc) def',
+    '[/_objdef {icc_PDFA} /type /stream /OBJ pdfmark',
+    '[{icc_PDFA} <</N 3>> /PUT pdfmark',
+    '[{icc_PDFA} ICCProfile (r) file /PUT pdfmark',
+    '[/_objdef {OutputIntent_PDFA} /type /dict /OBJ pdfmark',
+    '[{OutputIntent_PDFA} <</Type /OutputIntent /S /GTS_PDFA1 /DestOutputProfile {icc_PDFA} /OutputConditionIdentifier (sRGB)>> /PUT pdfmark',
+    '[{Catalog} <</OutputIntents [ {OutputIntent_PDFA} ]>> /PUT pdfmark',
+  ].join('\n');
+  return [
+    '-dPDFA=2', '-dPDFACompatibilityPolicy=1', '-sDEVICE=pdfwrite', '-dNOPAUSE', '-dQUIET', '-dBATCH', '-dSAFER', '-dNOOUTERSAVE', '-dAutoRotatePages=/None',
+    '-sColorConversionStrategy=RGB', '-sProcessColorModel=DeviceRGB',
+    '-dDownsampleColorImages=false', '-dDownsampleGrayImages=false', '-dDownsampleMonoImages=false',
+    '-sOutputFile=/out.pdf', '-c', def, '-f', '/in.pdf',
+  ];
+}

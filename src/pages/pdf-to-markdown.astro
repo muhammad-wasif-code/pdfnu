@@ -1,0 +1,67 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PdfToMarkdown from '../islands/PdfToMarkdown';
+
+const faqs = [
+  { q: 'What is Markdown?', a: 'Markdown is plain text with simple marks for structure: <code>#</code> for headings and <code>-</code> for list items. It’s used in notes apps like Obsidian and Notion, on GitHub, and it’s the format AI chatbots understand best.' },
+  { q: 'Are headings and lists kept?', a: 'Yes. Larger text becomes headings (#, ##, ###), bullet and numbered lists become Markdown lists, and paragraphs are joined back together across line breaks.' },
+  { q: 'Can I paste the result into ChatGPT or another AI?', a: 'Yes. Markdown keeps the document’s structure in a compact form, which helps AI tools understand long documents. Use <strong>Copy Markdown</strong> and paste it in.' },
+  { q: 'Does it work with scanned PDFs?', a: 'No. Scans contain pictures of text, not text. The tool will tell you if no text is found.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Conversion happens in your browser, and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="pdf-to-markdown"
+  title="PDF to Markdown Converter – Free, No Upload | PDFSherpa"
+  description="Convert PDF to clean Markdown with headings, lists and paragraphs. Perfect for notes, docs and AI tools. Free, instant and private."
+  h1="PDF to Markdown"
+  lead="Turn a PDF into clean Markdown with real headings, lists and paragraphs, ready for your notes app, a README or an AI chat. Converted on your device in seconds."
+  howToTitle="How to Convert PDF to Markdown"
+  steps={['Select or drop your PDF.', 'Wait a moment while pages are read.', '<strong>Copy</strong> the Markdown or <strong>download</strong> the .md file.']}
+  faqs={faqs}
+  related={['pdf-to-text', 'compare-pdf', 'extract-images-from-pdf', 'pdf-to-powerpoint']}
+>
+  <PdfToMarkdown client:load />
+
+  <Fragment slot="content">
+    <h2>Why Markdown instead of plain text?</h2>
+    <p>
+      Copying text out of a PDF gives you a wall of words with broken lines. Markdown keeps the shape of the document: titles stay titles, lists stay
+      lists, and paragraphs flow normally. That makes it far easier to edit, to keep in a notes app, or to give to an AI tool.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> Every page is read automatically.</li>
+      <li><strong>Check the preview.</strong> The result shows how many headings were found.</li>
+      <li><strong>Copy or download.</strong> Turn on <em>Page breaks</em> if you want a <code>---</code> line between pages.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>What gets converted</h2>
+    <ul>
+      <li><strong>Headings:</strong> text noticeably larger than the body text becomes <code>#</code>, <code>##</code> or <code>###</code>, by size.</li>
+      <li><strong>Paragraphs:</strong> lines are joined, and words split with a hyphen at the end of a line are put back together.</li>
+      <li><strong>Lists:</strong> bullets (•, –, *) and numbered items (1., a)) become Markdown lists, including items that wrap onto a second line.</li>
+      <li><strong>Page numbers:</strong> lines with just a page number are dropped.</li>
+    </ul>
+
+    <h2>Uses</h2>
+    <ul>
+      <li>Import lecture notes, manuals or reports into Obsidian, Notion, Bear or Logseq.</li>
+      <li>Give a long PDF to ChatGPT, Claude or Gemini as text with its structure intact.</li>
+      <li>Turn a PDF spec into a README or wiki page.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Tables come out as plain lines and bold or italic styling isn’t detected. Multi-column layouts may mix columns in some files. For plain text only,
+      use <a href="/pdf-to-text">PDF to Text</a>.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>PDFSherpa reads your PDF locally with Mozilla’s pdf.js. Nothing is uploaded or stored.</p>
+  </Fragment>
+</ToolLayout>

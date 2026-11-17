@@ -43,6 +43,13 @@ export const tools: Tool[] = [
   { slug: 'extract-images-from-pdf', name: 'Extract Images', short: 'PDF Images', tagline: 'Save photos from PDF', category: 'Convert', from: '#fdba74', to: '#c2410c', icon: 'extractimg', keywords: 'extract images from pdf save pictures photos get images' },
   { slug: 'repair-pdf', name: 'Repair PDF', short: 'Repair', tagline: 'Fix damaged files', category: 'Optimize', from: '#94a3b8', to: '#334155', icon: 'repair', keywords: 'repair pdf fix corrupted damaged broken pdf wont open recover' },
   { slug: 'signature-cleaner', name: 'Signature Cleaner', short: 'Clean Signature', tagline: 'Clear background', category: 'Image', from: '#a5b4fc', to: '#4338ca', icon: 'signclean', keywords: 'signature background remove transparent signature png clean scan signature white' },
+  { slug: 'crop-pdf', name: 'Crop PDF', short: 'Crop PDF', tagline: 'Trim page margins', category: 'Edit', from: '#fda4af', to: '#be123c', icon: 'croppdf', keywords: 'crop pdf trim margins cut page area whitespace' },
+  { slug: 'redact-pdf', name: 'Redact PDF', short: 'Redact', tagline: 'Black out text for real', category: 'Security', from: '#64748b', to: '#0f172a', icon: 'redact', keywords: 'redact pdf black out hide remove sensitive text names numbers censor' },
+  { slug: 'scan-to-pdf', name: 'Scan to PDF', short: 'Scan to PDF', tagline: 'Phone camera to PDF', category: 'Convert', from: '#fcd34d', to: '#b45309', icon: 'scan', keywords: 'scan to pdf camera phone photo document scanner scan paper' },
+  { slug: 'compare-pdf', name: 'Compare PDF', short: 'Compare', tagline: 'Spot text changes', category: 'Organize', from: '#93c5fd', to: '#1e40af', icon: 'compare', keywords: 'compare pdf diff differences two versions changes text' },
+  { slug: 'pdf-to-markdown', name: 'PDF to Markdown', short: 'PDF to MD', tagline: 'Text with headings', category: 'Convert', from: '#c4b5fd', to: '#5b21b6', icon: 'markdown', keywords: 'pdf to markdown md convert headings notes llm chatgpt' },
+  { slug: 'pdf-to-powerpoint', name: 'PDF to PowerPoint', short: 'PDF to PPT', tagline: 'Pages to slides', category: 'Convert', from: '#fdba74', to: '#c2410c', icon: 'ppt', keywords: 'pdf to powerpoint ppt pptx slides convert presentation' },
+  { slug: 'pdf-to-pdfa', name: 'PDF to PDF/A', short: 'PDF/A', tagline: 'Archive-ready PDF', category: 'Convert', from: '#7dd3fc', to: '#0369a1', icon: 'pdfa', keywords: 'pdf to pdf/a pdfa archive convert iso 19005 long term court filing' },
 ];
 
 export const categories: { name: Category; accent: string }[] = [

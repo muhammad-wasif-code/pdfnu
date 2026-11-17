@@ -13,7 +13,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "node test/ops.test.mjs && node test/protect.test.cjs && node test/gs-tools.test.cjs",
+    "test": "node test/ops.test.mjs && node test/diff.test.mjs && node test/markdown.test.mjs && node test/protect.test.cjs && node test/gs-tools.test.cjs",
     "postbuild": "node scripts/postbuild.mjs"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "jszip": "^3.10.2",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.6.205",
+    "pptxgenjs": "^4.0.1",
     "preact": "^10.29.8",
     "tailwindcss": "^4.3.5"
   },

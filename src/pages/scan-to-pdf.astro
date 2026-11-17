@@ -1,0 +1,69 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ScanPdf from '../islands/ScanPdf';
+
+const faqs = [
+  { q: 'Do I need to install a scanner app?', a: 'No. Open this page on your phone, tap <strong>Take a photo</strong> and your camera opens. Each photo becomes a page, and you download one PDF at the end.' },
+  { q: 'How do I make the scan look clean and white?', a: 'Keep the <strong>Document</strong> look selected. It turns the paper white and makes the text dark and sharp, like a real scanner. Use <strong>Colour</strong> for photos, stamps or coloured forms.' },
+  { q: 'Can I scan several pages into one PDF?', a: 'Yes. Keep tapping <strong>Add page</strong>. Reorder pages with the arrows, rotate or crop any page, then create the PDF.' },
+  { q: 'Can I use photos I already took?', a: 'Yes. Tap <strong>Choose photos</strong> and pick them from your gallery, several at a time.' },
+  { q: 'Are my photos uploaded?', a: 'No. Photos are processed in your browser and the PDF is created on your device. Nothing is sent to a server.' },
+];
+---
+<ToolLayout
+  slug="scan-to-pdf"
+  title="Scan to PDF with Your Phone Camera – Free | PDFSherpa"
+  description="Turn paper into a clean PDF with your phone camera: whiten the page, crop, rotate and add more pages. No app, no signup, no upload."
+  h1="Scan to PDF"
+  lead="Use your phone camera as a scanner. Snap each page, let PDFSherpa whiten the paper and sharpen the text, then download a single PDF. No app needed, and your photos stay on your phone."
+  howToTitle="How to Scan a Document to PDF"
+  steps={['Tap <strong>Take a photo</strong> (or choose photos from your gallery).', 'Add more pages, then crop or rotate any that need it.', 'Pick a look and page size, then tap <strong>Create PDF</strong>.']}
+  faqs={faqs}
+  related={['jpg-to-pdf', 'compress-pdf', 'sign-pdf', 'merge-pdf']}
+>
+  <ScanPdf client:load />
+
+  <Fragment slot="content">
+    <h2>Your phone is the scanner</h2>
+    <p>
+      Scan to PDF turns photos of paper into a document that looks scanned: white background, dark text, straight pages, all in one PDF. It’s
+      made for forms, receipts, ID copies, homework and signed letters that someone wants “as a PDF”.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Take a photo</strong> of the first page. On a computer, choose image files instead.</li>
+      <li><strong>Add pages.</strong> Each new photo is added to the end. Use the arrows to reorder.</li>
+      <li><strong>Fix pages.</strong> ↻ rotates a page, ✂ crops away the table or background around the paper, ✕ removes it.</li>
+      <li><strong>Choose a look.</strong> <em>Document</em> for black-and-white text, <em>Gray</em> for softer pages, <em>Colour</em> for stamps and photos, or <em>Original</em>.</li>
+      <li><strong>Create the PDF</strong> in A4, Letter or the photo’s own size.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Tips for a sharp scan</h2>
+    <ul>
+      <li>Put the paper on a dark table so its edges stand out, then crop close to the edges.</li>
+      <li>Use daylight or a bright room and avoid your own shadow over the page. Turn off the flash if it causes glare.</li>
+      <li>Hold the phone straight above the page so lines don’t slant.</li>
+      <li>Tap the screen on the text to focus before taking the photo.</li>
+      <li>If a portal limits file size, run the result through <a href="/compress-pdf">Compress PDF</a>.</li>
+    </ul>
+
+    <h2>What the looks do</h2>
+    <p>
+      <strong>Document</strong> measures how bright the paper is and pushes it to pure white while darkening ink, which also shrinks the file.
+      <strong>Gray</strong> does the same more gently. <strong>Colour</strong> brightens the page but keeps colours, and <strong>Original</strong> leaves the photo untouched.
+    </p>
+
+    <h2>Limitations</h2>
+    <p>
+      Pages aren’t straightened automatically, so crop and hold the phone level for best results. The text in a scan is an image, so it can’t be
+      selected or searched.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Everything runs on your phone or computer. Your photos and the finished PDF are never uploaded.</p>
+  </Fragment>
+</ToolLayout>

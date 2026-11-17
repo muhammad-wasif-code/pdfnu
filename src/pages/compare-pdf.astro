@@ -1,0 +1,67 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ComparePdf from '../islands/ComparePdf';
+
+const faqs = [
+  { q: 'How do I find what changed between two versions of a PDF?', a: 'Drop the original PDF on the left and the new version on the right, then click <strong>Compare PDFs</strong>. Every change is listed with removed words in red and added words in green, plus the page number.' },
+  { q: 'Does it compare images and layout too?', a: 'It compares the text, which is where contract and document changes matter most. Changes to pictures, colours or spacing alone aren’t reported.' },
+  { q: 'Can I save the comparison?', a: 'Yes. Click <strong>Download report</strong> for an HTML file you can open in any browser, print or send to a colleague.' },
+  { q: 'Why does it say a file has no text?', a: 'That PDF is probably a scan, so its text is a picture. Comparison needs real text in both files.' },
+  { q: 'Are my documents uploaded?', a: 'No. Both PDFs are read and compared inside your browser. That makes it safe for contracts and confidential drafts.' },
+];
+---
+<ToolLayout
+  slug="compare-pdf"
+  title="Compare PDF Files – Find Text Differences Free | PDFSherpa"
+  description="Compare two PDFs and see every word that was added or removed, with page numbers and a downloadable report. Free, private, no upload."
+  h1="Compare PDF"
+  lead="See exactly what changed between two versions of a document: every word removed in red, every word added in green, with page numbers. Both files stay on your device."
+  howToTitle="How to Compare Two PDF Files"
+  steps={['Drop the original PDF and the new version.', 'Click <strong>Compare PDFs</strong>.', 'Review each change or download the report.']}
+  faqs={faqs}
+  related={['pdf-to-text', 'redact-pdf', 'merge-pdf', 'pdf-to-markdown']}
+>
+  <ComparePdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Compare PDF does</h2>
+    <p>
+      When someone sends back “the updated version” of a contract, offer letter or report, you need to know what they changed. Compare PDF reads
+      the text of both files, lines them up word by word, and lists every difference, so a changed date, amount or clause can’t slip past you.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Add the original</strong> on the left (or top on phones).</li>
+      <li><strong>Add the new version</strong> on the right.</li>
+      <li><strong>Compare.</strong> You’ll see how many changes were found and how many words were added and removed.</li>
+      <li><strong>Review.</strong> Each change shows a little surrounding text so you can find it in the document.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Useful for</h2>
+    <ul>
+      <li><strong>Contracts and leases:</strong> catch quietly edited amounts, dates and conditions before signing.</li>
+      <li><strong>Job offers:</strong> check what changed between the draft and the final offer letter.</li>
+      <li><strong>Academic work:</strong> see what an editor or co-author changed in your paper.</li>
+      <li><strong>Policies and terms:</strong> find what a provider updated in their new terms.</li>
+    </ul>
+
+    <h2>How it works</h2>
+    <p>
+      PDFSherpa extracts the words from each page with pdf.js and runs a diff, the same kind of algorithm software developers use to compare code.
+      Line breaks and spacing are ignored, so re-flowed text doesn’t show up as changed. Only real word changes do.
+    </p>
+
+    <h2>Limitations</h2>
+    <p>
+      Scanned PDFs have no text to compare. Changes in images, formatting or colours aren’t detected. For very different documents, pages are compared
+      one by one. Password-protected PDFs must be unlocked first.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Both documents are processed in your browser. Neither file is uploaded, and the report is created on your device.</p>
+  </Fragment>
+</ToolLayout>

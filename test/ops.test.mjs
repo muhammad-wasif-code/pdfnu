@@ -111,4 +111,45 @@ for (const f of ['broken.pdf', 'truncated.pdf']) {
 }
 ok('rebuild broken startxref + truncated trailer');
 
+
+// crop (normal + rotated page)
+{
+  const rot = buf('test/fixtures/rotated.pdf');
+  const before = await open(rot.slice(0));
+  const sz0 = before.getPages().map((p) => p.getCropBox());
+  const out = await ops.cropPdf(rot, before.getPages().map(() => ({ x: 0.1, y: 0.2, w: 0.5, h: 0.5 })));
+  const after = await open(out);
+  after.getPages().forEach((p, i) => {
+    const c = p.getCropBox(), m = p.getMediaBox();
+    assert.deepEqual(c, m);
+    const r = p.getRotation().angle % 180 !== 0;
+    // visual width = 50% of visual width before
+    const vw0 = r ? sz0[i].height : sz0[i].width, vw1 = r ? c.height : c.width;
+    assert.ok(Math.abs(vw1 - vw0 * 0.5) < 0.5, `page ${i} width ${vw1} vs ${vw0}`);
+  });
+  const untouched = await open(await ops.cropPdf(small(), [null, { x: 0, y: 0, w: 0.5, h: 1 }]));
+  assert.equal(untouched.getPages()[0].getCropBox().width, (await open(small())).getPages()[0].getCropBox().width);
+  ok('crop pages (rotation-aware, per page)');
+}
+
+// true redaction: redacted page's text is gone from the file, others survive
+{
+  const { inflateSync } = await import('node:zlib');
+  const allText = (u8) => {
+    const b = Buffer.from(u8), t = b.toString('latin1'); let m, acc = ''; const re = /stream\r?\n/g;
+    while ((m = re.exec(t))) { const st = m.index + m[0].length, en = t.indexOf('endstream', st); const raw = b.subarray(st, en); try { acc += inflateSync(raw).toString('latin1'); } catch { acc += raw.toString('latin1'); } }
+    return acc + t;
+  };
+  const hex = (s) => Buffer.from(s).toString('hex').toUpperCase();
+  const orig = allText(new Uint8Array(small()));
+  assert.ok(orig.includes(hex('Page 1 line')));
+  const jpeg = readFileSync('test/fixtures/signature-photo.jpg');
+  const out = await ops.redactPages(small(), [{ index: 0, jpeg: jpeg.buffer.slice(jpeg.byteOffset, jpeg.byteOffset + jpeg.byteLength), w: 595, h: 842 }], true);
+  const txt = allText(out);
+  assert.ok(!txt.includes(hex('Page 1 line')), 'redacted text must not remain');
+  assert.ok(txt.includes(hex('Page 2 line')), 'other pages keep text');
+  assert.equal((await open(out)).getPageCount(), 3);
+  ok('redact: page flattened, original text removed from file');
+}
+
 console.log(`\nAll ${n} pdfOps tests passed`);

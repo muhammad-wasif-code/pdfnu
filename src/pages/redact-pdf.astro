@@ -1,0 +1,71 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import RedactPdf from '../islands/RedactPdf';
+
+const faqs = [
+  { q: 'Is the redacted text really removed?', a: 'Yes. Every page you redact is rebuilt as an image with the black boxes burned in, and the original text, fonts and drawings of that page are left out of the new file. Copying, searching or removing the box can’t bring the text back.' },
+  { q: 'Why not just draw a black box over the text?', a: 'A box drawn on top only hides the text visually. The words are still in the file and can be copied, searched or revealed by deleting the box. Many real data leaks happened exactly this way.' },
+  { q: 'Can I find and black out every copy of a word?', a: 'Yes. Type a name, phone number or ID into the search box and tap <strong>Mark all</strong>. Every match on every page gets a box. Check each one, then redact.' },
+  { q: 'What happens to the rest of the document?', a: 'Pages without boxes are kept exactly as they are, with selectable text. Only redacted pages become images. Links that point to a redacted page are removed.' },
+  { q: 'Does search work on scanned PDFs?', a: 'Not on scans, because their text is already a picture. Draw boxes over the information by hand instead.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Everything happens in your browser, which matters most for documents that need redacting.' },
+];
+---
+<ToolLayout
+  slug="redact-pdf"
+  title="Redact PDF Free – Black Out Text Permanently | PDFSherpa"
+  description="Black out names, numbers and addresses in a PDF so they’re truly removed, not just covered. Search and mark all matches. Free, no upload."
+  h1="Redact PDF"
+  lead="Black out names, account numbers, addresses and anything else private, and have it removed from the file for real. Search to mark every match at once. Your document never leaves your device."
+  howToTitle="How to Redact a PDF"
+  steps={['Select or drop your PDF.', 'Draw boxes over private information, or search for a word and tap <strong>Mark all</strong>.', 'Click <strong>Redact</strong> and download the cleaned PDF.']}
+  faqs={faqs}
+  related={['delete-pdf-pages', 'protect-pdf', 'edit-pdf', 'compare-pdf']}
+>
+  <RedactPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What real redaction means</h2>
+    <p>
+      Redaction is removing information so it can’t be recovered. Putting a black rectangle on top of text isn’t enough: the words underneath stay
+      in the file, and anyone can copy them out. PDFSherpa redacts properly. Each page you mark is rendered as an image with the boxes painted in,
+      and the new PDF is built without that page’s original text, fonts or drawings.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> Pages appear one at a time with page arrows in the toolbar.</li>
+      <li><strong>Mark what to hide.</strong> Drag on the page to draw a box. To find text, type it in the search field and tap <em>Mark all</em>.</li>
+      <li><strong>Check the boxes.</strong> Tap a box to move or resize it, or delete it. Make sure each one fully covers the words.</li>
+      <li><strong>Redact and download.</strong> Optionally remove the document’s title and author information too.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>What people redact</h2>
+    <ul>
+      <li>Bank account and card numbers on statements shared as proof of income.</li>
+      <li>National ID, passport and tax numbers on copies sent to agents or landlords.</li>
+      <li>Names and addresses of other people in documents you publish or forward.</li>
+      <li>Salary figures or internal prices before sending a contract outside the company.</li>
+    </ul>
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>Redacted pages become images, so their remaining text can’t be selected or searched. Pages you don’t touch stay fully searchable.</li>
+      <li>Search matches are placed using the PDF’s text positions. Always look at each box before downloading, especially with unusual fonts.</li>
+      <li>To remove a whole page instead, use <a href="/delete-pdf-pages">Delete Pages</a>. It keeps every other page unchanged.</li>
+      <li>After redacting, open the result and try selecting the hidden text yourself. You’ll find there’s nothing there.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Form fields, comments and bookmarks on redacted pages are removed along with the original content. Files may get larger because redacted
+      pages are stored as pictures. Password-protected PDFs need to be unlocked first with <a href="/unlock-pdf">Unlock PDF</a>.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Redaction runs entirely on your device with pdf.js and pdf-lib. Your document and the text you search for are never uploaded.</p>
+  </Fragment>
+</ToolLayout>

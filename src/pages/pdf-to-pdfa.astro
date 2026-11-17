@@ -1,0 +1,68 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PdfToPdfa from '../islands/PdfToPdfa';
+
+const faqs = [
+  { q: 'What is PDF/A?', a: 'PDF/A is the ISO 19005 version of PDF made for long-term archiving. Everything needed to display the document, like fonts and colour information, is stored inside the file, so it looks the same decades from now.' },
+  { q: 'Which PDF/A version do I get?', a: 'PDF/A-2b, the version most courts, universities and government archives accept. “b” (basic) guarantees the document will look the same in the future.' },
+  { q: 'Who asks for PDF/A files?', a: 'Courts for electronic filing, universities for theses, public tenders, tax offices and companies with records-retention rules.' },
+  { q: 'Will my PDF look different?', a: 'It should look the same. Fonts are embedded and colours are tagged as sRGB. Interactive features PDF/A doesn’t allow, such as JavaScript, are removed.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Conversion runs in your browser with a WebAssembly build of Ghostscript, and the file never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="pdf-to-pdfa"
+  title="Convert PDF to PDF/A (Archive Format) Free | PDFSherpa"
+  description="Convert PDF to PDF/A-2b for archiving, court filing and thesis submission. Fonts embedded, sRGB colour, metadata added. Free and private."
+  h1="PDF to PDF/A"
+  lead="Convert any PDF to PDF/A-2b, the archive standard asked for by courts, universities and government offices. Fonts and colours are embedded so it looks the same for decades, and it never leaves your device."
+  howToTitle="How to Convert a PDF to PDF/A"
+  steps={['Select or drop your PDF.', 'Click <strong>Convert to PDF/A</strong>.', 'Download your archive-ready file.']}
+  faqs={faqs}
+  related={['compress-pdf', 'repair-pdf', 'protect-pdf', 'merge-pdf']}
+>
+  <PdfToPdfa client:load />
+
+  <Fragment slot="content">
+    <h2>What PDF to PDF/A does</h2>
+    <p>
+      A normal PDF may rely on fonts installed on your computer, or on colour settings a future viewer won’t understand. PDF/A removes those risks:
+      the converter embeds every font, adds an sRGB colour profile and writes archive metadata into the file, as the ISO 19005 standard requires.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> The first conversion downloads the PDF engine once. After that it works offline.</li>
+      <li><strong>Convert.</strong> Your document is rewritten as PDF/A-2b.</li>
+      <li><strong>Download</strong> the file, saved with <code>-pdfa</code> at the end of its name.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>When you need PDF/A</h2>
+    <ul>
+      <li><strong>Court e-filing:</strong> many courts require PDF/A for submitted documents.</li>
+      <li><strong>Thesis submission:</strong> university libraries often archive dissertations only as PDF/A.</li>
+      <li><strong>Tenders and government forms:</strong> portals may reject files that aren’t PDF/A.</li>
+      <li><strong>Company records:</strong> invoices and contracts kept for many years.</li>
+    </ul>
+
+    <h2>What changes in the file</h2>
+    <ul>
+      <li>All fonts are embedded, or subsets of them, so text displays identically everywhere.</li>
+      <li>Colours are converted to sRGB and an output-intent colour profile is included.</li>
+      <li>Archive identification and metadata are added in XMP format.</li>
+      <li>Features PDF/A forbids, like embedded JavaScript, are dropped.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Unusual source files, such as ones with broken fonts, may not meet every rule of the standard. If a portal still rejects the result, try
+      <a href="/repair-pdf">Repair PDF</a> first and convert again. Password-protected PDFs must be unlocked first, because PDF/A doesn’t allow encryption.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Conversion uses Ghostscript compiled to WebAssembly, running in your browser. Your document is never uploaded.</p>
+  </Fragment>
+</ToolLayout>

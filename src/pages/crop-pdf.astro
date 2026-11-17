@@ -1,0 +1,68 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import CropPdf from '../islands/CropPdf';
+
+const faqs = [
+  { q: 'How do I crop the white margins off a PDF?', a: 'Open the PDF and tap <strong>Auto-detect margins</strong>. PDFSherpa finds where the content starts and ends and sets the crop box for you. Adjust the corners if needed, then click Crop PDF.' },
+  { q: 'Can I crop just one page?', a: 'Yes. Go to the page with the arrows, set the crop area, and choose <strong>Only page N</strong> before cropping. Leave it on <strong>All pages</strong> to apply the same crop to every page.' },
+  { q: 'Does cropping reduce quality?', a: 'No. Cropping changes the visible page area only. Text stays selectable and images keep their full resolution.' },
+  { q: 'Is the cropped-out content deleted?', a: 'No. Like most PDF editors, cropping hides content outside the box but it still exists inside the file. To remove sensitive content for real, use <a href="/redact-pdf">Redact PDF</a>.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Cropping happens in your browser with pdf-lib. The file never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="crop-pdf"
+  title="Crop PDF Online Free – Trim Margins & Pages | PDFSherpa"
+  description="Crop PDF pages to the area you need: trim white margins automatically or drag the corners. All pages or just one. Free, private, no upload."
+  h1="Crop PDF"
+  lead="Trim white margins, cut a page down to a single figure, or make scanned pages tidy. Auto-detect the content or drag the corners, then download. Nothing is uploaded."
+  howToTitle="How to Crop a PDF"
+  steps={['Select or drop your PDF.', 'Tap <strong>Auto-detect margins</strong> or drag the corners of the crop box.', 'Choose all pages or one page, then click <strong>Crop PDF</strong> and download.']}
+  faqs={faqs}
+  related={['edit-pdf', 'rotate-pdf', 'organize-pdf', 'compress-pdf']}
+>
+  <CropPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Crop PDF does</h2>
+    <p>
+      Crop PDF changes the visible area of your pages. It’s the quickest way to remove wide white margins so a document reads better on a phone or
+      e-reader, to cut a page down to one chart or table before sharing it, or to tidy scans that caught the edge of the scanner glass.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> The first page appears with a crop box.</li>
+      <li><strong>Set the area to keep.</strong> Tap <em>Auto-detect margins</em> to fit the box to the content, or drag the round handles. Drag inside the box to move it.</li>
+      <li><strong>Pick the pages.</strong> Apply the crop to every page, or only to the page you’re looking at.</li>
+      <li><strong>Download.</strong> The result opens in any PDF reader with the new page size.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>When cropping helps</h2>
+    <ul>
+      <li><strong>Reading on a phone:</strong> removing margins makes text noticeably larger on small screens.</li>
+      <li><strong>Sharing one figure:</strong> crop a page down to a diagram, then convert it with <a href="/pdf-to-jpg">PDF to JPG</a>.</li>
+      <li><strong>Cleaning scans:</strong> remove dark borders and the edges of the scanner lid.</li>
+      <li><strong>Printing:</strong> trim pages so they print larger on the paper.</li>
+    </ul>
+
+    <h2>Tips</h2>
+    <ul>
+      <li>Auto-detect looks at the page you’re viewing. If other pages have wider content, check them with the arrows before cropping all pages.</li>
+      <li>Pages with different layouts can be cropped one at a time: crop one page, download, then open the result and crop the next.</li>
+      <li>Rotated pages are handled correctly: the crop box matches what you see on screen.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Cropping hides content but doesn’t delete it, so it isn’t a way to remove private information. Use <a href="/redact-pdf">Redact PDF</a> for that.
+      The file size usually stays about the same. Password-protected PDFs must be unlocked first.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Your PDF is cropped locally in your browser. Nothing is uploaded, logged or stored.</p>
+  </Fragment>
+</ToolLayout>

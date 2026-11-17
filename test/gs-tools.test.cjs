@@ -20,4 +20,12 @@ const { run, maxDiff } = require('./gs-gray-try.cjs');
   const bad = await run(enc, lib.decryptArgs('wrong'));
   assert.ok(!bad.o || bad.o.length < 5000, 'wrong password yields no pages');
   console.log('✓ wrong password does not produce a document');
+
+  const a = await run(color, lib.pdfaArgs());
+  assert.equal(a.c, 0);
+  const t = Buffer.from(a.o).toString('latin1');
+  assert.ok(/GTS_PDFA1/.test(t), 'output intent');
+  assert.ok(/pdfaid:part[^0-9]{0,4}2/.test(t), 'PDF/A-2 identification in XMP');
+  assert.ok(/ICCBased|\/N 3/.test(t), 'ICC profile embedded');
+  console.log('✓ PDF/A-2b: output intent, XMP id and ICC profile present');
 })();

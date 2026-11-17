@@ -1,0 +1,67 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PdfToPpt from '../islands/PdfToPpt';
+
+const faqs = [
+  { q: 'Will my slides look exactly like the PDF?', a: 'Yes. Each page becomes one slide showing the page exactly as it appears, with the same fonts, colours and layout, because the page is placed as a high-quality picture.' },
+  { q: 'Can I edit the text in the slides?', a: 'The original text is part of the picture, so it can’t be edited directly. You can add new text boxes, shapes, notes and animations on top in PowerPoint, Keynote or Google Slides.' },
+  { q: 'Does it work with Google Slides and Keynote?', a: 'Yes. The .pptx file opens in PowerPoint, Google Slides, Keynote and LibreOffice Impress.' },
+  { q: 'What slide size is used?', a: 'The slide size matches your PDF’s first page, so a 16:9 presentation exported as PDF comes back as 16:9 slides. Pages with a different size are centred on their slide.' },
+  { q: 'Is my PDF uploaded?', a: 'No. Pages are rendered and the PowerPoint file is built in your browser. Nothing leaves your device.' },
+];
+---
+<ToolLayout
+  slug="pdf-to-powerpoint"
+  title="PDF to PowerPoint Converter – PDF to PPTX Free | PDFSherpa"
+  description="Convert PDF to PowerPoint: every page becomes a slide that looks exactly like the original. Opens in PowerPoint, Google Slides and Keynote. No upload."
+  h1="PDF to PowerPoint"
+  lead="Turn every page of a PDF into a PowerPoint slide that looks exactly like the original. Present it, add notes or build on it. Converted on your device."
+  howToTitle="How to Convert PDF to PowerPoint"
+  steps={['Select or drop your PDF.', 'Choose Standard or High quality.', 'Click <strong>Convert to PowerPoint</strong> and download the .pptx.']}
+  faqs={faqs}
+  related={['pdf-to-jpg', 'compress-pdf', 'pdf-to-markdown', 'merge-pdf']}
+>
+  <PdfToPpt client:load />
+
+  <Fragment slot="content">
+    <h2>What PDF to PowerPoint does</h2>
+    <p>
+      Lecturers, clients and conference organisers often share slides only as PDF. PDF to PowerPoint turns them back into a .pptx so you can present
+      them in slideshow mode, add speaker notes, mix them into your own deck, or annotate them in class.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong> Any number of pages works.</li>
+      <li><strong>Pick a quality.</strong> <em>Standard</em> keeps the file small for email. <em>High</em> looks sharper on projectors and big screens.</li>
+      <li><strong>Convert and download.</strong> Open the .pptx in PowerPoint, Google Slides or Keynote.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Good uses</h2>
+    <ul>
+      <li>Present a PDF slide deck with presenter view and notes.</li>
+      <li>Copy a few slides from someone else’s PDF into your own presentation.</li>
+      <li>Add your own commentary, arrows or highlights on top of each page for teaching.</li>
+      <li>Turn a PDF report into slides for a quick meeting walkthrough.</li>
+    </ul>
+
+    <h2>Why the pages are pictures</h2>
+    <p>
+      Rebuilding editable text boxes from a PDF usually breaks the layout: fonts change, lines move and text overlaps. Placing each page as a picture
+      guarantees the slides look exactly right. Need the words themselves? Use <a href="/pdf-to-text">PDF to Text</a> or
+      <a href="/pdf-to-markdown">PDF to Markdown</a> and paste them into your slides.
+    </p>
+
+    <h2>Limitations</h2>
+    <p>
+      Existing text, links and animations in the PDF aren’t editable in the slides. Very long PDFs on High quality produce large files, so
+      Standard is usually best. Password-protected PDFs must be unlocked first.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Pages are rendered with pdf.js and the presentation is created with the open-source PptxGenJS library, entirely in your browser.</p>
+  </Fragment>
+</ToolLayout>

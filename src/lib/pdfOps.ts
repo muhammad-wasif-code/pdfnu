@@ -396,3 +396,83 @@ export async function rebuild(input: ArrayBuffer) {
   if (!pages) throw new Error('No pages found');
   return { bytes: await doc.save({ useObjectStreams: false }), pages };
 }
+
+/* ---------------- Crop ---------------- */
+
+/** A box in visual page space, as fractions of the visible page (origin top-left). */
+export interface FracBox { x: number; y: number; w: number; h: number; }
+
+/** Crop pages to a box. `boxes[i]` applies to page i; null/undefined leaves the page unchanged. */
+export async function cropPdf(input: ArrayBuffer, boxes: (FracBox | null | undefined)[]) {
+  const doc = await load(input);
+  doc.getPages().forEach((page, i) => {
+    const b = boxes[i];
+    if (!b) return;
+    const f = frame(page);
+    const [x1, y1] = f.toUser(b.x * f.vw, f.vh - b.y * f.vh);
+    const [x2, y2] = f.toUser((b.x + b.w) * f.vw, f.vh - (b.y + b.h) * f.vh);
+    const x = Math.min(x1, x2), y = Math.min(y1, y2), w = Math.abs(x2 - x1), h = Math.abs(y2 - y1);
+    if (w < 1 || h < 1) return;
+    page.setMediaBox(x, y, w, h);
+    page.setCropBox(x, y, w, h);
+    page.setTrimBox(x, y, w, h);
+    page.setBleedBox(x, y, w, h);
+    page.setArtBox(x, y, w, h);
+  });
+  doc.setProducer('PDFSherpa');
+  return save(doc);
+}
+
+/* ---------------- Redact ---------------- */
+
+export interface FlatPage { index: number; jpeg: ArrayBuffer; w: number; h: number; }
+
+/**
+ * True redaction: pages in `flat` are replaced by an image of the page (already blacked out by the caller).
+ * The result is built in a fresh document so the original content of those pages is not carried over,
+ * and links on other pages that point at a redacted page are dropped (they would otherwise drag it along).
+ */
+export async function redactPages(input: ArrayBuffer, flat: FlatPage[], stripInfo: boolean) {
+  const src = await load(input);
+  const out = await PDFDocument.create();
+  const pages = src.getPages();
+  const byIndex = new Map(flat.map((p) => [p.index, p]));
+  const redactedRefs = new Set(flat.map((p) => pages[p.index]?.ref.toString()));
+  const pointsAtRedacted = (v: unknown): boolean => {
+    const arr = v as { asArray?: () => unknown[] };
+    const first = arr?.asArray?.()[0] as { toString(): string } | undefined;
+    return !!first && redactedRefs.has(first.toString());
+  };
+
+  for (let i = 0; i < pages.length; i++) {
+    const r = byIndex.get(i);
+    if (r) {
+      const img = await out.embedJpg(r.jpeg);
+      const pg = out.addPage([r.w, r.h]);
+      pg.drawImage(img, { x: 0, y: 0, width: r.w, height: r.h });
+      continue;
+    }
+    const page = pages[i];
+    const annots = page.node.Annots();
+    if (annots) {
+      const keep = annots.asArray().filter((ref) => {
+        const a = src.context.lookup(ref);
+        if (!(a instanceof PDFDict)) return true;
+        if (pointsAtRedacted(a.get(PDFName.of('Dest')))) return false;
+        const act = a.lookup(PDFName.of('A'));
+        if (act instanceof PDFDict && pointsAtRedacted(act.get(PDFName.of('D')))) return false;
+        return true;
+      });
+      page.node.set(PDFName.of('Annots'), src.context.obj(keep));
+    }
+    const [copy] = await out.copyPages(src, [i]);
+    out.addPage(copy);
+  }
+  if (!stripInfo) {
+    const t = src.getTitle(); if (t) out.setTitle(t);
+    const a = src.getAuthor(); if (a) out.setAuthor(a);
+  }
+  out.setProducer('PDFSherpa');
+  out.setCreator('PDFSherpa');
+  return save(out);
+}
