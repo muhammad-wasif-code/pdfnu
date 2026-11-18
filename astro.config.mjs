@@ -12,6 +12,8 @@ import { existsSync } from 'node:fs';
  */
 /** @param {...string} args */
 const git = (...args) => { try { return execFileSync('git', args, { encoding: 'utf8' }).trim(); } catch { return ''; } };
+// CI (Cloudflare Pages) clones shallowly; fetch history once so dates are real.
+if (git('rev-parse', '--is-shallow-repository') === 'true') git('fetch', '--unshallow', '--quiet');
 const fullHistory = git('rev-parse', '--is-shallow-repository') === 'false';
 const lastmodCache = new Map();
 /** @param {string} url @returns {string | undefined} */
