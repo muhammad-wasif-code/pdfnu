@@ -9,7 +9,7 @@ import { assertPdf, friendlyError, isPdfName, UserError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import type { CompressResult, Preset, Progress } from '../lib/compress';
 
-type Target = '100' | '200' | '500' | '1024' | '2048';
+export type Target = '100' | '200' | '500' | '1024' | '2048';
 type Phase = 'idle' | 'ready' | 'working' | 'done' | 'error';
 
 const PRESETS = [
@@ -25,11 +25,11 @@ const TARGETS = [
   { value: '2048' as const, label: '2MB' },
 ];
 
-export default function CompressPdf() {
+export default function CompressPdf({ initialTarget }: { initialTarget?: Target } = {}) {
   const [phase, setPhase] = useState<Phase>('idle');
   const [file, setFile] = useState<File | null>(null);
   const [preset, setPreset] = useState<Preset>('recommended');
-  const [target, setTarget] = useState<Target | null>(null);
+  const [target, setTarget] = useState<Target | null>(initialTarget ?? null);
   const [progress, setProgress] = useState<Progress>({ label: '', value: 0 });
   const [result, setResult] = useState<CompressResult | null>(null);
   const [error, setError] = useState<UserError | null>(null);

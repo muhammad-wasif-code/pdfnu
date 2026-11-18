@@ -8,6 +8,7 @@ import AdSlot from '../components/AdSlot.astro';
 import HowToSteps from '../components/HowToSteps.astro';
 import { getTool } from '../data/tools';
 import { guidesForTool } from '../data/guides';
+import { landingsForTool } from '../data/landings';
 
 interface Props {
   slug: string;
@@ -21,18 +22,22 @@ interface Props {
   steps: string[];
   faqs: QA[];
   related: string[];
+  /** Landing page variant of a tool (e.g. /compress-pdf-to-100kb): own URL, breadcrumb under the tool */
+  variant?: { path: string; name: string };
 }
-const { slug, title, description, h1, lead, howToTitle, steps, faqs, related } = Astro.props;
+const { slug, title, description, h1, lead, howToTitle, steps, faqs, related, variant } = Astro.props;
+const path = variant?.path ?? `/${slug}`;
 const tool = getTool(slug);
 const relatedTools = related.map(getTool);
 const relatedGuides = guidesForTool(slug);
+const quickSizes = landingsForTool(slug);
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
   name: `${tool.name} – PDFSherpa`,
-  url: `${site}/${slug}`,
+  url: `${site}${path}`,
   description,
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Any (runs in the browser)',
@@ -41,9 +46,9 @@ const jsonLd = {
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
 };
 ---
-<BaseLayout title={title} description={description} path={`/${slug}`} jsonLd={jsonLd} ads>
+<BaseLayout title={title} description={description} path={path} jsonLd={jsonLd} ads>
   <div class="container-page pt-5">
-    <Breadcrumbs items={[{ name: tool.name, href: `/${slug}` }]} />
+    <Breadcrumbs items={variant ? [{ name: tool.name, href: `/${slug}` }, { name: variant.name, href: variant.path }] : [{ name: tool.name, href: `/${slug}` }]} />
   </div>
 
   <section class="container-page max-w-3xl pt-6 text-center sm:pt-8">
@@ -55,6 +60,15 @@ const jsonLd = {
   <!-- Tool app (Preact island) -->
   <section class="container-page mt-6 max-w-3xl" aria-label={`${tool.name} tool`}>
     <slot />
+    {quickSizes.length > 0 && (
+      <nav aria-label="Popular sizes" class="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
+        <span class="text-muted dark:text-gray-400">Popular:</span>
+        {quickSizes.map((q) => (
+          <a href={`/${q.slug}`} aria-current={variant?.path === `/${q.slug}` ? 'page' : undefined}
+            class={`rounded-full border px-3 py-1.5 font-semibold ${variant?.path === `/${q.slug}` ? 'border-brand bg-brand-soft text-brand dark:bg-brand/15 dark:text-brand-light' : 'border-line text-ink hover:border-brand dark:border-white/10 dark:text-gray-200'}`}>{q.name}</a>
+        ))}
+      </nav>
+    )}
   </section>
 
   <!-- Ad below the tool result: reserved height, never overlaps controls -->

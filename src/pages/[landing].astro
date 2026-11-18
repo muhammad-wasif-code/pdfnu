@@ -1,0 +1,67 @@
+---
+/** Keyword landing pages (see src/data/landings.ts): a tool with a preset target plus copy for that exact search. */
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import CompressPdf from '../islands/CompressPdf';
+import CompressImage from '../islands/CompressImage';
+import ResizeImage from '../islands/ResizeImage';
+import { landings, landingsForTool, type Landing } from '../data/landings';
+import { getTool } from '../data/tools';
+
+export function getStaticPaths() {
+  return landings.map((l) => ({ params: { landing: l.slug }, props: { l } }));
+}
+interface Props { l: Landing; }
+const { l } = Astro.props;
+const tool = getTool(l.tool);
+const siblings = landingsForTool(l.tool).filter((x) => x.slug !== l.slug);
+const steps =
+  l.tool === 'resize-image'
+    ? [`Select or drop your image. The size is already set to <strong>${l.name}</strong>.`, 'Change fit, format or a KB limit if you need to.', 'Click <strong>Resize</strong> and download.']
+    : l.tool === 'compress-image'
+      ? [`Select or drop your images. The target is already set to <strong>${l.name}</strong>.`, 'Choose JPG or WebP.', 'Download each compressed image.']
+      : [`Select or drop your PDF. The target is already set to <strong>${l.name}</strong>.`, 'Click <strong>Compress</strong>.', 'Download the smaller PDF.'];
+const related = l.tool === 'compress-pdf' ? ['compress-pdf', 'split-pdf', 'grayscale-pdf', 'jpg-to-pdf']
+  : l.tool === 'compress-image' ? ['compress-image', 'resize-image', 'passport-photo-maker', 'signature-cleaner']
+  : ['resize-image', 'crop-image', 'compress-image', 'passport-photo-maker'];
+const sizeWord = l.tool === 'resize-image' ? 'sizes' : 'targets';
+---
+<ToolLayout
+  slug={l.tool}
+  variant={{ path: `/${l.slug}`, name: l.name }}
+  title={l.title}
+  description={l.description}
+  h1={l.h1}
+  lead={l.lead}
+  howToTitle={`How to ${l.h1.charAt(0).toLowerCase()}${l.h1.slice(1)}`}
+  steps={steps}
+  faqs={l.faqs}
+  related={related}
+>
+  {l.tool === 'compress-pdf' && <CompressPdf client:load initialTarget={l.target} />}
+  {l.tool === 'compress-image' && <CompressImage client:load initialTarget={l.target} />}
+  {l.tool === 'resize-image' && <ResizeImage client:load initialSize={l.size} />}
+
+  <Fragment slot="content">
+    <h2>About this size</h2>
+    {l.intro.map((p) => <p set:html={p} />)}
+
+    <h2>When you need it</h2>
+    <ul>{l.uses.map((u) => <li set:html={u} />)}</ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Tips</h2>
+    <ul>{l.tips.map((t) => <li set:html={t} />)}</ul>
+
+    <h2>Other {sizeWord}</h2>
+    <p>
+      Need a different size? Try
+      {siblings.map((s, i) => (
+        <>
+          <a href={`/${s.slug}`}>{s.name}</a>{i < siblings.length - 2 ? ', ' : i === siblings.length - 2 ? ' or ' : ''}
+        </>
+      ))}, or open <a href={`/${l.tool}`}>{tool.name}</a> to choose any setting.
+    </p>
+  </Fragment>
+</ToolLayout>

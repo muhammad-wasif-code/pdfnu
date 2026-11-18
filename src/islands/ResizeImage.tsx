@@ -20,7 +20,7 @@ const PRESETS: Preset[] = [
 type Fmt = 'image/jpeg' | 'image/png' | 'image/webp';
 const EXT: Record<Fmt, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
 
-export default function ResizeImage() {
+export default function ResizeImage({ initialSize }: { initialSize?: { w: number; h: number } } = {}) {
   const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState('');
   const [nat, setNat] = useState<{ w: number; h: number } | null>(null);
@@ -46,7 +46,9 @@ export default function ResizeImage() {
     try {
       const { decodeImage } = await import('../lib/image');
       const d = await decodeImage(f, f.name);
-      setNat({ w: d.width, h: d.height }); setW(d.width); setH(d.height);
+      setNat({ w: d.width, h: d.height });
+      if (initialSize) { setW(initialSize.w); setH(initialSize.h); setLock(false); setFit('cover'); }
+      else { setW(d.width); setH(d.height); }
       d.close();
       if (url) URL.revokeObjectURL(url);
       setFile(f); setUrl(URL.createObjectURL(f));

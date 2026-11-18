@@ -8,16 +8,16 @@ import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import { IMAGE_ACCEPT, isImage, type OutType } from '../lib/image';
 
-type Target = '20' | '30' | '50' | '100' | '200';
+export type Target = '20' | '30' | '50' | '100' | '200';
 type Fmt = 'image/jpeg' | 'image/webp';
 interface Item { id: string; file: File; url: string; out?: { blob: Blob; name: string; w: number; h: number; missed: boolean; unchanged: boolean; url: string }; error?: string; }
 
 let seq = 0;
 const EXT: Record<string, string> = { 'image/jpeg': 'jpg', 'image/webp': 'webp' };
 
-export default function CompressImage() {
+export default function CompressImage({ initialTarget }: { initialTarget?: Target } = {}) {
   const [items, setItems] = useState<Item[]>([]);
-  const [target, setTarget] = useState<Target>('50');
+  const [target, setTarget] = useState<Target>(initialTarget ?? '50');
   const [fmt, setFmt] = useState<Fmt>('image/jpeg');
   const [phase, setPhase] = useState<'edit' | 'working' | 'done'>('edit');
   const [progress, setProgress] = useState({ label: '', value: 0 });
