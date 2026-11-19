@@ -1,0 +1,10 @@
+---
+/**
+ * mailto link wrapped in Cloudflare's email_off markers, so Email Address Obfuscation
+ * doesn't rewrite it into a /cdn-cgi/l/email-protection link (which crawlers report as 404).
+ */
+import { CONTACT_EMAIL } from '../data/site';
+const email = CONTACT_EMAIL;
+const html = `<!--email_off--><a href="mailto:${email}">${email}</a><!--email_on-->`;
+---
+<Fragment set:html={html} />

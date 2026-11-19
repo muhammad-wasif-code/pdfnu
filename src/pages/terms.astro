@@ -1,4 +1,5 @@
 ---
+import EmailLink from '../components/EmailLink.astro';
 import PageLayout from '../layouts/PageLayout.astro';
 import { CONTACT_EMAIL, LEGAL_UPDATED } from '../data/site';
 const updated = new Date(LEGAL_UPDATED).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -43,5 +44,5 @@ const updated = new Date(LEGAL_UPDATED).toLocaleDateString('en-US', { year: 'num
   <p>We may update these terms or change or discontinue tools at any time. Continued use after changes means you accept the updated terms.</p>
 
   <h2>8. Contact</h2>
-  <p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
+  <p><EmailLink /></p>
 </PageLayout>
