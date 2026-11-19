@@ -8,14 +8,14 @@ import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import { IMAGE_ACCEPT, isImage } from '../lib/image';
 
-type Fmt = 'image/jpeg' | 'image/png' | 'image/webp';
+export type Fmt = 'image/jpeg' | 'image/png' | 'image/webp';
 const EXT: Record<Fmt, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
 interface Item { id: string; file: File; url: string; out?: { blob: Blob; name: string }; error?: string; }
 let seq = 0;
 
-export default function ImageConverter() {
+export default function ImageConverter({ initialFormat }: { initialFormat?: Fmt } = {}) {
   const [items, setItems] = useState<Item[]>([]);
-  const [fmt, setFmt] = useState<Fmt>('image/jpeg');
+  const [fmt, setFmt] = useState<Fmt>(initialFormat ?? 'image/jpeg');
   const [quality, setQuality] = useState(90);
   const [phase, setPhase] = useState<'edit' | 'working' | 'done'>('edit');
   const [progress, setProgress] = useState({ label: '', value: 0 });

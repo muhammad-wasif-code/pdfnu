@@ -1,0 +1,39 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "How do I put both sides of my ID on one image?", a: "Open Combine Images, add the front and back photos, choose Stacked and click Combine. Download the single image." },
+  { q: "Should I use an image or a PDF?", a: "Use whatever the form asks for. For an image, use Combine Images. For a PDF with both sides on one page, combine first, then convert with JPG to PDF." },
+  { q: "My combined image is too big for the form. What now?", a: "Run it through Compress Image and pick the KB limit the form gives." },
+];
+---
+<GuideLayout slug="combine-id-card-front-and-back" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/combine-images">Combine Images</a>, add the photo of the front and the photo of the back, choose <strong>Stacked</strong>, and click <strong>Combine</strong>. Download one image with both sides, one above the other.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Photograph each side on a dark table, in good light, with no glare.</li>
+    <li>Crop each photo to the card’s edges with <a href="/crop-image">Crop Image</a>.</li>
+    <li>Open <a href="/combine-images">pdfsherpa.com/combine-images</a> and add both photos, front first.</li>
+    <li>Choose <strong>Stacked</strong>, a thin gap and a white background.</li>
+    <li>Click <strong>Combine</strong>, check the preview, and download as JPG.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Meeting form rules</h2>
+  <ul>
+    <li><strong>KB limit:</strong> use <a href="/compress-image">Compress Image</a>, for example to 100KB or 200KB.</li>
+    <li><strong>PDF required:</strong> convert the combined image with <a href="/jpg-to-pdf">JPG to PDF</a>.</li>
+    <li><strong>Separate uploads:</strong> some forms want front and back separately. Read the instructions first.</li>
+  </ul>
+
+  <h2>Protect your ID copy</h2>
+  <ul>
+    <li>Add a note such as <em>Copy for rental application only</em> with <a href="/watermark-pdf">Watermark</a> after converting to PDF.</li>
+    <li>Black out numbers the recipient doesn’t need with <a href="/redact-pdf">Redact PDF</a>.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Your ID photos are combined in your browser and never uploaded.</p>
+</GuideLayout>

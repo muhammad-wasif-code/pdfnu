@@ -1,0 +1,63 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ResizePdf from '../islands/ResizePdf';
+
+const faqs = [
+  { q: "How do I convert a Letter PDF to A4?", a: "Open the PDF, choose A4 and click Resize. Each page is scaled to fit A4 and centred, so nothing is cut off." },
+  { q: "Does resizing make text blurry?", a: "No. Pages are scaled as vector graphics, so text and lines stay sharp and text remains selectable." },
+  { q: "What does Auto orientation do?", a: "Each page keeps its own direction: portrait pages stay portrait and landscape pages become landscape on the new size." },
+  { q: "Will links and form fields keep working?", a: "Page content is kept, but links, comments and form fields are not carried over. Fill and flatten forms first if you need the answers." },
+  { q: "Is my PDF uploaded?", a: "No. Pages are resized in your browser with pdf-lib." },
+];
+---
+<ToolLayout
+  slug="resize-pdf"
+  title="Resize PDF Page Size – A4, Letter, Legal Free | PDFSherpa"
+  description="Change the page size of a PDF to A4, Letter, Legal, A3 or A5. Pages scale to fit, text stays sharp and selectable. Free, no upload."
+  h1="Resize PDF"
+  lead="Change every page of a PDF to A4, Letter, Legal, A3 or A5. Content scales to fit and stays sharp. Nothing is uploaded."
+  howToTitle="How to Change the Page Size of a PDF"
+  steps={["Select or drop your PDF.", "Choose the new page size, orientation and margin.", "Click <strong>Resize</strong> and download."]}
+  faqs={faqs}
+  related={["crop-pdf", "compress-pdf", "rotate-pdf", "organize-pdf"]}
+>
+  <ResizePdf client:load />
+
+  <Fragment slot="content">
+<h2>What Resize PDF does</h2>
+    <p>
+      PDFs made in the US are usually Letter size and most of the world uses A4. Print one on the other and you get cut-off edges or odd margins.
+      Resize PDF puts every page on the paper size you choose and scales the content to fit, centred and in proportion.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open your PDF.</strong></li>
+      <li><strong>Choose a size:</strong> A4, Letter, Legal, A3 or A5.</li>
+      <li><strong>Choose orientation:</strong> Auto follows each page, or force portrait or landscape.</li>
+      <li><strong>Add a margin</strong> if your printer cuts off edges.</li>
+      <li><strong>Resize</strong> and download.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Common uses</h2>
+    <ul>
+      <li>Letter to A4 (or A4 to Letter) before printing or submitting abroad.</li>
+      <li>Making scanned pages of mixed sizes all the same size.</li>
+      <li>Shrinking pages to A5 to print booklets.</li>
+      <li>Fitting a document onto Legal paper for legal filings.</li>
+    </ul>
+
+    <h2>Resize vs crop vs compress</h2>
+    <ul>
+      <li><strong>Resize PDF</strong> changes the paper size and scales content to fit.</li>
+      <li><a href="/crop-pdf">Crop PDF</a> trims margins without scaling.</li>
+      <li><a href="/compress-pdf">Compress PDF</a> reduces the file size in KB or MB, not the page size.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>Your PDF is processed locally and never uploaded.</p>
+  </Fragment>
+</ToolLayout>

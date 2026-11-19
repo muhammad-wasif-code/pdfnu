@@ -1,0 +1,41 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Why can’t Windows open my iPhone photos?", a: "iPhones save photos as HEIC by default. Windows needs an extra codec to open them, and many programs and websites don’t support HEIC at all." },
+  { q: "Is converting better than installing a codec?", a: "Converting to JPG works everywhere, including websites, forms, older programs and Android phones. A codec only helps on that one computer." },
+  { q: "How do I make my iPhone save JPG instead?", a: "Settings → Camera → Formats → Most Compatible." },
+];
+---
+<GuideLayout slug="open-heic-photos-on-windows" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/heic-to-jpg">HEIC to JPG</a>, drop the iPhone photos and click <strong>Convert</strong>. You get JPG files that open on any computer, phone or website.</p>
+
+  <h2>What HEIC is</h2>
+  <p>HEIC (High Efficiency Image Container) is the format iPhones have used since 2017. It keeps photos about half the size of JPG. The downside is compatibility: Windows, many Android phones, older software and most upload forms can’t read it.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Copy the photos to your computer, or open this page on the device that has them.</li>
+    <li>Open <a href="/heic-to-jpg">pdfsherpa.com/heic-to-jpg</a> and select the HEIC files.</li>
+    <li>Choose <strong>JPG</strong> (smaller, works everywhere) or <strong>PNG</strong> (lossless).</li>
+    <li>Click <strong>Convert</strong> and download, or use <strong>Download all</strong> for a .zip.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Stop it happening again</h2>
+  <ul>
+    <li><strong>On the iPhone:</strong> Settings → Camera → Formats → <em>Most Compatible</em>. New photos are saved as JPG.</li>
+    <li><strong>When copying to a PC:</strong> Settings → Photos → <em>Transfer to Mac or PC</em> → Automatic. The iPhone then converts while transferring.</li>
+  </ul>
+
+  <h2>After converting</h2>
+  <ul>
+    <li>Photo too big for a form? <a href="/compress-image">Compress Image</a>.</li>
+    <li>Need exact pixels? <a href="/resize-image">Resize Image</a>.</li>
+    <li>Several photos in one document? <a href="/jpg-to-pdf">JPG to PDF</a>.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Photos are converted in your browser and never uploaded.</p>
+</GuideLayout>

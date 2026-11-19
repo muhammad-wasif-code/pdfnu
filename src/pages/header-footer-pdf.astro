@@ -1,0 +1,64 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import HeaderFooter from '../islands/HeaderFooter';
+
+const faqs = [
+  { q: "How do I add “Page 1 of 10” to a PDF?", a: "Type Page [page] of [pages] into a footer box. Each page gets its own number and the total." },
+  { q: "What do [date] and [file] do?", a: "[date] inserts today’s date and [file] inserts the file name, on every page." },
+  { q: "Can I leave the first page without a header?", a: "Yes. Tick Skip the first page, which is useful for cover pages." },
+  { q: "Which characters are supported?", a: "Latin letters, numbers and common symbols. Letters from other scripts are replaced with a question mark." },
+  { q: "Is my PDF uploaded?", a: "No. Text is added in your browser." },
+];
+---
+<ToolLayout
+  slug="header-footer-pdf"
+  title="Add Header & Footer to PDF Free | PDFSherpa"
+  description="Add text headers and footers to every PDF page: file name, date, Page X of Y or your own text, left, centre or right. Free, no upload."
+  h1="Add Header & Footer to PDF"
+  lead="Put text at the top or bottom of every page: a title, the date, the file name or Page X of Y. Six positions, no upload."
+  howToTitle="How to Add a Header and Footer to a PDF"
+  steps={["Select or drop your PDF.", "Type text into any of the six header and footer boxes. Use [page], [pages], [date] or [file].", "Click <strong>Add header & footer</strong> and download."]}
+  faqs={faqs}
+  related={["add-page-numbers", "watermark-pdf", "edit-pdf", "merge-pdf"]}
+>
+  <HeaderFooter client:load />
+
+  <Fragment slot="content">
+<h2>What Header & Footer does</h2>
+    <p>
+      Headers and footers make printed documents easier to handle: a title on every page, the date it was printed, a “Confidential” label or a page count.
+      This tool adds them to an existing PDF without opening the original file in Word.
+    </p>
+
+    <h2>Six positions</h2>
+    <p>Each page has three header slots (left, centre, right) and three footer slots. Fill in as many as you need and leave the rest empty.</p>
+
+    <h2>Placeholders</h2>
+    <ul>
+      <li><code>[page]</code>: the current page number.</li>
+      <li><code>[pages]</code>: the total number of pages.</li>
+      <li><code>[date]</code>: today’s date.</li>
+      <li><code>[file]</code>: the file name.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Examples</h2>
+    <ul>
+      <li>Header right: <em>Confidential</em>. Footer centre: <em>Page [page] of [pages]</em>.</li>
+      <li>Header left: <em>Project Report 2026</em>. Footer right: <em>[date]</em>.</li>
+      <li>Footer left: <em>[file]</em> to keep printed pages traceable.</li>
+    </ul>
+
+    <h2>Tips</h2>
+    <ul>
+      <li>Only need numbers? <a href="/add-page-numbers">Page Numbers</a> is quicker.</li>
+      <li>Combining documents? Run <a href="/merge-pdf">Merge PDF</a> first so numbering runs across all pages.</li>
+      <li>If text overlaps existing content, try a smaller text size.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>Your PDF never leaves your device. Text is added with pdf-lib in your browser.</p>
+  </Fragment>
+</ToolLayout>

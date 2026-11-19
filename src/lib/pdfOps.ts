@@ -3,7 +3,9 @@
  */
 import {
   PDFDocument, StandardFonts, degrees, rgb, PDFName, PDFDict, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown,
-  PDFOptionList, PDFSignature, PDFButton, type PDFPage, type PDFFont,
+  PDFOptionList, PDFSignature, PDFButton, PDFArray, PDFStream, PDFRef, PDFNumber,
+  pushGraphicsState, popGraphicsState, concatTransformationMatrix, drawObject, beginText, endText, setFontAndSize,
+  setTextRenderingMode, TextRenderingMode, setTextMatrix, showText, setCharacterSqueeze, type PDFPage, type PDFFont,
 } from 'pdf-lib';
 
 const load = (buf: ArrayBuffer) => PDFDocument.load(buf, { updateMetadata: false });
@@ -475,4 +477,166 @@ export async function redactPages(input: ArrayBuffer, flat: FlatPage[], stripInf
   out.setProducer('PDFSherpa');
   out.setCreator('PDFSherpa');
   return save(out);
+}
+
+/* ---------------- Resize page size ---------------- */
+
+const PAGE_SIZES = { a4: [595.28, 841.89], letter: [612, 792], legal: [612, 1008], a3: [841.89, 1190.55], a5: [419.53, 595.28] } as const;
+export type PageSizeName = keyof typeof PAGE_SIZES;
+export interface ResizeOpts { size: PageSizeName; orientation: 'auto' | 'portrait' | 'landscape'; margin: number; }
+
+/**
+ * Put every page on a new sheet size, scaled to fit and centred. Pages are embedded as vector
+ * Form XObjects, so text stays sharp and selectable. Rotated pages come out upright.
+ */
+export async function resizePages(input: ArrayBuffer, o: ResizeOpts) {
+  const src = await load(input);
+  const out = await PDFDocument.create();
+  const srcPages = src.getPages();
+  const embedded = await out.embedPages(srcPages);
+  srcPages.forEach((page, i) => {
+    const f = frame(page);
+    const r = ((page.getRotation().angle % 360) + 360) % 360;
+    let [pw, ph] = PAGE_SIZES[o.size] as readonly [number, number];
+    const landscape = o.orientation === 'landscape' || (o.orientation === 'auto' && f.vw > f.vh);
+    if (landscape) [pw, ph] = [ph, pw];
+    const s = Math.min((pw - 2 * o.margin) / f.vw, (ph - 2 * o.margin) / f.vh);
+    const vw = f.vw * s, vh = f.vh * s;
+    const ox = (pw - vw) / 2, oy = (ph - vh) / 2; // bottom-left of the upright, scaled page
+    const { width: W, height: H } = page.getCropBox();
+    const w = W * s, h = H * s;
+    // drawPage rotates counter-clockwise around (x, y); /Rotate turns pages clockwise
+    const pos: Record<number, [number, number]> = { 0: [ox, oy], 90: [ox, oy + vh], 180: [ox + w, oy + h], 270: [ox + vw, oy] };
+    const [x, y] = pos[r] ?? pos[0];
+    const pg = out.addPage([pw, ph]);
+    pg.drawPage(embedded[i], { x, y, width: w, height: h, rotate: degrees(-r) });
+  });
+  out.setProducer('PDFSherpa');
+  return save(out);
+}
+
+/* ---------------- Flatten ---------------- */
+
+/**
+ * Flatten form fields and (optionally) comments/markup into the page content, so they can't be
+ * edited and look the same in every viewer. Link annotations are kept so links still work.
+ */
+export async function flattenPdf(input: ArrayBuffer, opts: { forms: boolean; annotations: boolean }) {
+  const doc = await load(input);
+  let fields = 0, annots = 0;
+  if (opts.forms) {
+    const form = doc.getForm();
+    fields = form.getFields().length;
+    if (fields) form.flatten({ updateFieldAppearances: true });
+  }
+  if (opts.annotations) {
+    for (const page of doc.getPages()) {
+      const arr = page.node.Annots();
+      if (!arr) continue;
+      const keep: unknown[] = [];
+      for (let i = 0; i < arr.size(); i++) {
+        const ref = arr.get(i);
+        const a = doc.context.lookup(ref);
+        if (!(a instanceof PDFDict)) continue;
+        const sub = a.get(PDFName.of('Subtype'))?.toString();
+        if (sub === '/Link' || sub === '/Widget') { keep.push(ref); continue; }
+        if (sub === '/Popup') continue;
+        const flags = (a.lookup(PDFName.of('F')) as PDFNumber | undefined)?.asNumber?.() ?? 0;
+        if (flags & 2) continue; // hidden
+        const ap = a.lookup(PDFName.of('AP'));
+        const nRef = ap instanceof PDFDict ? ap.get(PDFName.of('N')) : undefined;
+        const n = nRef instanceof PDFRef ? doc.context.lookup(nRef) : nRef;
+        const rect = (a.lookup(PDFName.of('Rect')) as PDFArray | undefined)?.asRectangle?.();
+        if (!(n instanceof PDFStream) || !rect || !(nRef instanceof PDFRef)) continue; // no appearance → drop
+        const bbox = (n.dict.lookup(PDFName.of('BBox')) as PDFArray | undefined)?.asRectangle?.() ?? { x: 0, y: 0, width: rect.width, height: rect.height };
+        const sx = bbox.width ? rect.width / bbox.width : 1, sy = bbox.height ? rect.height / bbox.height : 1;
+        const name = page.node.newXObject('FlatAnnot', nRef);
+        page.pushOperators(pushGraphicsState(), concatTransformationMatrix(sx, 0, 0, sy, rect.x - bbox.x * sx, rect.y - bbox.y * sy), drawObject(name), popGraphicsState());
+        annots++;
+      }
+      if (keep.length) page.node.set(PDFName.of('Annots'), doc.context.obj(keep as never[]));
+      else page.node.delete(PDFName.of('Annots'));
+    }
+  }
+  doc.setProducer('PDFSherpa');
+  return { bytes: await save(doc), fields, annots };
+}
+
+/* ---------------- Header & footer ---------------- */
+
+export interface HeaderFooterOpts {
+  header: [string, string, string]; // left, centre, right
+  footer: [string, string, string];
+  fontSize: number;
+  color: string;
+  start: number;
+  skipFirst: boolean;
+  fileName: string;
+  date: string;
+}
+
+/** Text in the six header/footer slots. Tokens: [page], [pages], [date], [file]. */
+export async function headerFooter(input: ArrayBuffer, o: HeaderFooterOpts) {
+  const doc = await load(input);
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const pages = doc.getPages();
+  const total = o.start + pages.length - (o.skipFirst ? 1 : 0) - 1;
+  pages.forEach((page, i) => {
+    if (o.skipFirst && i === 0) return;
+    const n = o.start + i - (o.skipFirst ? 1 : 0);
+    const f = frame(page);
+    const margin = Math.max(18, Math.min(f.vw, f.vh) * 0.04);
+    const h = font.heightAtSize(o.fontSize, { descender: false });
+    const slots: [string, Exclude<Position, 'center' | 'tile'>][] = [
+      [o.header[0], 'top-left'], [o.header[1], 'top-center'], [o.header[2], 'top-right'],
+      [o.footer[0], 'bottom-left'], [o.footer[1], 'bottom-center'], [o.footer[2], 'bottom-right'],
+    ];
+    for (const [raw, pos] of slots) {
+      if (!raw.trim()) continue;
+      const text = safeText(font, raw.replace(/\[page\]/gi, String(n)).replace(/\[pages\]/gi, String(total)).replace(/\[date\]/gi, o.date).replace(/\[file\]/gi, o.fileName));
+      const w = font.widthOfTextAtSize(text, o.fontSize);
+      const [cx, cy] = anchor(pos, f, w, h, margin);
+      const [vx, vy] = originFor(cx, cy, w, h, 0);
+      const [x, y] = f.toUser(vx, vy);
+      page.drawText(text, { x, y, size: o.fontSize, font, color: hexToRgb(o.color), rotate: degrees(f.angle(0)) });
+    }
+  });
+  doc.setProducer('PDFSherpa');
+  return save(doc);
+}
+
+/* ---------------- OCR → searchable PDF ---------------- */
+
+export interface OcrWord { text: string; x0: number; y0: number; x1: number; y1: number; }
+export interface OcrPage { jpeg: ArrayBuffer; w: number; h: number; imgW: number; imgH: number; words: OcrWord[]; }
+
+/**
+ * Page image + an invisible text layer placed over each recognised word, so the PDF can be
+ * searched, selected and copied. Words are stretched horizontally to match their box.
+ */
+export async function searchablePdf(pages: OcrPage[]) {
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  for (const p of pages) {
+    const img = await doc.embedJpg(p.jpeg);
+    const page = doc.addPage([p.w, p.h]);
+    page.drawImage(img, { x: 0, y: 0, width: p.w, height: p.h });
+    const fontKey = page.node.newFontDictionary(font.name, font.ref);
+    const sx = p.w / p.imgW, sy = p.h / p.imgH;
+    const ops = [beginText(), setTextRenderingMode(TextRenderingMode.Invisible)];
+    for (const wd of p.words) {
+      const text = safeText(font, wd.text.trim());
+      if (!text) continue;
+      const boxW = (wd.x1 - wd.x0) * sx, boxH = (wd.y1 - wd.y0) * sy;
+      if (boxW <= 0 || boxH <= 0) continue;
+      const size = Math.max(1, boxH * 0.9);
+      const natural = font.widthOfTextAtSize(text, size);
+      const squeeze = natural > 0 ? Math.max(10, Math.min(400, (boxW / natural) * 100)) : 100;
+      ops.push(setFontAndSize(fontKey, size), setCharacterSqueeze(squeeze), setTextMatrix(1, 0, 0, 1, wd.x0 * sx, p.h - wd.y1 * sy + boxH * 0.15), showText(font.encodeText(text)));
+    }
+    ops.push(endText());
+    page.pushOperators(...ops);
+  }
+  doc.setProducer('PDFSherpa');
+  return save(doc);
 }

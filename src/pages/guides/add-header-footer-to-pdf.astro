@@ -1,0 +1,40 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Can I add the date to every page?", a: "Yes. Type [date] into any header or footer box." },
+  { q: "How do I add page numbers with the total?", a: "Type Page [page] of [pages] into a footer box." },
+  { q: "Can I use different text on the first page?", a: "You can skip the first page entirely, which is useful for cover pages. Different text per page isn’t supported." },
+];
+---
+<GuideLayout slug="add-header-footer-to-pdf" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/header-footer-pdf">Header & Footer</a>, select the PDF, type text into any of the six boxes (for example <em>Confidential</em> top right and <em>Page [page] of [pages]</em> bottom centre), and click <strong>Add header & footer</strong>.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/header-footer-pdf">pdfsherpa.com/header-footer-pdf</a> and select the PDF.</li>
+    <li>Fill in the header boxes (left, centre, right) and footer boxes you need.</li>
+    <li>Use the buttons to insert <code>[page]</code>, <code>[pages]</code>, <code>[date]</code> or <code>[file]</code>.</li>
+    <li>Set the text size and choose whether to skip the first page.</li>
+    <li>Click <strong>Add header & footer</strong> and download.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Ideas</h2>
+  <ul>
+    <li><strong>Reports:</strong> title on the left of the header, date on the right, page numbers centred in the footer.</li>
+    <li><strong>Contracts:</strong> <em>Page [page] of [pages]</em> so no page can go missing unnoticed.</li>
+    <li><strong>Drafts:</strong> <em>DRAFT</em> in the header, or use <a href="/watermark-pdf">Watermark</a> for a large diagonal label.</li>
+    <li><strong>Printed handouts:</strong> <em>[file]</em> in the footer so loose pages can be matched to their document.</li>
+  </ul>
+
+  <h2>Related tools</h2>
+  <ul>
+    <li>Numbers only: <a href="/add-page-numbers">Page Numbers</a>.</li>
+    <li>Combine files first: <a href="/merge-pdf">Merge PDF</a>.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Text is added in your browser and your PDF is never uploaded.</p>
+</GuideLayout>

@@ -1,0 +1,61 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import CombineImages from '../islands/CombineImages';
+
+const faqs = [
+  { q: "How do I put two photos side by side?", a: "Add both photos, choose Side by side and click Combine. They are matched in height automatically." },
+  { q: "Can I combine the front and back of an ID card into one image?", a: "Yes. Choose Stacked to put the front above the back. That is what many forms expect." },
+  { q: "Will my photos lose quality?", a: "Photos are scaled to match each other, then saved as high-quality JPG or lossless PNG." },
+  { q: "Is there a limit on the number of images?", a: "No fixed limit. Very large results are scaled down to stay within what phones can handle." },
+  { q: "Are my photos uploaded?", a: "No. Images are combined in your browser and never leave your device." },
+];
+---
+<ToolLayout
+  slug="combine-images"
+  title="Combine Images – Join Photos Into One, Free | PDFSherpa"
+  description="Merge two or more photos into one image: side by side, stacked or as a grid collage. Choose spacing and background. Free, no upload."
+  h1="Combine Images"
+  lead="Join two or more photos into one image: side by side, stacked or as a grid. Pick spacing and background, then download. No upload."
+  howToTitle="How to Combine Images Into One"
+  steps={["Select or drop two or more images.", "Pick a layout: stacked, side by side or grid.", "Click <strong>Combine</strong>, check the preview and download."]}
+  faqs={faqs}
+  related={["jpg-to-pdf", "compress-image", "resize-image", "crop-image"]}
+>
+  <CombineImages client:load />
+
+  <Fragment slot="content">
+<h2>What Combine Images does</h2>
+    <p>
+      Combine Images places several pictures on one canvas and saves them as a single JPG or PNG. It’s the quickest way to send two photos as one,
+      make a before-and-after comparison, or meet a form that wants both sides of a document in one image.
+    </p>
+
+    <h2>Layouts</h2>
+    <ul>
+      <li><strong>Stacked:</strong> top to bottom, all the same width. Good for ID front and back, or long screenshots.</li>
+      <li><strong>Side by side:</strong> left to right, all the same height. Good for comparisons.</li>
+      <li><strong>Grid:</strong> a simple collage, as square as possible.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Step by step</h2>
+    <ol>
+      <li>Add two or more images. Use the arrows to change the order.</li>
+      <li>Choose layout, spacing and background colour.</li>
+      <li>Click <strong>Combine</strong> and check the preview.</li>
+      <li>Download as JPG (smaller) or PNG (lossless, can be transparent).</li>
+    </ol>
+
+    <h2>Tips</h2>
+    <ul>
+      <li>Crop each photo first with <a href="/crop-image">Crop Image</a> so only the important part is shown.</li>
+      <li>If a form has a KB limit, run the result through <a href="/compress-image">Compress Image</a>.</li>
+      <li>Want separate pages instead of one picture? Use <a href="/jpg-to-pdf">JPG to PDF</a>.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>Images are combined on your device with the browser’s canvas. Nothing is uploaded.</p>
+  </Fragment>
+</ToolLayout>

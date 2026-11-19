@@ -1,0 +1,36 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Will converting Letter to A4 cut off text?", a: "No. Pages are scaled to fit inside A4 and centred, so all content stays visible." },
+  { q: "Why are there white bands at the top and bottom?", a: "Letter and A4 have different shapes. Scaling to fit keeps proportions, so the leftover space shows as a small white margin." },
+  { q: "Can I convert A4 to Letter?", a: "Yes. Choose Letter instead. The same scaling applies." },
+];
+---
+<GuideLayout slug="convert-letter-pdf-to-a4" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/resize-pdf">Resize PDF</a>, select the PDF, choose <strong>A4</strong> and click <strong>Resize</strong>. Every page is scaled to fit A4, centred, with sharp text.</p>
+
+  <h2>Letter vs A4</h2>
+  <p>US Letter is 8.5×11 inches (216×279 mm). A4 is 210×297 mm, a little narrower and taller. Printing a Letter PDF on A4 paper, or the other way round, can cut off edges or leave odd margins, and some portals ask for one exact size.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/resize-pdf">pdfsherpa.com/resize-pdf</a> and select the PDF.</li>
+    <li>Choose <strong>A4</strong> (or Letter for the reverse).</li>
+    <li>Leave orientation on <strong>Auto</strong> so landscape pages stay landscape.</li>
+    <li>Add a small margin if your printer cuts off edges.</li>
+    <li>Click <strong>Resize</strong> and download.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Printing tips</h2>
+  <ul>
+    <li>In the print dialog, choose <em>Actual size</em> or 100% after resizing, not <em>Fit to page</em>, so it isn’t scaled twice.</li>
+    <li>For booklets, try A5, which is half of A4.</li>
+    <li>Want to remove wide margins instead of changing the paper size? Use <a href="/crop-pdf">Crop PDF</a>.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Pages are resized in your browser and the PDF is never uploaded.</p>
+</GuideLayout>

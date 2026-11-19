@@ -1,0 +1,43 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "What is the difference between saving and flattening a form?", a: "A saved form still has editable fields. A flattened form has the answers printed into the page, so they can’t be changed." },
+  { q: "Will my signature stay?", a: "Yes. Signatures added as images stay as they are. Signature fields with an appearance are flattened into the page." },
+  { q: "Can someone still edit a flattened PDF?", a: "Not the form answers in a normal PDF reader. Anyone with editing software could add new content on top, so use a password if you need more protection." },
+];
+---
+<GuideLayout slug="flatten-pdf-form" faqs={faqs}>
+<p><strong>Short answer:</strong> fill the form with <a href="/fill-pdf-form">Fill PDF Form</a>, then open <a href="/flatten-pdf">Flatten PDF</a>, select the filled file and click <strong>Flatten PDF</strong>. The answers become part of the page and can no longer be edited.</p>
+
+  <h2>Why flatten a form?</h2>
+  <ul>
+    <li><strong>Answers can’t be changed</strong> after you send the form.</li>
+    <li><strong>It looks the same everywhere.</strong> Some viewers and phones show form fields empty or in the wrong font.</li>
+    <li><strong>It prints correctly.</strong> Fields sometimes don’t print.</li>
+    <li><strong>Portals accept it.</strong> Some upload systems reject fillable PDFs.</li>
+  </ul>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Fill in the form and save it.</li>
+    <li>Open <a href="/flatten-pdf">pdfsherpa.com/flatten-pdf</a> and select the filled PDF.</li>
+    <li>Keep <strong>Form fields</strong> ticked. Tick <strong>Comments</strong> too if you added notes or highlights.</li>
+    <li>Click <strong>Flatten PDF</strong> and download.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Tip: lock answers while filling</h2>
+  <p><a href="/fill-pdf-form">Fill PDF Form</a> has its own option to lock answers when saving, so you can fill and flatten in one step.</p>
+
+  <h2>Before you flatten</h2>
+  <ul>
+    <li>Check every answer. Flattened answers can’t be edited.</li>
+    <li>Keep the unflattened copy in case you need to change something later.</li>
+    <li>Sign afterwards with <a href="/sign-pdf">Sign PDF</a> if the form needs a signature.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Flattening happens in your browser. Your form and answers are never uploaded.</p>
+</GuideLayout>

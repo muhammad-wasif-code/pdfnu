@@ -1,0 +1,61 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FlattenPdf from '../islands/FlattenPdf';
+
+const faqs = [
+  { q: "What does flattening a PDF mean?", a: "It turns interactive parts, like form fields and comments, into ordinary page content. They still look the same, but can no longer be edited or removed in a PDF reader." },
+  { q: "Why flatten a filled form?", a: "So the answers can’t be changed after you send it, and so they display and print correctly in every viewer. Some portals require flattened forms." },
+  { q: "Do links still work?", a: "Yes. Links are kept. Only form fields and comments or markup are flattened." },
+  { q: "Can I undo flattening?", a: "Not in the flattened file. Your original file stays unchanged, so keep it if you may need to edit again." },
+  { q: "Is my PDF uploaded?", a: "No. Flattening happens in your browser." },
+];
+---
+<ToolLayout
+  slug="flatten-pdf"
+  title="Flatten PDF – Lock Form Fields & Comments Free | PDFSherpa"
+  description="Flatten a PDF so filled form fields, comments and stamps become part of the page and can’t be edited. Links keep working. Free, no upload."
+  h1="Flatten PDF"
+  lead="Lock filled-in forms, comments and stamps into the page so they look the same everywhere and can’t be changed. Nothing is uploaded."
+  howToTitle="How to Flatten a PDF"
+  steps={["Select or drop your PDF.", "Choose what to flatten: form fields, comments, or both.", "Click <strong>Flatten PDF</strong> and download."]}
+  faqs={faqs}
+  related={["fill-pdf-form", "sign-pdf", "protect-pdf", "edit-pdf"]}
+>
+  <FlattenPdf client:load />
+
+  <Fragment slot="content">
+<h2>What Flatten PDF does</h2>
+    <p>
+      Filled forms and annotated PDFs contain layers that viewers draw on top of the page. Different apps draw them differently, some don’t print them,
+      and anyone can edit them. Flattening merges those layers into the page itself.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Open the PDF.</strong></li>
+      <li><strong>Choose what to flatten.</strong> Form fields (typed answers, ticks, dropdowns) and/or comments, highlights, stamps and drawings.</li>
+      <li><strong>Flatten and download.</strong> The result shows how many fields and comments were flattened.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>When to flatten</h2>
+    <ul>
+      <li>After filling a form with <a href="/fill-pdf-form">Fill PDF Form</a>, before sending it.</li>
+      <li>Before printing a PDF with comments or highlights, so they actually print.</li>
+      <li>When an upload portal rejects “interactive” or “fillable” PDFs.</li>
+      <li>Before merging documents, so form fields with the same name don’t clash.</li>
+    </ul>
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>Flattening doesn’t hide anything. To remove information for good, use <a href="/redact-pdf">Redact PDF</a>.</li>
+      <li>Comments without a visible appearance (like hidden pop-up notes) are removed rather than drawn.</li>
+      <li>To stop others opening the file at all, add a password with <a href="/protect-pdf">Protect PDF</a>.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>Your PDF is flattened locally with pdf-lib. It is never uploaded.</p>
+  </Fragment>
+</ToolLayout>

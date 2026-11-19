@@ -9,7 +9,7 @@ import { assertPdf, friendlyError, isPdfName, UserError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import type { CompressResult, Preset, Progress } from '../lib/compress';
 
-export type Target = '100' | '200' | '500' | '1024' | '2048';
+export type Target = '50' | '100' | '200' | '300' | '500' | '1024' | '2048';
 type Phase = 'idle' | 'ready' | 'working' | 'done' | 'error';
 
 const PRESETS = [
@@ -18,8 +18,10 @@ const PRESETS = [
   { value: 'high' as const, label: 'High Quality', sub: 'Better quality' },
 ];
 const TARGETS = [
+  { value: '50' as const, label: '50KB' },
   { value: '100' as const, label: '100KB' },
   { value: '200' as const, label: '200KB' },
+  { value: '300' as const, label: '300KB' },
   { value: '500' as const, label: '500KB' },
   { value: '1024' as const, label: '1MB' },
   { value: '2048' as const, label: '2MB' },

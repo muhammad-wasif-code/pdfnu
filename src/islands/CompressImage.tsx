@@ -8,7 +8,7 @@ import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
 import { IMAGE_ACCEPT, isImage, type OutType } from '../lib/image';
 
-export type Target = '20' | '30' | '50' | '100' | '200';
+export type Target = '10' | '20' | '30' | '50' | '100' | '200';
 type Fmt = 'image/jpeg' | 'image/webp';
 interface Item { id: string; file: File; url: string; out?: { blob: Blob; name: string; w: number; h: number; missed: boolean; unchanged: boolean; url: string }; error?: string; }
 
@@ -27,7 +27,7 @@ export default function CompressImage({ initialTarget }: { initialTarget?: Targe
   useEffect(() => () => ref.current.forEach((i) => URL.revokeObjectURL(i.url)), []);
   useEffect(() => {
     const t = new URLSearchParams(location.search).get('target');
-    if (t && ['20', '30', '50', '100', '200'].includes(t)) setTarget(t as Target);
+    if (t && ['10', '20', '30', '50', '100', '200'].includes(t)) setTarget(t as Target);
   }, []);
 
   const add = (files: File[]) => {
@@ -82,7 +82,7 @@ export default function CompressImage({ initialTarget }: { initialTarget?: Targe
 
       {phase !== 'done' && (
         <div class={`grid gap-4 sm:grid-cols-[1fr_auto] ${phase === 'working' ? 'pointer-events-none opacity-60' : ''}`}>
-          <OptionChips label="Target size (maximum)" options={(['20', '30', '50', '100', '200'] as Target[]).map((v) => ({ value: v, label: `${v}KB` }))} value={target} onChange={(v) => v && setTarget(v)} />
+          <OptionChips label="Target size (maximum)" options={(['10', '20', '30', '50', '100', '200'] as Target[]).map((v) => ({ value: v, label: `${v}KB` }))} value={target} onChange={(v) => v && setTarget(v)} />
           <OptionChips label="Format" options={[{ value: 'image/jpeg', label: 'JPG' }, { value: 'image/webp', label: 'WebP' }]} value={fmt} onChange={(v) => v && setFmt(v)} />
         </div>
       )}

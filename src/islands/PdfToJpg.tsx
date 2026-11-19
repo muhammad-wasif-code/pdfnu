@@ -11,8 +11,10 @@ import { downloadBlob } from '../lib/download';
 type Dpi = '72' | '150' | '300';
 type Quality = '0.7' | '0.85' | '0.95';
 interface Out { name: string; data: Blob; }
+export type PageFormat = 'jpg' | 'png';
 
-export default function PdfToJpg() {
+export default function PdfToJpg({ initialFormat = 'jpg' }: { initialFormat?: PageFormat } = {}) {
+  const [fmt, setFmt] = useState<PageFormat>(initialFormat);
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState(0);
   const [bytes, setBytes] = useState<Uint8Array | null>(null);
@@ -52,10 +54,10 @@ export default function PdfToJpg() {
           if (flag.v) throw new DOMException('Cancelled', 'AbortError');
           setProgress({ label: `Converting page ${list[k] + 1} (${k + 1} of ${list.length})…`, value: k / list.length });
           const c = await renderPage(pdf, list[k] + 1, Number(dpi));
-          const blob = await new Promise<Blob | null>((r) => c.toBlob(r, 'image/jpeg', Number(q)));
+          const blob = await new Promise<Blob | null>((r) => (fmt === 'png' ? c.toBlob(r, 'image/png') : c.toBlob(r, 'image/jpeg', Number(q))));
           c.width = c.height = 0;
           if (!blob) throw new UserError('Your browser couldn’t create the image. Try a lower DPI.', 'memory');
-          result.push({ name: `${base}-page-${list[k] + 1}.jpg`, data: blob });
+          result.push({ name: `${base}-page-${list[k] + 1}.${fmt}`, data: blob });
         }
       } finally { await pdf.destroy(); }
       setOuts(result); setPhase('done');
@@ -66,9 +68,9 @@ export default function PdfToJpg() {
   };
 
   const download = async () => {
-    if (outs.length === 1) return downloadBlob(outs[0].data, outs[0].name, 'image/jpeg');
+    if (outs.length === 1) return downloadBlob(outs[0].data, outs[0].name, fmt === 'png' ? 'image/png' : 'image/jpeg');
     const { makeZip } = await import('../lib/zip');
-    downloadBlob(await makeZip(outs), `${stripExt(file!.name)}-jpg.zip`, 'application/zip');
+    downloadBlob(await makeZip(outs), `${stripExt(file!.name)}-${fmt}.zip`, 'application/zip');
   };
   const reset = () => { setFile(null); setBytes(null); setOuts([]); setPagesSel(''); setPhase('edit'); };
 
@@ -81,7 +83,7 @@ export default function PdfToJpg() {
           {outs.length > 1 && outs.length <= 60 && (
             <ul class="mt-3 grid max-h-56 grid-cols-2 gap-1 overflow-auto text-sm sm:grid-cols-3">
               {outs.map((o) => (
-                <li key={o.name}><button type="button" class="flex min-h-9 w-full items-center justify-between gap-2 rounded-lg bg-white/70 px-3 py-1.5 text-left dark:bg-white/5" onClick={() => downloadBlob(o.data, o.name, 'image/jpeg')}><span class="truncate">{o.name.replace(/^.*-page-/, 'Page ').replace('.jpg', '')}</span><span class="text-xs font-semibold text-brand dark:text-brand-light">Save</span></button></li>
+                <li key={o.name}><button type="button" class="flex min-h-9 w-full items-center justify-between gap-2 rounded-lg bg-white/70 px-3 py-1.5 text-left dark:bg-white/5" onClick={() => downloadBlob(o.data, o.name, fmt === 'png' ? 'image/png' : 'image/jpeg')}><span class="truncate">{o.name.replace(/^.*-page-/, 'Page ').replace(/\.(jpg|png)$/, '')}</span><span class="text-xs font-semibold text-brand dark:text-brand-light">Save</span></button></li>
               ))}
             </ul>
           )}
@@ -97,7 +99,8 @@ export default function PdfToJpg() {
       {error && <ErrorBox onRetry={!file ? () => setError(null) : undefined}>{error}</ErrorBox>}
       <div class={`grid gap-4 sm:grid-cols-2 ${phase === 'working' ? 'pointer-events-none opacity-60' : ''}`}>
         <OptionChips label="Resolution" options={[{ value: '72', label: '72 DPI' }, { value: '150', label: '150 DPI' }, { value: '300', label: '300 DPI' }]} value={dpi} onChange={(v) => v && setDpi(v)} />
-        <OptionChips label="JPG quality" options={[{ value: '0.7', label: 'Medium' }, { value: '0.85', label: 'High' }, { value: '0.95', label: 'Maximum' }]} value={q} onChange={(v) => v && setQ(v)} />
+        <OptionChips<PageFormat> label="Image format" options={[{ value: 'jpg', label: 'JPG', sub: 'Smaller files' }, { value: 'png', label: 'PNG', sub: 'Lossless, sharp text' }]} value={fmt} onChange={(v) => v && setFmt(v)} />
+        {fmt === 'jpg' && <OptionChips label="JPG quality" options={[{ value: '0.7', label: 'Medium' }, { value: '0.85', label: 'High' }, { value: '0.95', label: 'Maximum' }]} value={q} onChange={(v) => v && setQ(v)} />}
       </div>
       {file && (
         <label class="block">

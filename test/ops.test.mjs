@@ -152,4 +152,75 @@ ok('rebuild broken startxref + truncated trailer');
   ok('redact: page flattened, original text removed from file');
 }
 
+// resize page size: what you see on screen is preserved (rotated pages come out with Rotate 0), text stays text
+{
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  const dirs = async (bytes) => {
+    const doc = await pdfjs.getDocument({ data: bytes, isEvalSupported: false }).promise;
+    const res = [];
+    for (let n = 1; n <= doc.numPages; n++) {
+      const page = await doc.getPage(n);
+      const vp = page.getViewport({ scale: 1 });
+      const it = (await page.getTextContent()).items.find((i) => i.str.trim());
+      const t = pdfjs.Util.transform(vp.transform, it.transform);
+      res.push([Math.sign(Math.round(t[0])), Math.sign(Math.round(t[1]))]); // on-screen text direction
+    }
+    return res;
+  };
+  const input = buf('test/fixtures/rotated.pdf');
+  const before = await dirs(new Uint8Array(input.slice(0)));
+  const out = await ops.resizePages(input, { size: 'a4', orientation: 'auto', margin: 0 });
+  const d2 = await open(out.slice());
+  d2.getPages().forEach((p) => assert.equal(p.getRotation().angle, 0));
+  assert.deepEqual(await dirs(out), before, 'on-screen text direction unchanged');
+  const letter = await open(await ops.resizePages(small(), { size: 'letter', orientation: 'portrait', margin: 18 }));
+  assert.deepEqual([Math.round(letter.getPage(0).getWidth()), Math.round(letter.getPage(0).getHeight())], [612, 792]);
+  ok('resize pages (A4/Letter, rotation-aware, text selectable)');
+}
+
+// flatten: form fields and an annotation with an appearance stream become page content
+{
+  const { PDFDocument: PD, PDFName: N, rgb: RGB } = await import('pdf-lib');
+  const src = await PD.load(buf('test/fixtures/form.pdf'));
+  const page = src.getPage(0);
+  const ap = src.context.formXObject([], { BBox: [0, 0, 100, 20] });
+  const apRef = src.context.register(ap);
+  const annot = src.context.obj({ Type: 'Annot', Subtype: 'Square', Rect: [50, 50, 150, 70], AP: { N: apRef } });
+  page.node.addAnnot(src.context.register(annot));
+  const input = await src.save();
+  const r = await ops.flattenPdf(input.buffer.slice(input.byteOffset, input.byteOffset + input.byteLength), { forms: true, annotations: true });
+  assert.ok(r.fields > 0, 'had fields'); assert.equal(r.annots, 1);
+  const f2 = await open(r.bytes);
+  assert.equal(f2.getForm().getFields().length, 0, 'no fields left');
+  assert.ok(!f2.getPage(0).node.Annots(), 'annotations removed from page');
+  ok('flatten forms + annotations');
+}
+
+// header & footer tokens
+{
+  const out = await ops.headerFooter(small(), { header: ['[file]', '', 'Confidential'], footer: ['', 'Page [page] of [pages]', '[date]'], fontSize: 9, color: '#333333', start: 1, skipFirst: false, fileName: 'report.pdf', date: '2026-11-19' });
+  const { inflateSync } = await import('node:zlib');
+  const b = Buffer.from(out), t = b.toString('latin1'); let m, acc = ''; const re = /stream\r?\n/g;
+  while ((m = re.exec(t))) { const st = m.index + m[0].length, en = t.indexOf('endstream', st); try { acc += inflateSync(b.subarray(st, en)).toString('latin1'); } catch {} }
+  const hex = (x) => Buffer.from(x).toString('hex').toUpperCase();
+  for (const want of ['Page 2 of 3', 'Confidential', 'report.pdf', '2026-11-19']) assert.ok(acc.includes(hex(want)), want);
+  ok('header & footer with [page]/[pages]/[date]/[file]');
+}
+
+// searchable PDF: invisible OCR text is extractable and sits over its box
+{
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  const jpeg = readFileSync('test/fixtures/signature-photo.jpg');
+  const out = await ops.searchablePdf([{ jpeg: jpeg.buffer.slice(jpeg.byteOffset, jpeg.byteOffset + jpeg.byteLength), w: 300, h: 200, imgW: 600, imgH: 400,
+    words: [{ text: 'Invoice', x0: 40, y0: 40, x1: 200, y1: 80 }, { text: 'Total', x0: 40, y0: 300, x1: 140, y1: 340 }] }]);
+  const doc = await pdfjs.getDocument({ data: out, isEvalSupported: false }).promise;
+  const page = await doc.getPage(1);
+  const items = (await page.getTextContent()).items.filter((i) => i.str.trim());
+  assert.deepEqual(items.map((i) => i.str), ['Invoice', 'Total']);
+  const inv = items[0];
+  assert.ok(Math.abs(inv.transform[4] - 20) < 1, 'x at box left (40px → 20pt)');
+  assert.ok(Math.abs(inv.width - 80) < 3, `width matches box (${inv.width})`);
+  ok('searchable PDF: invisible text layer positioned over words');
+}
+
 console.log(`\nAll ${n} pdfOps tests passed`);

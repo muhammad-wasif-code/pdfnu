@@ -1,6 +1,6 @@
 // Copies large runtime assets (Ghostscript WASM, pdf.js fonts/cmaps) into public/vendor
 // with versioned paths so they can be cached forever. Runs before dev/build.
-import { cpSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 const require = createRequire(import.meta.url);
@@ -25,4 +25,28 @@ if (!existsSync(pjOut)) {
   cpSync(join(pdfjsDir, 'wasm'), join(pjOut, 'wasm'), { recursive: true });
   cpSync(join(pdfjsDir, 'iccs'), join(pjOut, 'iccs'), { recursive: true });
 }
-console.log(`vendor ready: ${gsOut}, ${pjOut}`);
+// OCR: tesseract.js worker + LSTM cores + language models (served from our own origin, never a CDN)
+const tjDir = dirname(require.resolve('tesseract.js/package.json'));
+const tjVer = JSON.parse(readFileSync(join(tjDir, 'package.json'), 'utf8')).version;
+const coreDir = dirname(require.resolve('tesseract.js-core/package.json'));
+const tjOut = `public/vendor/tesseract-${tjVer}`;
+if (!existsSync(join(tjOut, 'lang', 'hin.traineddata.gz'))) {
+  mkdirSync(join(tjOut, 'lang'), { recursive: true });
+  cpSync(join(tjDir, 'dist', 'worker.min.js'), join(tjOut, 'worker.min.js'));
+  for (const f of ['tesseract-core-simd-lstm.wasm.js', 'tesseract-core-lstm.wasm.js', 'tesseract-core-relaxedsimd-lstm.wasm.js', 'LICENSE']) cpSync(join(coreDir, f), join(tjOut, f === 'LICENSE' ? 'LICENSE.txt' : f));
+  for (const l of ['eng', 'urd', 'hin']) {
+    const d = dirname(require.resolve(`@tesseract.js-data/${l}/package.json`));
+    cpSync(join(d, '4.0.0_best_int', `${l}.traineddata.gz`), join(tjOut, 'lang', `${l}.traineddata.gz`));
+  }
+}
+
+// HEIC decoder (libheif compiled to JS, bundled in heic2any)
+const hDir = dirname(require.resolve('heic2any/package.json'));
+const hVer = JSON.parse(readFileSync(join(hDir, 'package.json'), 'utf8')).version;
+const hOut = `public/vendor/heic2any-${hVer}`;
+if (!existsSync(join(hOut, 'heic2any.min.js'))) {
+  mkdirSync(hOut, { recursive: true });
+  cpSync(join(hDir, 'dist', 'heic2any.min.js'), join(hOut, 'heic2any.min.js'));
+  writeFileSync(join(hOut, 'LICENSE.txt'), readFileSync(join(hDir, 'LICENSE.md'), 'utf8') + '\n\nBundles libheif (LGPL-3.0), https://github.com/strukturag/libheif\n');
+}
+console.log(`vendor ready: ${gsOut}, ${pjOut}, ${tjOut}, ${hOut}`);

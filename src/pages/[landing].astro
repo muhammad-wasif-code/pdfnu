@@ -5,6 +5,10 @@ import AdSlot from '../components/AdSlot.astro';
 import CompressPdf from '../islands/CompressPdf';
 import CompressImage from '../islands/CompressImage';
 import ResizeImage from '../islands/ResizeImage';
+import PdfToJpg from '../islands/PdfToJpg';
+import JpgToPdf from '../islands/JpgToPdf';
+import ImageConverter from '../islands/ImageConverter';
+import OcrPdf from '../islands/OcrPdf';
 import { landings, landingsForTool, type Landing } from '../data/landings';
 import { getTool } from '../data/tools';
 
@@ -20,11 +24,26 @@ const steps =
     ? [`Select or drop your image. The size is already set to <strong>${l.name}</strong>.`, 'Change fit, format or a KB limit if you need to.', 'Click <strong>Resize</strong> and download.']
     : l.tool === 'compress-image'
       ? [`Select or drop your images. The target is already set to <strong>${l.name}</strong>.`, 'Choose JPG or WebP.', 'Download each compressed image.']
-      : [`Select or drop your PDF. The target is already set to <strong>${l.name}</strong>.`, 'Click <strong>Compress</strong>.', 'Download the smaller PDF.'];
-const related = l.tool === 'compress-pdf' ? ['compress-pdf', 'split-pdf', 'grayscale-pdf', 'jpg-to-pdf']
-  : l.tool === 'compress-image' ? ['compress-image', 'resize-image', 'passport-photo-maker', 'signature-cleaner']
-  : ['resize-image', 'crop-image', 'compress-image', 'passport-photo-maker'];
-const sizeWord = l.tool === 'resize-image' ? 'sizes' : 'targets';
+      : l.tool === 'compress-pdf'
+        ? [`Select or drop your PDF. The target is already set to <strong>${l.name}</strong>.`, 'Click <strong>Compress</strong>.', 'Download the smaller PDF.']
+        : l.tool === 'pdf-to-jpg'
+          ? ['Select or drop your PDF.', 'Choose the resolution and pages. PNG is already selected.', 'Convert and download one image or all as a .zip.']
+          : l.tool === 'jpg-to-pdf'
+            ? ['Select or drop your images.', 'Reorder them and choose page size and margins.', 'Click <strong>Convert</strong> and download the PDF.']
+            : l.tool === 'ocr-pdf'
+              ? ['Select or drop a photo, screenshot or scan.', 'Choose the language of the text.', 'Click <strong>Recognise text</strong>, then copy or download it.']
+              : ['Select or drop your images.', 'The output format is already selected. Adjust quality if you like.', 'Convert and save the images.'];
+const RELATED: Record<Landing['tool'], string[]> = {
+  'compress-pdf': ['compress-pdf', 'split-pdf', 'grayscale-pdf', 'jpg-to-pdf'],
+  'compress-image': ['compress-image', 'resize-image', 'passport-photo-maker', 'signature-cleaner'],
+  'resize-image': ['resize-image', 'crop-image', 'compress-image', 'passport-photo-maker'],
+  'pdf-to-jpg': ['pdf-to-jpg', 'extract-images-from-pdf', 'compress-image', 'pdf-to-text'],
+  'jpg-to-pdf': ['jpg-to-pdf', 'scan-to-pdf', 'compress-pdf', 'merge-pdf'],
+  'image-converter': ['image-converter', 'compress-image', 'resize-image', 'jpg-to-pdf'],
+  'ocr-pdf': ['ocr-pdf', 'pdf-to-text', 'scan-to-pdf', 'crop-image'],
+};
+const related = RELATED[l.tool];
+const sizeWord = l.tool === 'resize-image' ? 'sizes' : l.tool === 'compress-pdf' || l.tool === 'compress-image' ? 'targets' : 'conversions';
 ---
 <ToolLayout
   slug={l.tool}
@@ -41,6 +60,10 @@ const sizeWord = l.tool === 'resize-image' ? 'sizes' : 'targets';
   {l.tool === 'compress-pdf' && <CompressPdf client:load initialTarget={l.target} />}
   {l.tool === 'compress-image' && <CompressImage client:load initialTarget={l.target} />}
   {l.tool === 'resize-image' && <ResizeImage client:load initialSize={l.size} />}
+  {l.tool === 'pdf-to-jpg' && <PdfToJpg client:load initialFormat={l.format} />}
+  {l.tool === 'jpg-to-pdf' && <JpgToPdf client:load />}
+  {l.tool === 'image-converter' && <ImageConverter client:load initialFormat={l.format} />}
+  {l.tool === 'ocr-pdf' && <OcrPdf client:load initialMode={l.mode} />}
 
   <Fragment slot="content">
     <h2>About this size</h2>
@@ -54,14 +77,13 @@ const sizeWord = l.tool === 'resize-image' ? 'sizes' : 'targets';
     <h2>Tips</h2>
     <ul>{l.tips.map((t) => <li set:html={t} />)}</ul>
 
-    <h2>Other {sizeWord}</h2>
+    <h2>{siblings.length ? `Other ${sizeWord}` : 'More options'}</h2>
     <p>
-      Need a different size? Try
-      {siblings.map((s, i) => (
-        <>
-          <a href={`/${s.slug}`}>{s.name}</a>{i < siblings.length - 2 ? ', ' : i === siblings.length - 2 ? ' or ' : ''}
-        </>
-      ))}, or open <a href={`/${l.tool}`}>{tool.name}</a> to choose any setting.
+      {siblings.length > 0 && <>Need something else? Try {siblings.map((s, i) => (
+        <><a href={`/${s.slug}`}>{s.name}</a>{i < siblings.length - 2 ? ', ' : i === siblings.length - 2 ? ' or ' : ''}</>
+      ))}, or open </>}
+      {siblings.length === 0 && <>For every option, open </>}
+      <a href={`/${l.tool}`}>{tool.name}</a>{siblings.length ? ' to choose any setting.' : '.'}
     </p>
   </Fragment>
 </ToolLayout>

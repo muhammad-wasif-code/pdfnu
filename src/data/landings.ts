@@ -19,9 +19,13 @@ interface Base {
   faqs: QA[];
 }
 export type Landing =
-  | (Base & { tool: 'compress-pdf'; target: '100' | '200' | '500' | '1024' | '2048' })
-  | (Base & { tool: 'compress-image'; target: '20' | '30' | '50' | '100' | '200' })
-  | (Base & { tool: 'resize-image'; size: { w: number; h: number } });
+  | (Base & { tool: 'compress-pdf'; target: '50' | '100' | '200' | '300' | '500' | '1024' | '2048' })
+  | (Base & { tool: 'compress-image'; target: '10' | '20' | '30' | '50' | '100' | '200' })
+  | (Base & { tool: 'resize-image'; size: { w: number; h: number } })
+  | (Base & { tool: 'pdf-to-jpg'; format: 'png' })
+  | (Base & { tool: 'jpg-to-pdf' })
+  | (Base & { tool: 'image-converter'; format: 'image/jpeg' | 'image/png' | 'image/webp' })
+  | (Base & { tool: 'ocr-pdf'; mode: 'image' });
 
 const privacyFaq: QA = { q: 'Is my file uploaded?', a: 'No. Everything happens inside your browser, so the file never leaves your device. It works offline after the first visit.' };
 
@@ -334,6 +338,246 @@ export const landings: Landing[] = [
     faqs: [
       { q: 'What aspect ratio is 1280×720?', a: '16:9, the same as HD and Full HD video.' },
       { q: 'Should I save as JPG or PNG?', a: 'JPG for photo thumbnails, which keeps them small. PNG if the image is mostly text and flat colours.' },
+      privacyFaq,
+    ],
+  },
+  /* ---------------- added: more sizes ---------------- */
+  {
+    tool: 'compress-pdf', target: '50', slug: 'compress-pdf-to-50kb', name: '50KB',
+    title: 'Compress PDF to 50KB Online Free (No Upload) | PDFSherpa',
+    description: 'Shrink a PDF to under 50KB for the strictest upload forms. Target preset, honest result if it can’t fit. Free, private, no signup.',
+    h1: 'Compress PDF to 50KB',
+    lead: 'Squeeze a PDF under 50KB for forms with very strict limits. The 50KB target is preset and your file stays on your device.',
+    intro: [
+      '50KB is an extreme limit, usually set for a single scanned certificate, a photo ID or a one-page receipt. Typed one-page documents fit easily. Scans need everything else to be right too.',
+      'PDFSherpa lowers image quality step by step until the file is under 50KB, and tells you honestly if a document simply has too much in it to fit.',
+    ],
+    uses: ['A single scanned certificate or ID card', 'One-page receipts and challans', 'Typed one-page letters and affidavits', 'Small declarations for exam forms'],
+    tips: [
+      'Keep it to one page. Remove the rest with <a href="/delete-pdf-pages">Delete Pages</a>.',
+      'Crop scanner borders with <a href="/crop-pdf">Crop PDF</a> and convert to black and white with <a href="/grayscale-pdf">Grayscale PDF</a> before compressing.',
+      'Scanning again? <a href="/scan-to-pdf">Scan to PDF</a> with the Document look produces very small pages.',
+    ],
+    faqs: [
+      { q: 'Can a scanned page really fit in 50KB?', a: 'Usually yes for one page in black and white, at a lower resolution that is still readable. Colour photos and multi-page scans rarely fit.' },
+      { q: 'What if it still doesn’t fit?', a: 'The result shows the smallest size reached. Try one page at a time, grayscale, or a tighter crop.' },
+      privacyFaq,
+    ],
+  },
+  {
+    tool: 'compress-pdf', target: '300', slug: 'compress-pdf-to-300kb', name: '300KB',
+    title: 'Compress PDF to 300KB Online Free | PDFSherpa',
+    description: 'Get a PDF under 300KB for application portals while keeping scans clear. Target preset. Free, private, no upload.',
+    h1: 'Compress PDF to 300KB',
+    lead: 'Bring a PDF under 300KB with clear, readable pages. The 300KB target is preset and nothing is uploaded.',
+    intro: [
+      '300KB is a common limit for application documents: experience letters, transcripts and identity proofs that are a few pages long.',
+      'With the 300KB target selected, PDFSherpa removes waste first and only lowers photo quality as much as needed.',
+    ],
+    uses: ['Experience and salary certificates', 'Two- to five-page scanned transcripts', 'Address proof such as utility bills', 'Signed application forms'],
+    tips: [
+      'Merging documents for one upload? Use <a href="/merge-pdf">Merge PDF</a> first, then compress the combined file.',
+      'Password-protected bills must be unlocked first with <a href="/unlock-pdf">Unlock PDF</a>.',
+    ],
+    faqs: [
+      { q: 'How many scanned pages fit in 300KB?', a: 'Typically 3–6 black-and-white pages, or 2–3 colour pages, at good readable quality.' },
+      { q: 'Will text stay selectable?', a: 'In typed PDFs, yes. Scans are images already, so they stay images.' },
+      privacyFaq,
+    ],
+  },
+  {
+    tool: 'compress-image', target: '10', slug: 'compress-image-to-10kb', name: '10KB',
+    title: 'Compress Image to 10KB Online Free (Signature) | PDFSherpa',
+    description: 'Reduce a signature or small photo to under 10KB for exam and bank forms, with smart resizing. Free, private, no upload.',
+    h1: 'Compress Image to 10KB',
+    lead: 'Get a signature or thumbnail under 10KB, the limit some exam and bank forms use. The 10KB target is preset and nothing is uploaded.',
+    intro: [
+      '10KB is tiny: it’s meant for signatures, thumb impressions and very small photos. Getting there cleanly depends on cropping tightly and using small pixel dimensions.',
+      'PDFSherpa lowers JPG quality first, then pixel size, and stops as soon as the image is under 10KB.',
+    ],
+    uses: ['Signature uploads on exam and recruitment forms', 'Thumb impressions', 'Tiny ID thumbnails', 'Bank form signatures'],
+    tips: [
+      'Clean the signature first with <a href="/signature-cleaner">Signature Cleaner</a>. A white background compresses far better than grey paper.',
+      'Crop to just the signature with <a href="/crop-image">Crop Image</a>.',
+      'If the form also wants exact pixels, use <a href="/resize-image-to-140x60">Resize to 140×60</a>.',
+    ],
+    faqs: [
+      { q: 'Can a photo of my face fit in 10KB?', a: 'Only at a small size, around 150–200 pixels wide. For face photos, 20–50KB is more usual.' },
+      { q: 'Why JPG and not PNG?', a: 'JPG is much smaller for scanned signatures and is accepted by almost every form.' },
+      privacyFaq,
+    ],
+  },
+  {
+    tool: 'compress-image', target: '30', slug: 'compress-image-to-30kb', name: '30KB',
+    title: 'Compress Image to 30KB Online Free (JPG) | PDFSherpa',
+    description: 'Reduce a photo or signature to under 30KB for online application forms while keeping it clear. Free, private, no upload.',
+    h1: 'Compress Image to 30KB',
+    lead: 'Shrink a photo or signature to under 30KB for application forms. The 30KB target is preset and your image stays on your device.',
+    intro: [
+      'Many forms ask for a photo between 20KB and 50KB, or a signature under 30KB. Aiming for 30KB keeps you safely inside both kinds of rule.',
+      'PDFSherpa compresses to just under 30KB, keeping as much detail as that allows.',
+    ],
+    uses: ['Applicant photos with a 20–50KB range', 'Signatures with a 30KB limit', 'Photos for student and staff ID forms', 'Profile photos on government portals'],
+    tips: [
+      'For an exact passport size, use <a href="/passport-photo-maker">Passport Photo</a> and set a 50KB limit there.',
+      'A plain light background makes faces sharper at small sizes.',
+    ],
+    faqs: [
+      { q: 'The form says minimum 20KB. Will 30KB be accepted?', a: 'Yes. PDFSherpa aims just under 30KB, not as small as possible, so it stays above a 20KB minimum for typical photos.' },
+      { q: 'Can I do several photos at once?', a: 'Yes. Drop them together and each is compressed separately.' },
+      privacyFaq,
+    ],
+  },
+  {
+    tool: 'resize-image', size: { w: 140, h: 60 }, slug: 'resize-image-to-140x60', name: '140×60',
+    title: 'Resize Signature to 140×60 Pixels Online Free | PDFSherpa',
+    description: 'Resize a signature image to exactly 140×60 pixels for bank and exam application forms. Free, private, no upload.',
+    h1: 'Resize Signature to 140×60 Pixels',
+    lead: 'Resize a signature to exactly 140×60 pixels, a size several bank and exam forms ask for. Your image never leaves your device.',
+    intro: [
+      '140×60 pixels is a signature size used by some bank recruitment and exam forms. Rules differ between forms, so always check the size on the official notification.',
+      'The size is preset below and the signature is centre-cropped to the right shape. Set a KB limit too if the form has one.',
+    ],
+    uses: ['Bank recruitment exam signatures', 'Exam and admission form signatures', 'Signature fields on online applications'],
+    tips: [
+      'Photograph the signature on white paper and clean it with <a href="/signature-cleaner">Signature Cleaner</a> first.',
+      'Crop it tightly with <a href="/crop-image">Crop Image</a> so the centre crop doesn’t cut any strokes.',
+      'Most forms also have a KB limit, often 10–20KB. Set it before saving, or use <a href="/compress-image-to-10kb">Compress to 10KB</a>.',
+    ],
+    faqs: [
+      { q: 'Will my signature be squashed?', a: 'No. It’s cropped to the 140×60 shape from the centre. Crop it yourself first if you want to choose exactly what stays.' },
+      { q: 'Is 140×60 right for my form?', a: 'Check the official notification. Signature sizes vary between forms and years, and portals reject the wrong size.' },
+      privacyFaq,
+    ],
+  },
+
+  /* ---------------- added: format conversions ---------------- */
+  {
+    tool: 'pdf-to-jpg', format: 'png', slug: 'pdf-to-png', name: 'PDF to PNG',
+    title: 'PDF to PNG Converter – High Quality, Free | PDFSherpa',
+    description: 'Convert PDF pages to lossless PNG images with sharp text, at 72–300 DPI. One page or all as a zip. Free, no upload.',
+    h1: 'PDF to PNG',
+    lead: 'Turn PDF pages into lossless PNG images with crisp text and lines. Choose the resolution, download one or all. Nothing is uploaded.',
+    intro: [
+      'PNG keeps every pixel exactly, so text, tables and diagrams stay razor-sharp. That makes it better than JPG for screenshots of documents, slides and charts.',
+      'PNG is preselected below. Pick 150 DPI for screens or 300 DPI for print and zooming.',
+    ],
+    uses: ['Slides and diagrams for presentations', 'Document pages for websites and wikis', 'Charts and tables for reports', 'Pages with transparent-looking line art'],
+    tips: [
+      'PNG files are larger than JPG. If size matters more than sharpness, switch to JPG.',
+      'To get the original photos out of a PDF rather than whole pages, use <a href="/extract-images-from-pdf">Extract Images</a>.',
+    ],
+    faqs: [
+      { q: 'PNG or JPG for PDF pages?', a: 'PNG for text, charts and diagrams, because it’s lossless and sharp. JPG for photo-heavy pages, because files are much smaller.' },
+      { q: 'Can I convert only some pages?', a: 'Yes. Type the page numbers or ranges you want before converting.' },
+      privacyFaq,
+    ],
+  },
+  {
+    tool: 'jpg-to-pdf', slug: 'png-to-pdf', name: 'PNG to PDF',
+    title: 'PNG to PDF Converter – Combine PNGs Free | PDFSherpa',
+    description: 'Convert PNG images, screenshots and scans into one PDF. Reorder pages, choose page size and margins. Free, no upload.',
+    h1: 'PNG to PDF',
+    lead: 'Combine PNG screenshots and images into one PDF. Reorder, pick A4 or Letter, and download. Your images never leave your device.',
+    intro: [
+      'PNG is the usual format for screenshots and graphics. Turning a set of them into one PDF makes them easy to send, print or upload as a single file.',
+      'The converter accepts PNG, JPG and WebP together, so mixed images become one PDF in the order you choose.',
+    ],
+    uses: ['Screenshots of payments, chats or receipts', 'Scanned pages saved as PNG', 'Design mock-ups and diagrams', 'Certificates downloaded as images'],
+    tips: [
+      'Large PNG screenshots make big PDFs. Run the result through <a href="/compress-pdf">Compress PDF</a> if needed.',
+      'Use A4 for printing and “Fit” to keep each image’s own size.',
+    ],
+    faqs: [
+      { q: 'Is transparency kept?', a: 'Transparent areas appear white in the PDF, which is how they would print.' },
+      { q: 'Can I mix PNG and JPG?', a: 'Yes. Add any mix of PNG, JPG and WebP images.' },
+      privacyFaq,
+    ],
+  },
+  {
+    tool: 'image-converter', format: 'image/png', slug: 'jpg-to-png', name: 'JPG to PNG',
+    title: 'JPG to PNG Converter Online Free | PDFSherpa',
+    description: 'Convert JPG photos to PNG in your browser, one or many at once. Lossless output for editing and graphics. Free, no upload.',
+    h1: 'JPG to PNG',
+    lead: 'Convert JPG images to PNG, one or many at once. PNG is lossless, so nothing more is lost when you edit and save again.',
+    intro: [
+      'PNG is the better format when an image will be edited, layered or saved several times, because it doesn’t add compression each time.',
+      'PNG is preselected below. Note that converting can’t restore detail a JPG already lost, and PNG files are bigger.',
+    ],
+    uses: ['Images you will edit further', 'Logos and graphics for design tools', 'Forms or apps that only accept PNG', 'Screenshots you want to keep lossless'],
+    tips: [
+      'Need a transparent background for a signature? Use <a href="/signature-cleaner">Signature Cleaner</a>. Converting alone doesn’t remove a background.',
+      'If the PNG is too large for a form, convert to JPG instead or compress it.',
+    ],
+    faqs: [
+      { q: 'Does JPG to PNG improve quality?', a: 'No. It stops further loss, but can’t bring back detail the JPG already discarded.' },
+      { q: 'Why is the PNG bigger?', a: 'PNG stores pixels without lossy compression, so photos take more space.' },
+      privacyFaq,
+    ],
+  },
+  {
+    tool: 'image-converter', format: 'image/jpeg', slug: 'png-to-jpg', name: 'PNG to JPG',
+    title: 'PNG to JPG Converter Online Free | PDFSherpa',
+    description: 'Convert PNG images to smaller JPG files in your browser, one or many at once. Choose quality. Free, private, no upload.',
+    h1: 'PNG to JPG',
+    lead: 'Turn large PNG images into much smaller JPG files that every form and app accepts. Converted on your device.',
+    intro: [
+      'PNG photos and screenshots can be several megabytes. Converting to JPG often makes them five to ten times smaller with little visible difference.',
+      'JPG is preselected below. Transparent areas become white, since JPG has no transparency.',
+    ],
+    uses: ['Upload forms that only accept JPG', 'Shrinking screenshots before emailing', 'Photos saved as PNG by mistake', 'Images for websites and chat apps'],
+    tips: [
+      'Need a specific KB size? Use <a href="/compress-image">Compress Image</a> after converting.',
+      'Keep logos with transparency as PNG. JPG fills the background with white.',
+    ],
+    faqs: [
+      { q: 'Will I lose quality?', a: 'Slightly, because JPG is lossy, but at high quality the difference is hard to see for photos.' },
+      { q: 'What happens to transparent areas?', a: 'They become white.' },
+      privacyFaq,
+    ],
+  },
+  {
+    tool: 'image-converter', format: 'image/jpeg', slug: 'webp-to-jpg', name: 'WebP to JPG',
+    title: 'WebP to JPG Converter Online Free | PDFSherpa',
+    description: 'Convert WebP images from websites into JPG that every app and form accepts. Batch conversion, free, no upload.',
+    h1: 'WebP to JPG',
+    lead: 'Convert WebP images saved from websites into JPG files that work everywhere. Batch conversion, all on your device.',
+    intro: [
+      'Many websites serve images as WebP. When you save one, older apps, some editors and many upload forms refuse to open it.',
+      'JPG is preselected below. Drop one or many WebP files and save them as JPG.',
+    ],
+    uses: ['Images saved from websites', 'Product photos from online shops', 'Images for forms that reject WebP', 'Photos for older editing apps'],
+    tips: [
+      'Want lossless output instead? Choose PNG.',
+      'For more on formats, read the <a href="/guides/convert-webp-to-jpg">WebP to JPG guide</a>.',
+    ],
+    faqs: [
+      { q: 'Why do websites use WebP?', a: 'It’s smaller than JPG at the same quality, so pages load faster.' },
+      { q: 'Can I convert many WebP files at once?', a: 'Yes. Drop them all and save each converted JPG.' },
+      privacyFaq,
+    ],
+  },
+  /* ---------------- OCR ---------------- */
+  {
+    tool: 'ocr-pdf', mode: 'image', slug: 'image-to-text', name: 'Image to Text',
+    title: 'Image to Text Converter (OCR) – Free, No Upload | PDFSherpa',
+    description: 'Extract text from photos, screenshots and scans in English, Urdu or Hindi. Copy it or save as .txt. Free OCR that runs on your device.',
+    h1: 'Image to Text',
+    lead: 'Copy the text out of any photo, screenshot or scanned page. Works in English, Urdu and Hindi, and the image never leaves your device.',
+    intro: [
+      'Image to Text uses OCR (optical character recognition) to read the letters in a picture and turn them into text you can copy, edit and search.',
+      'Recognition runs entirely in your browser. The first time, the recognition engine downloads once (a few MB). After that it works offline.',
+    ],
+    uses: ['Copy text from a screenshot or photo of a notice', 'Type up a printed page without retyping it', 'Get the text of a scanned letter or receipt', 'Pull quotes out of photos of books and slides'],
+    tips: [
+      'Use a sharp, well-lit photo taken straight on. Blur is the biggest cause of mistakes.',
+      'Crop to just the text with <a href="/crop-image">Crop Image</a> so pictures and edges aren’t read as letters.',
+      'For a whole scanned document, drop the PDF instead and download a searchable PDF.',
+      'Choose the right language. English OCR can’t read Urdu or Hindi letters.',
+    ],
+    faqs: [
+      { q: 'Which languages are supported?', a: 'English, Urdu and Hindi. Pick the language before you start.' },
+      { q: 'How accurate is it?', a: 'For clear printed text, very accurate. Handwriting, very small text and blurry photos give more mistakes, so check the result. The confidence score helps.' },
       privacyFaq,
     ],
   },

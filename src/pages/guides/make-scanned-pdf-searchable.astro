@@ -1,0 +1,45 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "How do I know if my PDF needs OCR?", a: "Try to select a word or press Ctrl+F and search. If nothing can be selected or found, the PDF is a scan and needs OCR." },
+  { q: "Does OCR change how the PDF looks?", a: "No. The page image stays the same. An invisible text layer is placed on top so the text can be searched and copied." },
+  { q: "Can it read Urdu and Hindi?", a: "Yes, as text you can copy or save. The searchable PDF option is for English." },
+];
+---
+<GuideLayout slug="make-scanned-pdf-searchable" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/ocr-pdf">OCR PDF</a>, drop the scanned PDF, choose the language and click <strong>Recognise text</strong>. Download the <strong>searchable PDF</strong>. It looks the same as before, but now you can search it, select text and copy it.</p>
+
+  <h2>Why scans aren’t searchable</h2>
+  <p>A scanner or phone camera saves each page as a picture. To a computer, the words are just pixels. OCR (optical character recognition) reads those pixels as letters and saves them as real text.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/ocr-pdf">pdfsherpa.com/ocr-pdf</a> and select the scanned PDF, or photos of the pages.</li>
+    <li>Choose <strong>English</strong>, <strong>Urdu</strong> or <strong>Hindi</strong>.</li>
+    <li>Click <strong>Recognise text</strong>. The first time, the engine downloads once (a few MB).</li>
+    <li>Check the confidence score. Below 70%, read the text carefully.</li>
+    <li>Download the searchable PDF, a .txt file, or copy the text.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Getting accurate results</h2>
+  <ul>
+    <li><strong>Sharp scans:</strong> 300 DPI scans or clear phone photos work best. <a href="/scan-to-pdf">Scan to PDF</a> with the Document look helps a lot.</li>
+    <li><strong>Straight pages:</strong> rotate sideways pages first with <a href="/rotate-pdf">Rotate PDF</a>.</li>
+    <li><strong>Clean edges:</strong> crop dark borders with <a href="/crop-pdf">Crop PDF</a>.</li>
+    <li><strong>Printed text:</strong> typed and printed text is recognised far better than handwriting.</li>
+  </ul>
+
+  <h2>What you can do afterwards</h2>
+  <ul>
+    <li>Search a long scanned contract or book with Ctrl+F.</li>
+    <li>Copy paragraphs into an email or document.</li>
+    <li>Convert the text to notes with <a href="/pdf-to-markdown">PDF to Markdown</a>.</li>
+    <li>Make the file smaller with <a href="/compress-pdf">Compress PDF</a>.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>OCR runs on your device with the open-source Tesseract engine. Your scans are never uploaded, which matters for IDs, contracts and medical records.</p>
+</GuideLayout>

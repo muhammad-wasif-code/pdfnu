@@ -1,0 +1,62 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import HeicToJpg from '../islands/HeicToJpg';
+
+const faqs = [
+  { q: "What is a HEIC file?", a: "HEIC (or HEIF) is the photo format iPhones use by default. It is smaller than JPG at the same quality, but many Windows programs, Android phones and websites can’t open it." },
+  { q: "Will I lose quality?", a: "Very little. Photos are saved as high-quality JPG. Choose PNG for completely lossless output, though files are larger." },
+  { q: "Can I convert many photos at once?", a: "Yes. Drop as many as you like and download them together as a .zip." },
+  { q: "How do I stop my iPhone saving HEIC?", a: "Settings → Camera → Formats → Most Compatible. New photos are then saved as JPG." },
+  { q: "Are my photos uploaded?", a: "No. Conversion runs in your browser. The decoder is downloaded once from PDFSherpa, and your photos never leave your device." },
+];
+---
+<ToolLayout
+  slug="heic-to-jpg"
+  title="HEIC to JPG Converter – iPhone Photos Free | PDFSherpa"
+  description="Convert iPhone HEIC photos to JPG or PNG in your browser, many at once. Works on Windows, Android and Mac. Free, private, no upload."
+  h1="HEIC to JPG"
+  lead="Convert iPhone HEIC photos to JPG that opens everywhere: Windows, Android, websites and upload forms. Batch conversion, all on your device."
+  howToTitle="How to Convert HEIC to JPG"
+  steps={["Select or drop your HEIC photos.", "Choose JPG or PNG.", "Click <strong>Convert</strong> and download one by one or as a .zip."]}
+  faqs={faqs}
+  related={["image-converter", "compress-image", "jpg-to-pdf", "resize-image"]}
+>
+  <HeicToJpg client:load />
+
+  <Fragment slot="content">
+<h2>Why convert HEIC?</h2>
+    <p>
+      iPhones save photos as HEIC to save space. That works fine on Apple devices, but send the photo to a Windows PC, an Android phone or an online form
+      and it often won’t open, or the upload is rejected. Converting to JPG fixes that.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Add photos.</strong> Drop HEIC or HEIF files, or tap to choose them.</li>
+      <li><strong>Pick a format.</strong> JPG for sharing and forms, PNG for lossless editing.</li>
+      <li><strong>Convert.</strong> The first time, the HEIC decoder downloads once (about 1.3 MB).</li>
+      <li><strong>Download</strong> each photo, or all of them as a .zip.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Common situations</h2>
+    <ul>
+      <li>Photos emailed or copied from an iPhone that won’t open on Windows.</li>
+      <li>Upload forms that only accept JPG or PNG.</li>
+      <li>Sharing iPhone photos with Android users.</li>
+      <li>Putting iPhone photos into Word, PowerPoint or a website.</li>
+    </ul>
+
+    <h2>Next steps</h2>
+    <ul>
+      <li>Need a smaller file for a form? Use <a href="/compress-image">Compress Image</a>.</li>
+      <li>Need exact pixels? Use <a href="/resize-image">Resize Image</a>.</li>
+      <li>Want the photos in one document? Use <a href="/jpg-to-pdf">JPG to PDF</a>.</li>
+    </ul>
+
+    <h2>Privacy</h2>
+    <p>Photos are decoded with libheif, compiled to run inside your browser. Nothing is uploaded, so personal photos stay private.</p>
+  </Fragment>
+</ToolLayout>

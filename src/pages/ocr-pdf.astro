@@ -1,0 +1,72 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import OcrPdf from '../islands/OcrPdf';
+
+const faqs = [
+  { q: "What does OCR do?", a: "OCR (optical character recognition) reads the letters in a scan or photo and turns them into real text. A scanned PDF becomes searchable, and you can copy text from it." },
+  { q: "Is my document uploaded to a server?", a: "No. Recognition runs in your browser with tesseract.js. The engine and language files are downloaded once from PDFSherpa itself, and your document never leaves your device." },
+  { q: "Which languages are supported?", a: "English, Urdu and Hindi. A searchable PDF is created for English. For Urdu and Hindi you get the text to copy or save as .txt." },
+  { q: "How long does it take?", a: "About 2–10 seconds per page on a modern phone or computer, depending on the page and the device. The first run also downloads the engine (a few MB)." },
+  { q: "How accurate is it?", a: "Clean printed scans are usually recognised very accurately. Handwriting, low-resolution scans and photos taken at an angle produce more mistakes, so check important text." },
+];
+---
+<ToolLayout
+  slug="ocr-pdf"
+  title="OCR PDF – Make Scanned PDFs Searchable Free | PDFSherpa"
+  description="Turn scanned PDFs and photos into searchable PDFs and editable text. English, Urdu and Hindi OCR. Free and private: runs on your device."
+  h1="OCR PDF"
+  lead="Turn scanned PDFs and photos into text you can search, select and copy. Download a searchable PDF or plain text. Your files never leave your device."
+  howToTitle="How to OCR a Scanned PDF"
+  steps={["Select or drop a scanned PDF, or photos of pages.", "Choose the language: English, Urdu or Hindi.", "Click <strong>Recognise text</strong>, then download a searchable PDF, a .txt or copy the text."]}
+  faqs={faqs}
+  related={["pdf-to-text", "scan-to-pdf", "compress-pdf", "pdf-to-markdown"]}
+>
+  <OcrPdf client:load />
+
+  <Fragment slot="content">
+<h2>What OCR PDF does</h2>
+    <p>
+      A scanned PDF is just pictures of pages. You can’t search it, copy from it, or have it read aloud. OCR PDF recognises the text in every page and
+      adds an invisible text layer on top of the original image. The page looks exactly the same, but now Ctrl+F finds words and you can select and copy text.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Add your file.</strong> A scanned PDF, or one or more photos of pages.</li>
+      <li><strong>Pick the language</strong> the text is written in.</li>
+      <li><strong>Recognise.</strong> Progress is shown page by page. The first run downloads the recognition engine once.</li>
+      <li><strong>Download</strong> the searchable PDF or a .txt file, or copy the text. You can also correct the text before copying it.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>When you need OCR</h2>
+    <ul>
+      <li>Searching long scanned contracts, books or reports for a word.</li>
+      <li>Copying text from a scanned letter instead of retyping it.</li>
+      <li>Making scans accessible to screen readers.</li>
+      <li>Getting text from photos of notices, receipts and documents in Urdu or Hindi.</li>
+    </ul>
+
+    <h2>Tips for better results</h2>
+    <ul>
+      <li>Scan at 300 DPI if you can. With a phone, use <a href="/scan-to-pdf">Scan to PDF</a> and the Document look for sharp, high-contrast pages.</li>
+      <li>Straighten sideways pages first with <a href="/rotate-pdf">Rotate PDF</a>.</li>
+      <li>Crop dark borders with <a href="/crop-pdf">Crop PDF</a>. They can confuse recognition.</li>
+      <li>If your PDF already has selectable text, you don’t need OCR. Use <a href="/pdf-to-text">PDF to Text</a> instead, which is instant.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Handwriting is recognised poorly. Complex layouts with columns and tables may come out in a different reading order. The searchable PDF stores
+      pages as JPG images, so its size can differ from the original. Use <a href="/compress-pdf">Compress PDF</a> afterwards if needed.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>
+      Most online OCR services upload your document to their servers. PDFSherpa runs the open-source Tesseract engine inside your browser, so even
+      confidential scans stay on your device.
+    </p>
+  </Fragment>
+</ToolLayout>

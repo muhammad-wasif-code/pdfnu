@@ -50,6 +50,12 @@ export const tools: Tool[] = [
   { slug: 'pdf-to-markdown', name: 'PDF to Markdown', short: 'PDF to MD', tagline: 'Text with headings', category: 'Convert', from: '#c4b5fd', to: '#5b21b6', icon: 'markdown', keywords: 'pdf to markdown md convert headings notes llm chatgpt' },
   { slug: 'pdf-to-powerpoint', name: 'PDF to PowerPoint', short: 'PDF to PPT', tagline: 'Pages to slides', category: 'Convert', from: '#fdba74', to: '#c2410c', icon: 'ppt', keywords: 'pdf to powerpoint ppt pptx slides convert presentation' },
   { slug: 'pdf-to-pdfa', name: 'PDF to PDF/A', short: 'PDF/A', tagline: 'Archive-ready PDF', category: 'Convert', from: '#7dd3fc', to: '#0369a1', icon: 'pdfa', keywords: 'pdf to pdf/a pdfa archive convert iso 19005 long term court filing' },
+  { slug: 'ocr-pdf', name: 'OCR PDF', short: 'OCR', tagline: 'Scan to searchable text', category: 'Convert', from: '#5eead4', to: '#0f766e', icon: 'ocr', keywords: 'ocr pdf image to text scanned pdf searchable recognise text extract text from image urdu hindi' },
+  { slug: 'heic-to-jpg', name: 'HEIC to JPG', short: 'HEIC to JPG', tagline: 'iPhone photos to JPG', category: 'Image', from: '#f9a8d4', to: '#be185d', icon: 'heic', keywords: 'heic to jpg iphone photo convert heif to jpeg png' },
+  { slug: 'combine-images', name: 'Combine Images', short: 'Combine Images', tagline: 'Join photos into one', category: 'Image', from: '#fcd34d', to: '#d97706', icon: 'combine', keywords: 'combine images merge photos join pictures side by side collage stack' },
+  { slug: 'resize-pdf', name: 'Resize PDF', short: 'Resize PDF', tagline: 'Change page size', category: 'Edit', from: '#a5f3fc', to: '#0e7490', icon: 'resizepdf', keywords: 'resize pdf page size a4 letter legal change paper size scale pdf' },
+  { slug: 'flatten-pdf', name: 'Flatten PDF', short: 'Flatten', tagline: 'Lock forms & comments', category: 'Edit', from: '#cbd5e1', to: '#475569', icon: 'flatten', keywords: 'flatten pdf form fields annotations comments lock make uneditable' },
+  { slug: 'header-footer-pdf', name: 'Header & Footer', short: 'Header/Footer', tagline: 'Add text to every page', category: 'Edit', from: '#fde68a', to: '#b45309', icon: 'headerfooter', keywords: 'add header footer pdf text every page date file name page x of y' },
 ];
 
 export const categories: { name: Category; accent: string }[] = [
