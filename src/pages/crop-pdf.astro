@@ -8,15 +8,18 @@ const faqs = [
   { q: 'Can I crop just one page?', a: 'Yes. Go to the page with the arrows, set the crop area, and choose <strong>Only page N</strong> before cropping. Leave it on <strong>All pages</strong> to apply the same crop to every page.' },
   { q: 'Does cropping reduce quality?', a: 'No. Cropping changes the visible page area only. Text stays selectable and images keep their full resolution.' },
   { q: 'Is the cropped-out content deleted?', a: 'No. Like most PDF editors, cropping hides content outside the box but it still exists inside the file. To remove sensitive content for real, use <a href="/redact-pdf">Redact PDF</a>.' },
+  { q: 'How do I crop PDF pages online for free?', a: 'Open your PDF on this page, set the crop box with <strong>Auto-detect margins</strong> or by dragging the corners, then click <strong>Crop PDF</strong> and download. It’s free, with no signup and no watermark.' },
+  { q: 'Can I crop a PDF on my phone?', a: 'Yes. Crop PDF works in the browser on iPhone and Android. Drag the round handles with your finger, or tap Auto-detect margins.' },
+  { q: 'Can I crop a PDF without Adobe Acrobat?', a: 'Yes. You don’t need Acrobat or any software. PDFSherpa crops PDFs for free in any modern browser.' },
   { q: 'Is my PDF uploaded?', a: 'No. Cropping happens in your browser with pdf-lib. The file never leaves your device.' },
 ];
 ---
 <ToolLayout
   slug="crop-pdf"
-  title="Crop PDF Online Free – Trim Margins & Pages | PDFSherpa"
-  description="Crop PDF pages to the area you need: trim white margins automatically or drag the corners. All pages or just one. Free, private, no upload."
-  h1="Crop PDF"
-  lead="Trim white margins, cut a page down to a single figure, or make scanned pages tidy. Auto-detect the content or drag the corners, then download. Nothing is uploaded."
+  title="Crop PDF Online Free – Crop Pages & Margins | PDFSherpa"
+  description="Crop PDF online for free: trim white margins automatically or drag to crop PDF pages. All pages or just one. Works on phone and PC. No upload."
+  h1="Crop PDF Online Free"
+  lead="Crop PDF pages online for free: trim white margins, cut a page down to a single figure, or tidy scanned pages. Auto-detect the content or drag the corners, then download. No upload, no signup, no watermark."
   howToTitle="How to Crop a PDF"
   steps={['Select or drop your PDF.', 'Tap <strong>Auto-detect margins</strong> or drag the corners of the crop box.', 'Choose all pages or one page, then click <strong>Crop PDF</strong> and download.']}
   faqs={faqs}
@@ -60,6 +63,13 @@ const faqs = [
     <p>
       Cropping hides content but doesn’t delete it, so it isn’t a way to remove private information. Use <a href="/redact-pdf">Redact PDF</a> for that.
       The file size usually stays about the same. Password-protected PDFs must be unlocked first.
+    </p>
+
+    <h2>Crop PDF on any device</h2>
+    <p>
+      This free online PDF cropper runs in your browser, so it works on Windows, Mac, iPhone, iPad and Android, with no app and no Adobe Acrobat.
+      Pages sideways? <a href="/rotate-pdf">Rotate PDF</a> first, then crop. For a walkthrough, read
+      <a href="/guides/remove-white-margins-from-pdf">how to remove white margins from a PDF</a>.
     </p>
 
     <h2>Privacy</h2>
