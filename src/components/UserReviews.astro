@@ -1,0 +1,39 @@
+---
+/**
+ * Real user feedback from src/data/reviews.ts. No ratings, no review schema.
+ * While the list is empty, an honest "be the first" card is shown instead of invented reviews.
+ */
+import { reviews } from '../data/reviews';
+import { CONTACT_EMAIL } from '../data/site';
+const list = [...reviews].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 6);
+const subject = encodeURIComponent('My PDFSherpa review');
+const body = encodeURIComponent('Tool I used:\nMy review (a few words is fine):\nName to show (or leave blank to stay anonymous):\n\nYou may publish this on pdfsherpa.com: yes / no\n');
+const reviewBtn = `<!--email_off--><a href="mailto:${CONTACT_EMAIL}?subject=${subject}&amp;body=${body}" class="btn-primary min-h-11 px-5">Write a review</a><!--email_on-->`;
+---
+<section class="mt-8" aria-labelledby="reviews-title">
+  <h2 id="reviews-title" class="text-center text-lg font-bold text-ink sm:text-xl dark:text-white">What people say</h2>
+  {list.length > 0 && <p class="mt-1 text-center text-xs text-muted dark:text-gray-500">Real messages from users, shared with their permission.</p>}
+  <ul class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {list.map((r) => (
+      <li class="card flex flex-col p-5 shadow-none">
+        <blockquote class="flex-1 text-sm leading-6 text-gray-700 dark:text-gray-300">“{r.text}”</blockquote>
+        <p class="mt-4 text-[13px] text-muted dark:text-gray-400">
+          <span class="font-semibold text-ink dark:text-white">{r.name}</span>
+          {' · '}
+          {r.url ? <a href={r.url} rel="noopener nofollow" target="_blank" class="text-brand hover:underline dark:text-brand-light">{r.source}</a> : r.source}
+          {r.tool && <> · {r.tool}</>}
+        </p>
+      </li>
+    ))}
+    {list.length < 3 && (
+      <li class={`flex flex-col items-center justify-center rounded-card border-2 border-dashed border-line p-6 text-center dark:border-white/15 ${list.length === 0 ? 'sm:col-span-2 lg:col-span-3' : ''}`}>
+        <svg viewBox="0 0 24 24" class="h-8 w-8 text-brand dark:text-brand-light" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5.4A8 8 0 1 1 21 12Z" /><path d="M8.5 11h.01M12 11h.01M15.5 11h.01" /></svg>
+        <p class="mt-3 text-[15px] font-semibold text-ink dark:text-white">{list.length === 0 ? 'Be the first to share your experience' : 'Used PDFSherpa? Add your review'}</p>
+        <p class="mt-1 max-w-md text-sm text-gray-600 dark:text-gray-400">
+          We’re new, so we only show real reviews from real users, never made-up ones. Tell us how a tool worked for you, and with your permission it will appear here.
+        </p>
+        <div class="mt-4"><Fragment set:html={reviewBtn} /></div>
+      </li>
+    )}
+  </ul>
+</section>

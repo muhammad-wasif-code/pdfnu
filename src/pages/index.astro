@@ -4,6 +4,7 @@ import ToolCard from '../components/ToolCard.astro';
 import TrustBadges from '../components/TrustBadges.astro';
 import HeroArt from '../components/HeroArt.astro';
 import FAQ from '../components/FAQ.astro';
+import TrustProof from '../components/TrustProof.astro';
 import { tools } from '../data/tools';
 import { CONTACT_EMAIL, SOURCE_URL } from '../data/site';
 
@@ -91,6 +92,9 @@ const jsonLd = [
       </ul>
     </div>
   </section>
+
+  <!-- Verifiable trust + feedback -->
+  <TrustProof />
 
   <!-- FAQ -->
   <div class="container-page mt-10 max-w-6xl sm:mt-12">
