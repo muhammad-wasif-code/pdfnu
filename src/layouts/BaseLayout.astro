@@ -100,6 +100,10 @@ const lds = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         addEventListener('load', function () { navigator.serviceWorker && navigator.serviceWorker.register('/sw.js').catch(function () {}); });
       }
     </script>
+    {/* Native hover prefetch (replaces Astro's prefetch script → no extra request on the critical path). */}
+    <script type="speculationrules" is:inline set:html={JSON.stringify({
+      prefetch: [{ where: { and: [{ href_matches: '/*' }, { not: { href_matches: ['/vendor/*', '/_astro/*', '/*.pdf'] } }] }, eagerness: 'moderate' }],
+    })} />
   </head>
   <body class="flex min-h-dvh flex-col">
     <a href="#main" class="sr-only z-50 rounded-lg bg-brand px-4 py-2 text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3">Skip to content</a>

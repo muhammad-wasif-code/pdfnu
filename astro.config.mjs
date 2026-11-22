@@ -48,5 +48,4 @@ export default defineConfig({
     })],
   // Cast: @tailwindcss/vite and Astro bundle slightly different Vite type versions.
   vite: { plugins: [/** @type {any} */ (tailwindcss())] },
-  prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
 });
