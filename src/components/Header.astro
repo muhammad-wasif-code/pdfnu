@@ -1,88 +1,217 @@
 ---
 import Logo from './Logo.astro';
 import ToolIcon from './ToolIcon.astro';
-import { tools, categories } from '../data/tools';
+import { tools, categories, getTool, type Category } from '../data/tools';
+
+const byCat = (c: Category) => tools.filter((t) => t.category === c);
+const cat = (c: Category) => categories.find((x) => x.name === c)!;
+// Desktop columns, balanced by hand (Convert is the longest group).
+const columns: Category[][] = [['Optimize', 'Organize'], ['Convert'], ['Edit'], ['Security', 'Image']];
+const popular = ['compress-pdf', 'merge-pdf', 'pdf-to-word', 'edit-pdf', 'sign-pdf', 'jpg-to-pdf'].map(getTool);
+const searchText = (t: (typeof tools)[number]) => `${t.name} ${t.short} ${t.category} ${t.keywords}`.toLowerCase().replace(/[^a-z0-9]+/g, " ");
 ---
-<header class="sticky top-0 z-40 border-b border-gray-100 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-night/85">
+<header class="site-header sticky top-0 z-40 border-b border-gray-100 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-night/85">
   <div class="container-page flex h-16 items-center justify-between gap-3">
-    <div class="flex items-center gap-6">
+    <div class="flex items-center gap-4 lg:gap-6">
       <Logo />
-      <!-- Desktop: All tools mega-dropdown (works without JS via <details>) -->
-      <details class="nav-menu relative hidden md:block">
-        <summary class="flex min-h-11 cursor-pointer items-center gap-1 rounded-lg px-2 text-sm font-medium text-gray-700 hover:text-brand dark:text-gray-300 dark:hover:text-brand-light">
+      <nav class="hidden items-center gap-1 md:flex" aria-label="Main">
+        <button
+          type="button"
+          data-menu-btn="desktop"
+          aria-expanded="false"
+          aria-controls="tools-menu"
+          class="menu-trigger flex min-h-11 items-center gap-1.5 rounded-full px-3.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 hover:text-ink aria-expanded:bg-brand-soft aria-expanded:text-brand dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white dark:aria-expanded:bg-brand/20 dark:aria-expanded:text-brand-light"
+        >
+          <svg viewBox="0 0 20 20" class="h-4 w-4 opacity-80" fill="currentColor" aria-hidden="true"><path d="M3 3h5.5v5.5H3zM11.5 3H17v5.5h-5.5zM3 11.5h5.5V17H3zM11.5 11.5H17V17h-5.5z" opacity=".9"/></svg>
           All tools
-          <svg viewBox="0 0 20 20" class="chev h-4 w-4 transition-transform" fill="currentColor" aria-hidden="true"><path d="M5.3 7.3a1 1 0 0 1 1.4 0L10 10.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 0-1.4Z"/></svg>
-        </summary>
-        <div class="card absolute left-0 top-full mt-2 grid w-[min(860px,calc(100vw-3rem))] grid-cols-4 gap-x-4 gap-y-5 p-5 shadow-xl">
-          {categories.map((c) => {
-            const list = tools.filter((t) => t.category === c.name);
-            return (
-              <div>
-                <p class={`mb-2 text-xs font-semibold uppercase tracking-wider ${c.accent}`}>{c.name}</p>
-                <ul class="space-y-0.5">
-                  {list.map((t) => (
-                    <li>
-                      <a href={`/${t.slug}`} class="flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm font-medium text-gray-800 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/5">
-                        <ToolIcon tool={t} size="sm" />{t.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            );
-          })}
-          <div>
-            <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted dark:text-gray-400">Learn</p>
-            <ul class="space-y-0.5 text-sm font-medium">
-              <li><a href="/guides" class="block rounded-lg px-2 py-2 hover:bg-gray-50 dark:hover:bg-white/5">Guides</a></li>
-              <li><a href="/about" class="block rounded-lg px-2 py-2 hover:bg-gray-50 dark:hover:bg-white/5">About PDFSherpa</a></li>
-            </ul>
-          </div>
-        </div>
-      </details>
+          <svg viewBox="0 0 20 20" class="chev h-4 w-4 transition-transform duration-200" fill="currentColor" aria-hidden="true"><path d="M5.3 7.3a1 1 0 0 1 1.4 0L10 10.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 0-1.4Z"/></svg>
+        </button>
+        <a href="/guides" class="flex min-h-11 items-center rounded-full px-3.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 hover:text-ink dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white">Guides</a>
+      </nav>
     </div>
 
     <div class="flex items-center gap-2">
       <button
         type="button"
         data-theme-toggle
-        class="grid h-11 w-11 place-items-center rounded-full border border-line bg-white text-gray-700 hover:bg-gray-50 dark:border-white/15 dark:bg-white/5 dark:text-gray-200 dark:hover:bg-white/10"
+        class="grid h-11 w-11 place-items-center rounded-full border border-line bg-white text-gray-700 transition-colors hover:bg-gray-50 dark:border-white/15 dark:bg-white/5 dark:text-gray-200 dark:hover:bg-white/10"
         aria-label="Toggle dark mode"
       >
         <svg viewBox="0 0 24 24" class="h-5 w-5 dark:hidden" fill="currentColor" aria-hidden="true"><path d="M20.4 15.3A8.5 8.5 0 0 1 8.7 3.6a8.7 8.7 0 1 0 11.7 11.7Z"/></svg>
         <svg viewBox="0 0 24 24" class="hidden h-5 w-5 dark:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
       </button>
 
-      <!-- Mobile menu -->
-      <details class="nav-menu md:hidden">
-        <summary class="grid h-11 w-11 cursor-pointer place-items-center rounded-full text-gray-800 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/10" aria-label="Open menu">
-          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-        </summary>
-        <nav class="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-line bg-white px-4 pb-6 pt-2 shadow-xl dark:border-white/10 dark:bg-night" aria-label="Mobile">
-          <ul class="grid grid-cols-2 gap-1">
-            {tools.map((t) => (
-              <li>
-                <a href={`/${t.slug}`} class="flex min-h-11 items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-white/5">
-                  <ToolIcon tool={t} size="sm" />{t.name}
+      <button
+        type="button"
+        data-menu-btn="mobile"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Open menu"
+        class="menu-trigger grid h-11 w-11 place-items-center rounded-full border border-line bg-white text-gray-800 transition-colors hover:bg-gray-50 aria-expanded:border-brand/30 aria-expanded:bg-brand-soft aria-expanded:text-brand md:hidden dark:border-white/15 dark:bg-white/5 dark:text-gray-200 dark:hover:bg-white/10 dark:aria-expanded:bg-brand/20 dark:aria-expanded:text-brand-light"
+      >
+        <svg viewBox="0 0 24 24" class="burger h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+          <path class="b1" d="M4 7h16"/><path class="b2" d="M4 12h16"/><path class="b3" d="M4 17h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Desktop mega menu -->
+  <div
+    id="tools-menu"
+    data-menu-panel="desktop"
+    class="menu-panel absolute inset-x-0 top-full hidden md:block"
+  >
+    <div class="container-page pt-2">
+      <div class="card max-h-[calc(100dvh-5.5rem)] overflow-y-auto overscroll-contain p-0 shadow-2xl shadow-indigo-950/10 dark:shadow-black/40" role="region" aria-label="All tools">
+        <div class="flex flex-wrap items-center gap-3 border-b border-line px-5 py-4 dark:border-white/10">
+          <label class="relative min-w-[16rem] flex-1">
+            <span class="sr-only">Search tools</span>
+            <svg viewBox="0 0 20 20" class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.5"/><path d="m13.2 13.2 3.3 3.3"/></svg>
+            <input
+              type="search"
+              data-menu-search
+              placeholder={`Search ${tools.length} tools…`}
+              autocomplete="off"
+              class="h-11 w-full rounded-full border border-line bg-surface pl-10 pr-4 text-sm text-ink outline-none transition placeholder:text-gray-400 focus:border-brand/50 focus:bg-white focus:ring-4 focus:ring-brand/10 dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:bg-white/10"
+            />
+          </label>
+          <div class="flex flex-wrap items-center gap-1.5" data-menu-popular>
+            <span class="mr-1 text-xs font-semibold uppercase tracking-wider text-muted dark:text-gray-400">Popular</span>
+            {popular.map((t) => (
+              <a href={`/${t.slug}`} class="inline-flex min-h-9 items-center rounded-full border border-line px-3 text-xs font-semibold text-gray-700 transition-colors hover:border-brand/40 hover:bg-brand-soft hover:text-brand dark:border-white/10 dark:text-gray-300 dark:hover:border-brand-light/40 dark:hover:bg-white/5 dark:hover:text-white">{t.short}</a>
+            ))}
+          </div>
+        </div>
+
+        <div class="grid gap-x-3 gap-y-6 px-4 py-5 md:grid-cols-2 lg:grid-cols-4">
+          {columns.map((col) => (
+            <div class="space-y-6">
+              {col.map((c) => (
+                <section data-menu-group aria-label={c}>
+                  <p class={`mb-1.5 flex items-center gap-2 px-2 text-[11px] font-bold uppercase tracking-[0.12em] ${cat(c).accent}`}>
+                    <span class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true"></span>{c}
+                    <span class="font-semibold text-gray-400 dark:text-gray-500">{byCat(c).length}</span>
+                  </p>
+                  <ul>
+                    {byCat(c).map((t) => (
+                      <li data-menu-item data-search={searchText(t)}>
+                        <a href={`/${t.slug}`} class="group flex min-h-11 items-center gap-3 rounded-xl px-2 py-1 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                          <ToolIcon tool={t} size="sm" />
+                          <span class="min-w-0">
+                            <span class="block truncate text-sm font-semibold text-gray-800 group-hover:text-ink dark:text-gray-200 dark:group-hover:text-white">{t.name}</span>
+                            <span class="block truncate text-xs text-muted dark:text-gray-400">{t.tagline}</span>
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          ))}
+        </div>
+        <p data-menu-empty hidden class="px-6 pb-8 pt-2 text-center text-sm text-muted dark:text-gray-400">No tools match that search.</p>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface/70 px-5 py-3 text-sm dark:border-white/10 dark:bg-white/[0.03]">
+          <p class="flex items-center gap-2 text-xs font-medium text-gray-600 dark:text-gray-400">
+            <svg viewBox="0 0 20 20" class="h-4 w-4 text-success" fill="currentColor" aria-hidden="true"><path d="M10 1.5 3.5 4v5c0 4.1 2.8 7.6 6.5 8.9 3.7-1.3 6.5-4.8 6.5-8.9V4L10 1.5Zm3 6.2-3.6 3.9a.8.8 0 0 1-1.1 0L6.9 10a.8.8 0 1 1 1.1-1.1l.9.9L11.9 6.6A.8.8 0 1 1 13 7.7Z"/></svg>
+            Every tool runs in your browser. Files never leave your device.
+          </p>
+          <div class="flex gap-1 font-semibold text-gray-600 dark:text-gray-300">
+            <a href="/guides" class="rounded-lg px-2.5 py-1.5 hover:bg-white hover:text-brand dark:hover:bg-white/5 dark:hover:text-brand-light">Guides</a>
+            <a href="/about" class="rounded-lg px-2.5 py-1.5 hover:bg-white hover:text-brand dark:hover:bg-white/5 dark:hover:text-brand-light">About</a>
+            <a href="/contact" class="rounded-lg px-2.5 py-1.5 hover:bg-white hover:text-brand dark:hover:bg-white/5 dark:hover:text-brand-light">Contact</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu: full-height sheet under the header -->
+  <nav
+    id="mobile-menu"
+    data-menu-panel="mobile"
+    aria-label="Tools menu"
+    class="menu-panel absolute inset-x-0 top-full h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain bg-white md:hidden dark:bg-night"
+  >
+    <div class="sticky top-0 z-10 border-b border-line bg-white/95 px-4 pb-3 pt-3 backdrop-blur dark:border-white/10 dark:bg-night/95">
+      <label class="relative block">
+        <span class="sr-only">Search tools</span>
+        <svg viewBox="0 0 20 20" class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.5"/><path d="m13.2 13.2 3.3 3.3"/></svg>
+        <input
+          type="search"
+          data-menu-search
+          placeholder={`Search ${tools.length} tools…`}
+          autocomplete="off"
+          class="h-12 w-full rounded-2xl border border-line bg-surface pl-10 pr-4 text-base text-ink outline-none placeholder:text-gray-400 focus:border-brand/50 focus:bg-white focus:ring-4 focus:ring-brand/10 dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:bg-white/10"
+        />
+      </label>
+    </div>
+
+    <div class="px-4 pb-8 pt-4">
+      <div data-menu-popular>
+        <p class="mb-2 px-1 text-[11px] font-bold uppercase tracking-[0.12em] text-muted dark:text-gray-400">Popular</p>
+        <div class="-mx-4 flex gap-2 overflow-x-auto px-4 pb-3 pt-1 [scrollbar-width:none]">
+          {popular.map((t) => (
+            <a href={`/${t.slug}`} class="flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-line bg-white py-1 pl-1 pr-3.5 text-sm font-semibold text-gray-800 dark:border-white/10 dark:bg-white/5 dark:text-gray-200">
+              <ToolIcon tool={t} size="sm" />{t.short}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {categories.map((c) => (
+        <section data-menu-group aria-label={c.name} class="mt-6">
+          <p class={`mb-2 flex items-center gap-2 px-1 text-[11px] font-bold uppercase tracking-[0.12em] ${c.accent}`}>
+            <span class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true"></span>{c.name}
+            <span class="font-semibold text-gray-400 dark:text-gray-500">{byCat(c.name).length}</span>
+          </p>
+          <ul class="grid grid-cols-2 gap-2">
+            {byCat(c.name).map((t) => (
+              <li data-menu-item data-search={searchText(t)}>
+                <a href={`/${t.slug}`} class="flex min-h-14 items-center gap-2.5 rounded-2xl border border-line bg-white p-2 text-[13px] font-semibold leading-tight text-gray-800 transition-colors active:bg-gray-50 dark:border-white/10 dark:bg-night-2 dark:text-gray-100 dark:active:bg-white/10">
+                  <ToolIcon tool={t} size="sm" /><span class="min-w-0">{t.short}</span>
                 </a>
               </li>
             ))}
           </ul>
-          <div class="mt-3 flex gap-4 border-t border-line pt-3 text-sm font-medium text-gray-600 dark:border-white/10 dark:text-gray-300">
-            <a href="/guides" class="py-2">Guides</a><a href="/about" class="py-2">About</a><a href="/contact" class="py-2">Contact</a>
-          </div>
-        </nav>
-      </details>
+        </section>
+      ))}
+      <p data-menu-empty hidden class="py-10 text-center text-sm text-muted dark:text-gray-400">No tools match that search.</p>
+
+      <div class="mt-8 grid grid-cols-3 gap-2 border-t border-line pt-5 text-center text-sm font-semibold text-gray-700 dark:border-white/10 dark:text-gray-300">
+        <a href="/guides" class="flex min-h-11 items-center justify-center rounded-xl bg-surface dark:bg-white/5">Guides</a>
+        <a href="/about" class="flex min-h-11 items-center justify-center rounded-xl bg-surface dark:bg-white/5">About</a>
+        <a href="/contact" class="flex min-h-11 items-center justify-center rounded-xl bg-surface dark:bg-white/5">Contact</a>
+      </div>
+      <p class="mt-5 text-center text-xs text-muted dark:text-gray-400">All {tools.length} tools run in your browser. Files never leave your device.</p>
     </div>
-  </div>
+  </nav>
 </header>
 
 <style>
-  details[open] .chev { transform: rotate(180deg); }
+  .menu-panel {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.16s ease, transform 0.18s ease, visibility 0s linear 0.18s;
+  }
+  .menu-panel[data-open] {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.18s ease, transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s;
+  }
+  .menu-trigger[aria-expanded='true'] .chev { transform: rotate(180deg); }
+  .burger path { transition: transform 0.2s ease, opacity 0.15s ease; transform-origin: 12px 12px; }
+  .menu-trigger[aria-expanded='true'] .b1 { transform: translateY(5px) rotate(45deg); }
+  .menu-trigger[aria-expanded='true'] .b2 { opacity: 0; }
+  .menu-trigger[aria-expanded='true'] .b3 { transform: translateY(-5px) rotate(-45deg); }
+  :global(html.menu-locked) { overflow: hidden; }
 </style>
 
 <script>
-  // Theme toggle + close menus on outside click / Escape. Tiny, no framework.
   const root = document.documentElement;
   document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((btn) =>
     btn.addEventListener('click', () => {
@@ -91,11 +220,92 @@ import { tools, categories } from '../data/tools';
       document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0b1020' : '#ffffff');
     }),
   );
-  const menus = [...document.querySelectorAll<HTMLDetailsElement>('details.nav-menu')];
+
+  type Menu = { btn: HTMLButtonElement; panel: HTMLElement; kind: string };
+  const menus: Menu[] = [...document.querySelectorAll<HTMLButtonElement>('[data-menu-btn]')].map((btn) => ({
+    btn,
+    kind: btn.dataset.menuBtn!,
+    panel: document.querySelector<HTMLElement>(`[data-menu-panel="${btn.dataset.menuBtn}"]`)!,
+  }));
+  let current: Menu | null = null;
+
+  const focusables = (m: Menu) =>
+    [m.btn, ...m.panel.querySelectorAll<HTMLElement>('a[href], input, button')].filter((el) => el.offsetParent !== null || el === m.btn);
+
+  function close(focusBtn = false) {
+    if (!current) return;
+    const m = current;
+    current = null;
+    m.panel.removeAttribute('data-open');
+    m.btn.setAttribute('aria-expanded', 'false');
+    if (m.kind === 'mobile') { m.btn.setAttribute('aria-label', 'Open menu'); root.classList.remove('menu-locked'); }
+    if (focusBtn) m.btn.focus();
+  }
+
+  function open(m: Menu) {
+    if (current) close();
+    current = m;
+    m.panel.setAttribute('data-open', '');
+    m.btn.setAttribute('aria-expanded', 'true');
+    if (m.kind === 'mobile') { m.btn.setAttribute('aria-label', 'Close menu'); root.classList.add('menu-locked'); }
+    // Desktop: jump straight into search. Mobile: avoid popping the keyboard over the list.
+    if (m.kind === 'desktop') m.panel.querySelector<HTMLInputElement>('[data-menu-search]')?.focus({ preventScroll: true });
+  }
+
+  menus.forEach((m) => {
+    m.btn.addEventListener('click', () => (current === m ? close() : open(m)));
+
+    const input = m.panel.querySelector<HTMLInputElement>('[data-menu-search]');
+    const items = [...m.panel.querySelectorAll<HTMLElement>('[data-menu-item]')];
+    const groups = [...m.panel.querySelectorAll<HTMLElement>('[data-menu-group]')];
+    const popular = m.panel.querySelector<HTMLElement>('[data-menu-popular]');
+    const empty = m.panel.querySelector<HTMLElement>('[data-menu-empty]');
+    input?.addEventListener('input', () => {
+      const words = input.value.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+      let shown = 0;
+      items.forEach((li) => {
+        // Match word starts, so "word" finds PDF to Word but not "password".
+        const hit = words.every((w) => (" " + li.dataset.search).includes(" " + w));
+        li.hidden = !hit;
+        if (hit) shown++;
+      });
+      groups.forEach((g) => (g.hidden = !g.querySelector('[data-menu-item]:not([hidden])')));
+      if (popular) popular.hidden = words.length > 0;
+      if (empty) empty.hidden = shown > 0;
+    });
+    // Enter in search opens the first match.
+    input?.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      const first = m.panel.querySelector<HTMLAnchorElement>('[data-menu-item]:not([hidden]) a');
+      if (first) { e.preventDefault(); first.click(); }
+    });
+  });
+
   document.addEventListener('click', (e) => {
-    menus.forEach((m) => { if (m.open && !m.contains(e.target as Node)) m.open = false; });
+    if (!current) return;
+    const t = e.target as Node;
+    if (!current.panel.contains(t) && !current.btn.contains(t)) close();
   });
+
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') menus.forEach((m) => { if (m.open) { m.open = false; m.querySelector('summary')?.focus(); } });
+    if (!current) return;
+    if (e.key === 'Escape') { e.preventDefault(); close(true); return; }
+    if (e.key === 'Tab' && current.kind === 'mobile') {
+      // Trap focus inside the full-screen mobile sheet (+ its close button).
+      const f = focusables(current);
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
   });
+  // Desktop dropdown closes when focus tabs out of it.
+  document.addEventListener('focusin', (e) => {
+    if (current?.kind !== 'desktop') return;
+    const t = e.target as Node;
+    if (!current.panel.contains(t) && !current.btn.contains(t)) close();
+  });
+  // Switching from mobile to desktop width with the sheet open would leave scroll locked.
+  matchMedia('(min-width: 768px)').addEventListener('change', () => close());
+  // Restore a clean state when coming back via bfcache.
+  window.addEventListener('pageshow', (e: PageTransitionEvent) => { if (e.persisted) close(); });
 </script>
