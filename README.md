@@ -2,7 +2,7 @@
 
 **Every PDF tool you need. Fast, free, and your files never leave your device.**
 
-[Live site](https://pdfsherpa.com) · [Source](https://github.com/muhammad-wasif-code/pdfnu) · Contact: [hello@pdfsherpa.com](mailto:hello@pdfsherpa.com)
+[Live site](https://pdfsherpa.com) · [Source](https://github.com/muhammad-wasif-code/pdfnu) · [Follow PDFSherpa on LinkedIn](https://www.linkedin.com/company/pdfsherpa/) · Contact: [hello@pdfsherpa.com](mailto:hello@pdfsherpa.com)
 
 PDFSherpa is a static website with **41 PDF and image tools** that run **100% in the browser**. Files are never uploaded to a server. There is no signup, no watermark, and no file-size limit imposed by a server. After the first visit, the site works offline as an installable PWA. How-to guides: [pdfsherpa.com/guides](https://pdfsherpa.com/guides).
 
