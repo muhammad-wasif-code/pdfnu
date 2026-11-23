@@ -5,8 +5,11 @@ import {
   PDFDocument, StandardFonts, degrees, rgb, PDFName, PDFDict, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown,
   PDFOptionList, PDFSignature, PDFButton, PDFArray, PDFStream, PDFRef, PDFNumber,
   pushGraphicsState, popGraphicsState, concatTransformationMatrix, drawObject, beginText, endText, setFontAndSize,
-  setTextRenderingMode, TextRenderingMode, setTextMatrix, showText, setCharacterSqueeze, type PDFPage, type PDFFont,
+  setTextRenderingMode, TextRenderingMode, setTextMatrix, showText, setCharacterSqueeze, TextAlignment, type PDFPage, type PDFFont,
 } from 'pdf-lib';
+import { TextEngine, wrapLines, type Keyer, type TextStyle } from './textEngine';
+/** Tests point font loading at the files on disk. */
+export { setFontFetcher } from './textEngine';
 
 const load = (buf: ArrayBuffer) => PDFDocument.load(buf, { updateMetadata: false });
 const save = (doc: PDFDocument) => doc.save({ useObjectStreams: true, addDefaultPage: false });
@@ -99,6 +102,9 @@ function anchor(pos: Position, f: Frame, w: number, h: number, margin: number): 
 function safeText(font: PDFFont, text: string) {
   return [...text].map((ch) => { try { font.encodeText(ch); return ch; } catch { return '?'; } }).join('');
 }
+/** True if a standard (WinAnsi) font can draw the text as is: the small, fast path. */
+function winAnsi(font: PDFFont, text: string) { try { font.encodeText(text); return true; } catch { return false; } }
+const rgbOf = (hex: string): [number, number, number] => { const c = hexToRgb(hex) as any; return [c.red, c.green, c.blue]; };
 
 function hexToRgb(hex: string) {
   const m = /^#?([0-9a-f]{6})$/i.exec(hex) ?? ['', '6b7280'];
@@ -126,7 +132,11 @@ export async function watermark(input: ArrayBuffer, o: WatermarkOpts) {
   const doc = await load(input);
   const font = await doc.embedFont(StandardFonts.HelveticaBold);
   const img = o.kind === 'image' && o.image ? (o.imageType === 'png' ? await doc.embedPng(o.image) : await doc.embedJpg(o.image)) : null;
-  const text = o.kind === 'text' ? safeText(font, o.text || 'CONFIDENTIAL') : '';
+  const raw = o.kind === 'text' ? (o.text || 'CONFIDENTIAL').replace(/\s+/g, ' ') : '';
+  // any language: Urdu, Hindi, Chinese… go through the multilingual text engine
+  const te = raw && !winAnsi(font, raw) ? await TextEngine.create(doc) : null;
+  if (te) await te.prepare([{ text: raw, style: { bold: true } }]);
+  const text = raw;
   const color = hexToRgb(o.color || '#6b7280');
   const pages = doc.getPages();
   pages.forEach((page, i) => {
@@ -138,7 +148,7 @@ export async function watermark(input: ArrayBuffer, o: WatermarkOpts) {
       h = (img.height / img.width) * w;
     } else {
       size = o.fontSize ?? Math.round(Math.min(f.vw, f.vh) / 9);
-      w = font.widthOfTextAtSize(text, size);
+      w = te ? te.measure(text, { bold: true }, size) : font.widthOfTextAtSize(text, size);
       h = font.heightAtSize(size, { descender: false });
     }
     const centers: [number, number][] = [];
@@ -157,6 +167,7 @@ export async function watermark(input: ArrayBuffer, o: WatermarkOpts) {
       const [x, y] = f.toUser(vx, vy);
       const rotate = degrees(f.angle(o.angle));
       if (img) page.drawImage(img, { x, y, width: w, height: h, opacity: o.opacity, rotate });
+      else if (te) te.drawOnPage(page, te.shape(text, { bold: true }, size), x, y, { color: rgbOf(o.color || '#6b7280'), rotate: f.angle(o.angle), opacity: o.opacity });
       else page.drawText(text, { x, y, size, font, color, opacity: o.opacity, rotate });
     }
   });
@@ -300,13 +311,30 @@ export async function editPdf(input: ArrayBuffer, items: EditItem[]) {
     return fonts.get(key)!;
   };
   const images = new Map<ArrayBuffer, Awaited<ReturnType<typeof doc.embedPng>>>();
+  // text a standard font can't draw (Urdu, Hindi, Chinese, emoji…) → multilingual engine
+  const FAMILY: Record<EditFont, TextStyle['family']> = { helvetica: 'sans', times: 'serif', courier: 'mono' };
+  const helv = await font('helvetica', false);
+  const uni = items.filter((it): it is Extract<EditItem, { type: 'text' }> => it.type === 'text' && !winAnsi(helv, it.text.replace(/\n/g, ' ')));
+  const te = uni.length ? await TextEngine.create(doc) : null;
+  if (te) await te.prepare(uni.flatMap((it) => it.text.split('\n').map((text) => ({ text, style: { family: FAMILY[it.font], bold: it.bold } }))));
 
   for (const it of items) {
     const page = pages[it.page];
     if (!page) continue;
     const f = frame(page);
     const rotate = degrees(f.angle(0));
-    if (it.type === 'text') {
+    if (it.type === 'text' && te && uni.includes(it)) {
+      const style: TextStyle = { family: FAMILY[it.font], bold: it.bold };
+      const lineH = it.size * 1.2;
+      const ascent = it.size * 0.718; // same baseline as the standard-font path and the editor preview
+      it.text.split('\n').forEach((line, i) => {
+        if (!line.trim()) return;
+        const vx = it.x * f.vw;
+        const vy = f.vh - (it.y * f.vh + (lineH - it.size) / 2 + ascent + i * lineH);
+        const [x, y] = f.toUser(vx, vy);
+        te.drawOnPage(page, te.shape(line, style, it.size), x, y, { color: rgbOf(it.color), rotate: f.angle(0) });
+      });
+    } else if (it.type === 'text') {
       const fnt = await font(it.font, it.bold);
       const lines = it.text.split('\n').map((l) => safeText(fnt, l));
       const lineH = it.size * 1.2;
@@ -362,31 +390,87 @@ export async function formFields(input: ArrayBuffer): Promise<{ fields: FieldInf
   return { fields, hasXfa };
 }
 
-/** Fill AcroForm fields. Values not representable in Helvetica (WinAnsi) are reported, not silently dropped. */
+/** Fill AcroForm fields. Text in any script is supported: values a standard font can't draw get their own appearance. */
 export async function fillForm(input: ArrayBuffer, values: Record<string, string | boolean | string[]>, flatten: boolean) {
   const doc = await load(input);
   const form = doc.getForm();
   const font = await doc.embedFont(StandardFonts.Helvetica);
   const bad: string[] = [];
+  const uni: { f: PDFTextField; text: string }[] = [];
   for (const [name, v] of Object.entries(values)) {
     let f;
     try { f = form.getField(name); } catch { continue; }
     if (f.isReadOnly()) continue;
     try {
       if (f instanceof PDFTextField) {
-        const text = String(v ?? '');
-        try { text.split(/\r?\n/).forEach((line) => font.encodeText(line)); } catch { bad.push(name); continue; }
         const max = f.getMaxLength();
-        f.setText(max ? text.slice(0, max) : text);
+        const text = String(v ?? '');
+        const val = max ? [...text].slice(0, max).join('') : text;
+        f.setText(val);
+        if (!winAnsi(font, val.replace(/\r?\n/g, ' '))) uni.push({ f, text: val });
       } else if (f instanceof PDFCheckBox) { v ? f.check() : f.uncheck(); }
       else if (f instanceof PDFRadioGroup) { if (v) f.select(String(v)); }
       else if (f instanceof PDFDropdown) { if (v) f.select(String(v)); else f.clear(); }
       else if (f instanceof PDFOptionList) { const arr = Array.isArray(v) ? v : [String(v)]; if (arr.length) f.select(arr.filter(Boolean)); else f.clear(); }
     } catch { bad.push(name); }
   }
+  if (uni.length) {
+    const te = await TextEngine.create(doc);
+    await te.prepare(uni.flatMap((u) => u.text.split(/\r?\n/).map((text) => ({ text }))).concat(uni.map((u) => ({ text: u.text.replace(/\r?\n/g, ' ') }))));
+    for (const u of uni) {
+      try { unicodeAppearance(doc, te, u.f, u.text); form.markFieldAsClean(u.f.ref); }
+      catch { bad.push(u.f.getName()); }
+    }
+  }
   form.updateFieldAppearances(font);
-  if (flatten) form.flatten();
+  if (flatten) form.flatten({ updateFieldAppearances: false });
   return { bytes: await save(doc), bad };
+}
+
+/** Appearance stream for a text field whose value needs the multilingual engine (Urdu, Hindi, Chinese…). */
+function unicodeAppearance(doc: PDFDocument, te: TextEngine, field: PDFTextField, text: string) {
+  const da = field.acroField.getDefaultAppearance() ?? '';
+  const daSize = Number(/([\d.]+)\s+Tf/.exec(da)?.[1] ?? 0);
+  const gray = /([\d.]+)\s+g\b/.exec(da), rgbm = /([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+rg\b/.exec(da);
+  const color: [number, number, number] = rgbm ? [+rgbm[1], +rgbm[2], +rgbm[3]] : gray ? [+gray[1], +gray[1], +gray[1]] : [0, 0, 0];
+  const multiline = field.isMultiline();
+  const align = field.getAlignment();
+  for (const w of field.acroField.getWidgets()) {
+    const r = w.getRectangle();
+    const pad = 2, innerW = Math.max(4, r.width - pad * 2);
+    // DA size (0 = auto), shrunk until the text fits the box
+    let size = daSize || (multiline ? 12 : Math.min(r.height * 0.7, 14));
+    let lines: string[];
+    if (multiline) {
+      size = Math.min(size, Math.max(4, (r.height - pad * 2) / 1.2));
+      lines = wrapLines(te, text, {}, size, innerW);
+      while (size > 4 && lines.length * size * 1.2 > r.height - pad * 2) { size = Math.max(4, size * 0.9); lines = wrapLines(te, text, {}, size, innerW); }
+    } else {
+      lines = [text.replace(/\r?\n/g, ' ')];
+      size = Math.min(size, Math.max(4, r.height * 0.8));
+      const w0 = te.measure(lines[0], {}, size);
+      if (w0 > innerW) size = Math.max(4, (size * innerW) / w0);
+    }
+    const fonts = new Map<PDFFont, string>(), imgs = new Map<any, string>();
+    const key: Keyer = {
+      font: (f) => { let n = fonts.get(f); if (!n) { n = `F${fonts.size}`; fonts.set(f, n); } return PDFName.of(n); },
+      image: (i) => { let n = imgs.get(i); if (!n) { n = `I${imgs.size}`; imgs.set(i, n); } return PDFName.of(n); },
+    };
+    const ops = lines.flatMap((ln, i) => {
+      if (!ln.trim()) return [];
+      const sh = te.shape(ln, {}, size);
+      const rtl = sh.pieces.some((p) => p.level % 2 === 1) && /[\u0590-\u08FF\uFB1D-\uFEFF]/.test(ln);
+      const x = align === TextAlignment.Center ? (r.width - sh.width) / 2
+        : align === TextAlignment.Right || rtl ? r.width - pad - sh.width : pad;
+      const y = multiline ? r.height - pad - size * 0.9 - i * size * 1.2 : (r.height - size) / 2 + size * 0.22;
+      return te.ops(sh, x, y, { color, key });
+    });
+    const Font: Record<string, PDFRef> = {}, XObject: Record<string, PDFRef> = {};
+    for (const [f, n] of fonts) Font[n] = f.ref;
+    for (const [im, n] of imgs) XObject[n] = im.ref;
+    const stream = doc.context.formXObject(ops, { BBox: [0, 0, r.width, r.height], Resources: { Font, XObject } });
+    w.setNormalAppearance(doc.context.register(stream));
+  }
 }
 
 /* ---------------- Repair ---------------- */
@@ -581,6 +665,12 @@ export async function headerFooter(input: ArrayBuffer, o: HeaderFooterOpts) {
   const font = await doc.embedFont(StandardFonts.Helvetica);
   const pages = doc.getPages();
   const total = o.start + pages.length - (o.skipFirst ? 1 : 0) - 1;
+  const fill = (raw: string, n: number) => raw.replace(/\[page\]/gi, String(n)).replace(/\[pages\]/gi, String(total)).replace(/\[date\]/gi, o.date).replace(/\[file\]/gi, o.fileName);
+  // non-Latin text (Urdu, Hindi, Chinese…) → multilingual engine; strings differ per page, so prepare them all
+  const all: string[] = [];
+  pages.forEach((_, i) => { if (!(o.skipFirst && i === 0)) for (const raw of [...o.header, ...o.footer]) if (raw.trim()) all.push(fill(raw, o.start + i - (o.skipFirst ? 1 : 0))); });
+  const te = all.some((t) => !winAnsi(font, t)) ? await TextEngine.create(doc) : null;
+  if (te) await te.prepare(all.map((text) => ({ text })));
   pages.forEach((page, i) => {
     if (o.skipFirst && i === 0) return;
     const n = o.start + i - (o.skipFirst ? 1 : 0);
@@ -593,12 +683,14 @@ export async function headerFooter(input: ArrayBuffer, o: HeaderFooterOpts) {
     ];
     for (const [raw, pos] of slots) {
       if (!raw.trim()) continue;
-      const text = safeText(font, raw.replace(/\[page\]/gi, String(n)).replace(/\[pages\]/gi, String(total)).replace(/\[date\]/gi, o.date).replace(/\[file\]/gi, o.fileName));
-      const w = font.widthOfTextAtSize(text, o.fontSize);
+      const text = fill(raw, n);
+      const sh = te && !winAnsi(font, text) ? te.shape(text, {}, o.fontSize) : null;
+      const w = sh ? sh.width : font.widthOfTextAtSize(text, o.fontSize);
       const [cx, cy] = anchor(pos, f, w, h, margin);
       const [vx, vy] = originFor(cx, cy, w, h, 0);
       const [x, y] = f.toUser(vx, vy);
-      page.drawText(text, { x, y, size: o.fontSize, font, color: hexToRgb(o.color), rotate: degrees(f.angle(0)) });
+      if (sh) te!.drawOnPage(page, sh, x, y, { color: rgbOf(o.color), rotate: f.angle(0) });
+      else page.drawText(safeText(font, text), { x, y, size: o.fontSize, font, color: hexToRgb(o.color), rotate: degrees(f.angle(0)) });
     }
   });
   doc.setProducer('PDFSherpa');
@@ -617,6 +709,10 @@ export interface OcrPage { jpeg: ArrayBuffer; w: number; h: number; imgW: number
 export async function searchablePdf(pages: OcrPage[]) {
   const doc = await PDFDocument.create();
   const font = await doc.embedFont(StandardFonts.Helvetica);
+  // words a standard font can't encode (Urdu, Hindi…) are placed with the multilingual engine
+  const uniWords = pages.flatMap((p) => p.words.map((w) => w.text.trim())).filter((t) => t && !winAnsi(font, t));
+  const te = uniWords.length ? await TextEngine.create(doc) : null;
+  if (te) await te.prepare(uniWords.map((text) => ({ text })));
   for (const p of pages) {
     const img = await doc.embedJpg(p.jpeg);
     const page = doc.addPage([p.w, p.h]);
@@ -625,11 +721,17 @@ export async function searchablePdf(pages: OcrPage[]) {
     const sx = p.w / p.imgW, sy = p.h / p.imgH;
     const ops = [beginText(), setTextRenderingMode(TextRenderingMode.Invisible)];
     for (const wd of p.words) {
-      const text = safeText(font, wd.text.trim());
-      if (!text) continue;
+      const raw = wd.text.trim();
+      if (!raw) continue;
       const boxW = (wd.x1 - wd.x0) * sx, boxH = (wd.y1 - wd.y0) * sy;
       if (boxW <= 0 || boxH <= 0) continue;
       const size = Math.max(1, boxH * 0.9);
+      if (te && !winAnsi(font, raw)) {
+        const sh = te.shape(raw, {}, size);
+        if (sh.width > 0) te.drawOnPage(page, sh, wd.x0 * sx, p.h - wd.y1 * sy + boxH * 0.15, { invisible: true, scaleX: Math.max(0.1, Math.min(4, boxW / sh.width)) });
+        continue;
+      }
+      const text = safeText(font, raw);
       const natural = font.widthOfTextAtSize(text, size);
       const squeeze = natural > 0 ? Math.max(10, Math.min(400, (boxW / natural) * 100)) : 100;
       ops.push(setFontAndSize(fontKey, size), setCharacterSqueeze(squeeze), setTextMatrix(1, 0, 0, 1, wd.x0 * sx, p.h - wd.y1 * sy + boxH * 0.15), showText(font.encodeText(text)));

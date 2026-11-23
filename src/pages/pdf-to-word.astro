@@ -1,0 +1,74 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PdfToWord from '../islands/PdfToWord';
+
+const faqs = [
+  { q: 'Is the Word file editable?', a: 'Yes. The text is real Word text, not a picture. Headings use Word’s Heading 1–4 styles, so they show up in the navigation pane, and bullet lists are real Word lists.' },
+  { q: 'Will it look exactly like my PDF?', a: 'No, and that’s on purpose. A PDF stores every letter at a fixed position, which turns into a mess of text boxes when it’s forced into Word. PDFSherpa rebuilds the document as normal flowing text, so it’s easy to edit, but columns, tables and images are not copied.' },
+  { q: 'Does it work with scanned PDFs?', a: 'Yes. If the PDF has no text layer, PDFSherpa offers to read it with OCR first, in English, Urdu or Hindi. Check names and numbers afterwards, because OCR can misread blurry text.' },
+  { q: 'Does it work with Urdu, Arabic or Hindi PDFs?', a: 'Yes. Text in any language is copied into Word, and Urdu and Arabic paragraphs are marked right-to-left.' },
+  { q: 'Can I open the file in Google Docs or Pages?', a: 'Yes. The .docx file works in Microsoft Word, Google Docs, Apple Pages, LibreOffice and WPS Office.' },
+  { q: 'Is my PDF uploaded?', a: 'No. PDFSherpa reads the PDF and builds the Word file inside your browser. Nothing is sent to a server, and the tool works offline after your first visit.' },
+  { q: 'How do I turn the Word file back into a PDF?', a: 'Use <a href="/word-to-pdf">Word to PDF</a>, or choose File → Save as → PDF in Word.' },
+];
+---
+<ToolLayout
+  slug="pdf-to-word"
+  title="PDF to Word Converter – Free, Editable DOCX, No Upload | PDFSherpa"
+  description="Convert PDF to an editable Word document (.docx) with headings, paragraphs and lists. Free, no signup, no watermark. Your file never leaves your device."
+  h1="PDF to Word"
+  lead="Turn a PDF into an editable Word document. Headings, paragraphs and lists come out as real Word text you can change, all converted on your device."
+  howToTitle="How to Convert PDF to Word"
+  steps={['Select or drop your PDF.', 'Click <strong>Convert to Word</strong>.', '<strong>Download</strong> the .docx and open it in Word or Google Docs.']}
+  faqs={faqs}
+  related={['word-to-pdf', 'pdf-to-text', 'ocr-pdf', 'edit-pdf']}
+>
+  <PdfToWord client:load />
+
+  <Fragment slot="content">
+    <h2>What does PDF to Word do?</h2>
+    <p>
+      PDF to Word reads the text inside your PDF and rebuilds it as a normal Word document. Instead of hundreds of floating text boxes, you get
+      paragraphs that re-flow when you type, headings that use Word’s own styles, and lists you can extend with the Enter key.
+    </p>
+    <p>
+      It’s the right tool when you need to <strong>change the words</strong>: update a CV, reuse a report, fix a letter you only have as a PDF,
+      or copy a long document into your own template. To change a few words and keep the exact look, use <a href="/edit-pdf">Edit PDF</a> instead.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Add your PDF.</strong> Tap <em>Select PDF</em> or drop the file on the box.</li>
+      <li><strong>Choose page breaks.</strong> Leave <em>Start a new Word page</em> on to keep the original page boundaries, or turn it off for one continuous document.</li>
+      <li><strong>Convert and download.</strong> The .docx is named after your PDF, for example <code>report.docx</code>.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>What gets converted</h2>
+    <ul>
+      <li><strong>Headings:</strong> text that is clearly larger than the body becomes Heading 1, 2, 3 or 4, by size.</li>
+      <li><strong>Paragraphs:</strong> lines are joined back into paragraphs, and words split with a hyphen at the end of a line are put back together.</li>
+      <li><strong>Bold and italic:</strong> emphasised words stay bold or italic, and centred lines such as titles and addresses stay centred.</li>
+      <li><strong>Lists:</strong> bullet points become a Word bullet list. Numbered items keep their original numbers (1., 2., a), b)).</li>
+      <li><strong>Page size:</strong> the Word document uses the PDF’s page size, so A4 stays A4 and Letter stays Letter.</li>
+      <li><strong>Right-to-left text:</strong> Urdu and Arabic paragraphs are marked right-to-left in Word.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Images, tables, columns, colours and fonts are not copied. Page numbers printed on the pages are removed.
+      For forms you only need to fill in, <a href="/fill-pdf-form">Fill PDF Form</a> is easier than converting.
+    </p>
+
+    <h2>Scanned PDFs</h2>
+    <p>
+      A scan or phone photo saved as PDF contains pictures of pages, not text. PDFSherpa notices this and offers to recognise the text with OCR
+      (English, Urdu or Hindi) before building the Word file. Recognition runs on your device too.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>The PDF is read locally with Mozilla’s pdf.js and the Word file is created in your browser. Nothing is uploaded or stored.</p>
+  </Fragment>
+</ToolLayout>

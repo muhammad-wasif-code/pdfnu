@@ -49,4 +49,13 @@ if (!existsSync(join(hOut, 'heic2any.min.js'))) {
   cpSync(join(hDir, 'dist', 'heic2any.min.js'), join(hOut, 'heic2any.min.js'));
   writeFileSync(join(hOut, 'LICENSE.txt'), readFileSync(join(hDir, 'LICENSE.md'), 'utf8') + '\n\nBundles libheif (LGPL-3.0), https://github.com/strukturag/libheif\n');
 }
-console.log(`vendor ready: ${gsOut}, ${pjOut}, ${tjOut}, ${hOut}`);
+// Fonts for drawing text in any script (Word to PDF, watermark, header/footer, edit, forms). WOFF → TTF.
+const { fontFiles, woffToSfnt } = await import('./fonts.mjs');
+const fVer = JSON.parse(readFileSync(join(dirname(require.resolve('@fontsource/carlito/package.json')), 'package.json'), 'utf8')).version;
+const fOut = `public/vendor/fonts-${fVer}`;
+if (!existsSync(join(fOut, 'LICENSE.txt'))) {
+  mkdirSync(fOut, { recursive: true });
+  for (const [name, src] of fontFiles()) writeFileSync(join(fOut, name), woffToSfnt(readFileSync(require.resolve(src))));
+  writeFileSync(join(fOut, 'LICENSE.txt'), 'Carlito, Tinos, Cousine, Caladea and the Noto fonts are licensed under the SIL Open Font License 1.1 (https://openfontlicense.org). Converted from the @fontsource packages.\n');
+}
+console.log(`vendor ready: ${gsOut}, ${pjOut}, ${tjOut}, ${hOut}, ${fOut}`);

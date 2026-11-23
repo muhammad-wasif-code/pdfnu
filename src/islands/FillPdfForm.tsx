@@ -53,7 +53,7 @@ export default function FillPdfForm() {
       const res = await pdfOp('fillForm', [bytes.slice().buffer, editable, flatten]);
       if (res.bad.length) {
         const labels = res.bad.map((n) => prettify(n)).join(', ');
-        setError(`These fields contain characters the PDF’s standard font can’t show (for example Urdu, Arabic, Hindi or emoji): ${labels}. Use Latin letters, or type the text with Edit PDF as an image.`);
+        setError(`These fields couldn’t be filled: ${labels}. Try shorter text, or add it with Edit PDF.`);
         setPhase('edit');
         return;
       }

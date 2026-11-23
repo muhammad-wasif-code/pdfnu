@@ -1,0 +1,75 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import WordToPdf from '../islands/WordToPdf';
+
+const faqs = [
+  { q: 'Do I need Microsoft Word installed?', a: 'No. PDFSherpa reads the .docx file itself, so it works on any phone, tablet or computer with a modern browser, including Chromebooks.' },
+  { q: 'Will the PDF look the same as in Word?', a: 'Very close for normal documents such as letters, CVs, reports and assignments. Calibri, Arial, Times New Roman, Courier New and Cambria are replaced by fonts with the same letter widths, so lines break where Word breaks them. Other fonts are replaced by the nearest match. Check the PDF before you send it.' },
+  { q: 'Can I convert old .doc files?', a: 'Not directly. Open the .doc in Word, Google Docs or LibreOffice, save it as .docx, then convert it here.' },
+  { q: 'Is the text in the PDF selectable?', a: 'Yes. The PDF contains real text, not pictures of pages, so it can be searched, selected and read by screen readers.' },
+  { q: 'Which languages are supported?', a: 'Practically all: English and other Latin, Greek and Cyrillic languages, Urdu and Arabic (right-to-left), Hebrew, Hindi, Bengali, Punjabi, Gujarati, Odia, Tamil, Telugu, Kannada, Malayalam, Sinhala and Thai, each with a matching font. Chinese, Japanese, Korean and emoji are drawn with your device’s own fonts.' },
+  { q: 'Is my document uploaded?', a: 'No. The conversion runs entirely in your browser. Your Word file never leaves your device, which makes the tool safe for contracts, CVs and other private documents.' },
+];
+---
+<ToolLayout
+  slug="word-to-pdf"
+  title="Word to PDF Converter – DOCX to PDF Free, No Upload | PDFSherpa"
+  description="Convert Word (.docx) to PDF in your browser, in any language. Keeps fonts, lists, tables, images, headers and footers. Free, no signup, no upload."
+  h1="Word to PDF"
+  lead="Convert a Word document to PDF without Microsoft Word, in any language. Fonts, headings, lists, tables, images, headers and footers are kept, and your file never leaves your device."
+  howToTitle="How to Convert Word to PDF"
+  steps={['Select or drop your .docx file.', 'Click <strong>Convert to PDF</strong>.', '<strong>Download</strong> your PDF.']}
+  faqs={faqs}
+  related={['pdf-to-word', 'compress-pdf', 'merge-pdf', 'protect-pdf']}
+>
+  <WordToPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What does Word to PDF do?</h2>
+    <p>
+      Word to PDF turns a .docx document into a PDF that looks the same on every device and can’t be changed by accident. Upload portals,
+      job applications and offices often accept only PDFs, and a PDF keeps your layout even when the reader doesn’t have the same fonts or software.
+    </p>
+    <p>
+      Most online converters upload your document to a server. PDFSherpa reads the Word file and lays out every page inside your browser,
+      so it’s safe for CVs, contracts and anything else you’d rather not share.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Add your document.</strong> Tap <em>Select Word file</em> or drop a .docx on the box.</li>
+      <li><strong>Convert.</strong> Most documents take a second or two.</li>
+      <li><strong>Download and check.</strong> The PDF is named after your document, for example <code>cv.pdf</code>. Open it once before you send it.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>What is kept</h2>
+    <ul>
+      <li><strong>Text formatting:</strong> bold, italic, underline, strikethrough, font sizes, colours, highlights, superscript and subscript.</li>
+      <li><strong>Paragraphs:</strong> alignment (including justified text), indents, line spacing, spacing before and after, and page breaks.</li>
+      <li><strong>Lists:</strong> bullets and numbering, including multi-level lists like 1.1 and a), i).</li>
+      <li><strong>Tables:</strong> column widths, borders, cell shading and merged cells. Long tables continue on the next page.</li>
+      <li><strong>Images:</strong> photos and logos in PNG, JPEG, GIF, BMP and WebP, scaled to fit the page.</li>
+      <li><strong>Page setup:</strong> paper size, orientation, margins, and different sections.</li>
+      <li><strong>Tab stops:</strong> right-aligned dates in a CV and dotted leaders in a table of contents.</li>
+      <li><strong>Any language:</strong> Urdu and Arabic right-to-left, Hindi and other Indian scripts, Chinese and more.</li>
+      <li><strong>Headers and footers:</strong> including page numbers like “Page 2 of 5”.</li>
+    </ul>
+    <p>
+      Need a smaller file for an upload form? Run the PDF through <a href="/compress-pdf">Compress PDF</a> next. To join several documents into one,
+      use <a href="/merge-pdf">Merge PDF</a>.
+    </p>
+
+    <h2>Limitations</h2>
+    <p>
+      Decorative fonts are replaced by the closest standard font, and Urdu is set in Naskh rather than Nastaliq. Multiple columns,
+      footnotes, comments, charts, SmartArt and EMF/WMF drawings are not reproduced, and floating images are placed in line with the text.
+      For those documents, use File → Save as → PDF in Word or Google Docs.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>Your document is read and converted on your device. Nothing is uploaded, stored or logged.</p>
+  </Fragment>
+</ToolLayout>

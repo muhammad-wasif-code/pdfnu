@@ -1,0 +1,61 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Why doesn’t the Word file look exactly like my PDF?", a: "A PDF stores every letter at a fixed spot on the page. Copying that into Word exactly means hundreds of floating text boxes that fall apart as soon as you type. PDFSherpa rebuilds the text as normal paragraphs instead, so editing is easy, but columns, tables and images are not copied." },
+  { q: "What about scanned PDFs?", a: "A scan contains pictures of pages, not text. PDFSherpa detects this and offers to recognise the text with OCR (English, Urdu or Hindi) before creating the Word file." },
+  { q: "Can I convert PDF to Word on my phone?", a: "Yes. The tool runs in Safari on iPhone and Chrome on Android. The .docx goes to your Files app or Downloads folder and opens in the Word or Google Docs app." },
+  { q: "Is it safe for a CV or contract?", a: "Yes. The PDF is read and the Word file is built inside your browser. Nothing is uploaded, so the document never reaches a server." },
+];
+---
+<GuideLayout slug="convert-pdf-to-word-free" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/pdf-to-word">PDF to Word</a>, select your PDF and click <strong>Convert to Word</strong>. You get an editable .docx with real headings, paragraphs and lists. It’s free, there’s no watermark or signup, and the file never leaves your device.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/pdf-to-word">pdfsherpa.com/pdf-to-word</a> on your computer or phone.</li>
+    <li>Tap <strong>Select PDF</strong>, or drop the file on the box.</li>
+    <li>Leave <strong>Start a new Word page where each PDF page begins</strong> on to keep the original pages. Turn it off for one continuous document, which is easier to re-format.</li>
+    <li>Click <strong>Convert to Word</strong> and download the .docx.</li>
+    <li>Open it in Microsoft Word, Google Docs, Pages or LibreOffice and edit as usual.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>What you get, and what you don’t</h2>
+  <p>
+    The converter is built for <strong>changing the words</strong>. Headings become Word’s Heading 1–4 styles, so they appear in the navigation pane
+    and you can restyle the whole document in one click. Lines are joined back into paragraphs, words split by a hyphen are mended, bold and italic
+    words keep their style, centred titles stay centred, and bullet lists become real Word lists. It works with any language, including Urdu and Hindi.
+  </p>
+  <p>
+    Images, tables, columns, colours and fonts are left out. If you need the pictures too, save them separately with
+    <a href="/extract-images-from-pdf">Extract Images</a> and paste them back in.
+  </p>
+
+  <h2>Choose the right tool for the job</h2>
+  <ul>
+    <li><strong>Rewrite or reuse the text</strong> (update an old CV, reuse a report): <a href="/pdf-to-word">PDF to Word</a>.</li>
+    <li><strong>Fix a few words and keep the exact look</strong> (a typo, a date): <a href="/edit-pdf">Edit PDF</a>. No conversion needed.</li>
+    <li><strong>Fill in a form</strong>: <a href="/fill-pdf-form">Fill PDF Form</a>.</li>
+    <li><strong>Just copy the text</strong> into an email or chat: <a href="/pdf-to-text">PDF to Text</a>.</li>
+    <li><strong>Scanned paper or photos</strong>: PDF to Word recognises the text for you, or use <a href="/ocr-pdf">OCR PDF</a> for a searchable PDF.</li>
+  </ul>
+
+  <h2>Other free ways</h2>
+  <p>
+    Microsoft Word on Windows can open a PDF directly (<em>File → Open</em>) and tries to keep the layout, which works well for simple documents
+    but often breaks complex ones. Google Docs can also open a PDF from Google Drive (<em>Open with → Google Docs</em>), though it uploads the file to
+    Google. Use whichever gives the cleaner result for your document.
+  </p>
+
+  <h2>Tips for a cleaner result</h2>
+  <ul>
+    <li>Remove cover pages or appendices you don’t need first with <a href="/delete-pdf-pages">Delete Pages</a>.</li>
+    <li>After converting, use Word’s Styles pane to change the font of all headings or all body text at once.</li>
+    <li>When you’re done editing, turn it back into a PDF with <a href="/word-to-pdf">Word to PDF</a>.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>PDFSherpa reads the PDF with Mozilla’s pdf.js and writes the Word file in your browser. Nothing is uploaded or stored.</p>
+</GuideLayout>

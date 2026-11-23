@@ -1,12 +1,24 @@
 // Unit tests for src/lib/pdfOps.ts (bundled on the fly with esbuild). Run: node test/ops.test.mjs
 import { build } from 'esbuild';
-import { readFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, mkdirSync, existsSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { PDFDocument } from 'pdf-lib';
 
 mkdirSync('test/out', { recursive: true });
 await build({ entryPoints: ['src/lib/pdfOps.ts'], bundle: true, format: 'esm', platform: 'node', outfile: 'test/out/pdfOps.mjs', external: ['pdf-lib'], logLevel: 'error' });
 const ops = await import('../test/out/pdfOps.mjs');
+// multilingual text engine: read fonts from public/vendor (run scripts/copy-vendor.mjs first)
+ops.setFontFetcher(async (url) => { const f = 'public' + url; return existsSync(f) ? new Uint8Array(readFileSync(f)) : null; });
+// font names (/BaseFont) and raw marker search inside a PDF, including compressed object streams
+const has = async (u8, s) => {
+  const { PDFName, PDFDict, PDFRawStream, decodePDFRawStream } = await import('pdf-lib');
+  const d = await PDFDocument.load(u8, { updateMetadata: false });
+  for (const [, obj] of d.context.enumerateIndirectObjects()) {
+    if (obj instanceof PDFDict && String(obj.get(PDFName.of('BaseFont')) ?? '').includes(s)) return true;
+    if (obj instanceof PDFRawStream) { try { if (Buffer.from(decodePDFRawStream(obj).decode()).toString('latin1').includes(s)) return true; } catch {} }
+  }
+  return Buffer.from(u8).toString('latin1').includes(s);
+};
 const buf = (f) => { const b = readFileSync(f); return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength); };
 const small = () => buf('test/fixtures/small.pdf');
 const scanned = () => buf('test/fixtures/scanned.pdf');
@@ -39,7 +51,10 @@ for (const position of ['center', 'top-left', 'bottom-right', 'tile']) {
   const out = await ops.watermark(rotated.buffer.slice(0), { kind: 'text', text: 'CONFIDENTIAL ✓ ünï', opacity: 0.3, position, angle: 45, color: '#ff0000' });
   assert.equal((await open(out)).getPageCount(), 1);
 }
-ok('text watermark (non-WinAnsi chars sanitized, rotated page)');
+const wmUr = await ops.watermark(small(), { kind: 'text', text: 'خفیہ دستاویز', opacity: 0.3, position: 'center', angle: 45, color: '#ff0000' });
+assert.equal((await open(wmUr)).getPageCount(), 3);
+assert.ok(await has(wmUr, 'NotoNaskhArabic'), 'Urdu watermark embeds the Naskh font');
+ok('text watermark: Latin, symbols, Urdu (rotated page)');
 const png = readFileSync('test/fixtures/image.png');
 d = await open(await ops.watermark(small(), { kind: 'image', image: png.buffer.slice(png.byteOffset, png.byteOffset + png.byteLength), imageType: 'png', imageScale: 0.3, opacity: 0.5, position: 'bottom-right', angle: 0 }));
 assert.equal(d.getPageCount(), 3); ok('image watermark');
@@ -74,13 +89,15 @@ assert.ok(w > h, 'landscape image → landscape A4'); ok('images to pdf (auto or
   const out = await ops.editPdf(buf('test/fixtures/rotated.pdf'), [
     { type: 'text', page: 0, x: 0.1, y: 0.1, text: 'Hello PDFSherpa\nSecond line ✓', size: 18, color: '#1d4ed8', font: 'helvetica', bold: true },
     { type: 'text', page: 1, x: 0.5, y: 0.5, text: 'Times text', size: 12, color: '#111827', font: 'times', bold: false },
+    { type: 'text', page: 1, x: 0.1, y: 0.8, text: 'میرا نام علی ہے\nमेरा नाम अली है', size: 14, color: '#111827', font: 'helvetica', bold: false },
     { type: 'rect', page: 0, x: 0.5, y: 0.5, w: 0.2, h: 0.1, color: '#ffffff', opacity: 1 },
     { type: 'rect', page: 1, x: 0.1, y: 0.2, w: 0.5, h: 0.03, color: '#facc15', opacity: 0.35 },
     { type: 'image', page: 1, x: 0.6, y: 0.7, w: 0.3, h: 0.15, png },
   ]);
   d = await open(out);
   assert.equal(d.getPageCount(), 2);
-  ok('editPdf text/rect/highlight/image (+ rotated page, sanitized glyphs)');
+  assert.ok(await has(out, 'NotoNaskhArabic') && await has(out, 'NotoSansDevanagari'), 'Urdu + Hindi edit text');
+  ok('editPdf text/rect/highlight/image (+ rotated page, symbols, Urdu, Hindi)');
 }
 
 // forms
@@ -95,12 +112,17 @@ assert.ok(w > h, 'landscape image → landscape A4'); ok('images to pdf (auto or
   const re = await ops.formFields(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength));
   const vals = Object.fromEntries(re.fields.map((f) => [f.name, f.value]));
   assert.equal(vals.full_name, 'Ali Khan'); assert.equal(vals.agree_terms, true); assert.equal(vals.country, 'Pakistan'); assert.equal(vals.gender, 'Male');
-  const urdu = await ops.fillForm(buf('test/fixtures/form.pdf'), { full_name: 'علی' }, false);
-  assert.deepEqual(urdu.bad, ['full_name'], 'non-Latin text is reported, not silently mangled');
+  const urdu = await ops.fillForm(buf('test/fixtures/form.pdf'), { full_name: 'علی خان', address: 'मकान 1\nगली 2' }, false);
+  assert.deepEqual(urdu.bad, [], 'Urdu and Hindi values are filled');
+  assert.ok(await has(urdu.bytes, 'NotoNaskhArabic') && await has(urdu.bytes, 'NotoSansDevanagari'), 'appearances use script fonts');
+  const urVals = Object.fromEntries((await ops.formFields(urdu.bytes.buffer.slice(urdu.bytes.byteOffset, urdu.bytes.byteOffset + urdu.bytes.byteLength))).fields.map((f) => [f.name, f.value]));
+  assert.equal(urVals.full_name, 'علی خان', 'field value kept as Unicode');
+  const urFlat = await ops.fillForm(buf('test/fixtures/form.pdf'), { full_name: 'علی خان' }, true);
+  assert.ok(await has(urFlat.bytes, 'NotoNaskhArabic'), 'flattened Urdu keeps its font');
   const flat = await ops.fillForm(buf('test/fixtures/form.pdf'), { full_name: 'Ali' }, true);
   const ff = await ops.formFields(flat.bytes.buffer.slice(flat.bytes.byteOffset, flat.bytes.byteOffset + flat.bytes.byteLength));
   assert.equal(ff.fields.length, 0, 'flatten removes fields');
-  ok('form fields: read, fill, non-Latin report, flatten');
+  ok('form fields: read, fill (Latin, Urdu, Hindi), flatten');
 }
 
 // repair (lossless rebuild)
@@ -204,7 +226,9 @@ ok('rebuild broken startxref + truncated trailer');
   while ((m = re.exec(t))) { const st = m.index + m[0].length, en = t.indexOf('endstream', st); try { acc += inflateSync(b.subarray(st, en)).toString('latin1'); } catch {} }
   const hex = (x) => Buffer.from(x).toString('hex').toUpperCase();
   for (const want of ['Page 2 of 3', 'Confidential', 'report.pdf', '2026-11-19']) assert.ok(acc.includes(hex(want)), want);
-  ok('header & footer with [page]/[pages]/[date]/[file]');
+  const ur = await ops.headerFooter(small(), { header: ['رپورٹ [page]', '', ''], footer: ['', 'पृष्ठ [page] / [pages]', ''], fontSize: 9, color: '#333333', start: 1, skipFirst: false, fileName: 'r.pdf', date: '' });
+  assert.ok(await has(ur, 'NotoNaskhArabic') && await has(ur, 'NotoSansDevanagari'), 'Urdu + Hindi header/footer fonts');
+  ok('header & footer with [page]/[pages]/[date]/[file], Urdu and Hindi');
 }
 
 // searchable PDF: invisible OCR text is extractable and sits over its box
@@ -220,7 +244,10 @@ ok('rebuild broken startxref + truncated trailer');
   const inv = items[0];
   assert.ok(Math.abs(inv.transform[4] - 20) < 1, 'x at box left (40px → 20pt)');
   assert.ok(Math.abs(inv.width - 80) < 3, `width matches box (${inv.width})`);
-  ok('searchable PDF: invisible text layer positioned over words');
+  const ur = await ops.searchablePdf([{ jpeg: jpeg.buffer.slice(jpeg.byteOffset, jpeg.byteOffset + jpeg.byteLength), w: 300, h: 200, imgW: 600, imgH: 400,
+    words: [{ text: 'رسید', x0: 300, y0: 40, x1: 500, y1: 80 }, { text: 'कुल', x0: 40, y0: 300, x1: 140, y1: 340 }] }]);
+  assert.ok(await has(ur, 'NotoNaskhArabic') && await has(ur, 'NotoSansDevanagari') && await has(ur, '/ActualText'), 'Urdu/Hindi invisible layer');
+  ok('searchable PDF: invisible text layer over words (English, Urdu, Hindi)');
 }
 
 console.log(`\nAll ${n} pdfOps tests passed`);

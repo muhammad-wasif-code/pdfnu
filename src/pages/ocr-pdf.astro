@@ -6,7 +6,7 @@ import OcrPdf from '../islands/OcrPdf';
 const faqs = [
   { q: "What does OCR do?", a: "OCR (optical character recognition) reads the letters in a scan or photo and turns them into real text. A scanned PDF becomes searchable, and you can copy text from it." },
   { q: "Is my document uploaded to a server?", a: "No. Recognition runs in your browser with tesseract.js. The engine and language files are downloaded once from PDFSherpa itself, and your document never leaves your device." },
-  { q: "Which languages are supported?", a: "English, Urdu and Hindi. A searchable PDF is created for English. For Urdu and Hindi you get the text to copy or save as .txt." },
+  { q: "Which languages are supported?", a: "English, Urdu and Hindi. For every language you get a searchable PDF (the scan with an invisible text layer) plus the text to copy or save as .txt. For Urdu and Hindi, how well copying from the PDF works depends on your PDF reader, so the .txt is the most reliable way to get the exact text." },
   { q: "How long does it take?", a: "About 2–10 seconds per page on a modern phone or computer, depending on the page and the device. The first run also downloads the engine (a few MB)." },
   { q: "How accurate is it?", a: "Clean printed scans are usually recognised very accurately. Handwriting, low-resolution scans and photos taken at an angle produce more mistakes, so check important text." },
 ];

@@ -6,7 +6,7 @@ import FillPdfForm from '../islands/FillPdfForm';
 const faqs = [
   { q: 'What if my PDF form isn’t fillable?', a: 'Many forms are just scanned pages without real fields. You can still type on them with <a href="/edit-pdf">Edit PDF</a>, which lets you place text anywhere on the page.' },
   { q: 'What does “lock answers (flatten)” do?', a: 'It turns your answers into regular page content, so the recipient can’t accidentally change them. Leave it unticked if you or someone else needs to edit the form later.' },
-  { q: 'Can I type in Urdu, Hindi or Arabic?', a: 'Standard PDF form fonts only cover Latin characters, so PDFSherpa warns you instead of saving broken text. For other scripts, use Edit PDF or fill the form in Adobe Acrobat Reader.' },
+  { q: 'Can I type in Urdu, Hindi or Arabic?', a: 'Yes. Answers in Urdu, Arabic, Hindi, Bengali, Tamil, Chinese and many other languages are drawn with matching fonts, right-to-left where needed, and stay correct after you lock (flatten) the form.' },
   { q: 'How do I sign the form after filling it?', a: 'Download the filled PDF, then open it in <a href="/sign-pdf">Sign PDF</a> to draw, type or upload your signature.' },
   { q: 'How do I fill out a PDF form online for free?', a: 'Open the PDF on this page, type your answers into the fields shown below it, then click <strong>Save filled PDF</strong>. There’s no signup and no watermark. See the <a href="/guides/fill-pdf-form-online">step-by-step guide</a> too.' },
   { q: 'Is my information uploaded?', a: 'No. Your answers and the PDF stay in your browser. That matters for forms full of personal details like ID numbers, addresses and dates of birth.' },
@@ -54,7 +54,7 @@ const faqs = [
     <h2>Limitations</h2>
     <p>
       Only standard (AcroForm) fields are supported. Older XFA forms, made with Adobe LiveCycle, can’t be filled in browsers, and PDFSherpa tells you if
-      that’s the case. Form scripts and calculations aren’t run. Answers use Latin characters. Password-protected forms must be unlocked first.
+      that’s the case. Form scripts and calculations aren’t run. Answers can be in any language. Password-protected forms must be unlocked first.
     </p>
 
     <h2>Privacy</h2>

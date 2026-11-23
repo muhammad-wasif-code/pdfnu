@@ -47,5 +47,6 @@ export default defineConfig({
       },
     })],
   // Cast: @tailwindcss/vite and Astro bundle slightly different Vite type versions.
-  vite: { plugins: [/** @type {any} */ (tailwindcss())] },
+  // the pdf worker lazy-loads fontkit (multilingual text), so it needs ES module output
+  vite: { plugins: [/** @type {any} */ (tailwindcss())], worker: { format: 'es' } },
 });

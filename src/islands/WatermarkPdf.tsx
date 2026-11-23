@@ -105,7 +105,7 @@ export default function WatermarkPdf() {
                   <span class="mb-1.5 block text-sm font-semibold text-ink dark:text-white">Text</span>
                   <input type="text" maxLength={80} value={text} onInput={(e) => setText((e.target as HTMLInputElement).value)}
                     class="h-12 w-full rounded-control border border-line bg-white px-4 text-[15px] outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 dark:border-white/10 dark:bg-night-2" />
-                  <span class="mt-1 block text-xs text-muted dark:text-gray-400">Latin characters only. Other symbols are replaced with “?”.</span>
+                  <span class="mt-1 block text-xs text-muted dark:text-gray-400">Any language works: English, Urdu, Arabic, Hindi, Chinese and more.</span>
                 </label>
                 <OptionChips label="Size" options={[{ value: 'auto', label: 'Auto' }, { value: '24', label: 'S' }, { value: '40', label: 'M' }, { value: '64', label: 'L' }]} value={size} onChange={(v) => v && setSize(v)} />
                 <fieldset>

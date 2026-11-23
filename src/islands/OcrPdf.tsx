@@ -40,7 +40,6 @@ export default function OcrPdf({ initialMode = 'pdf' }: { initialMode?: 'pdf' | 
   const [error, setError] = useState<string | null>(null);
 
   const isPdf = files.length === 1 && /\.pdf$/i.test(files[0].name);
-  const latin = lang === 'eng';
 
   const add = (list: File[]) => {
     setError(null);
@@ -72,7 +71,7 @@ export default function OcrPdf({ initialMode = 'pdf' }: { initialMode?: 'pdf' | 
         const r = await ocr!.recognize(c);
         texts.push(r.text.trim());
         confSum += r.confidence;
-        if (latin) { const j = await toJpeg(c, 2000); pages.push({ jpeg: j.data, w: wPt, h: hPt, imgW: c.width, imgH: c.height, words: r.words }); }
+        { const j = await toJpeg(c, 2000); pages.push({ jpeg: j.data, w: wPt, h: hPt, imgW: c.width, imgH: c.height, words: r.words }); }
         c.width = c.height = 0;
       };
       if (isPdf) {
@@ -100,7 +99,7 @@ export default function OcrPdf({ initialMode = 'pdf' }: { initialMode?: 'pdf' | 
       const n = texts.length;
       setText(texts.map((t, i) => (n > 1 ? `--- ${isPdf ? 'Page' : 'Image'} ${i + 1} ---\n${t}` : t)).join('\n\n'));
       setConf(n ? confSum / n : 0); setPagesDone(n);
-      if (latin && pages.length) {
+      if (pages.length) {
         setProgress({ label: 'Building searchable PDF…', value: 0.98 });
         const { pdfOp } = await import('../lib/pdfWorker');
         setPdf(await pdfOp('searchablePdf', [pages], pages.map((p) => p.jpeg)));
@@ -149,7 +148,6 @@ export default function OcrPdf({ initialMode = 'pdf' }: { initialMode?: 'pdf' | 
             <button type="button" class={`${pdf ? 'btn-secondary' : 'btn-primary'} min-h-12`} onClick={() => downloadBlob(new Blob([text], { type: 'text/plain;charset=utf-8' }), `${base}.txt`, 'text/plain')}>Download .txt</button>
             <button type="button" class="btn-secondary min-h-12" onClick={copy}>{copied ? 'Copied ✓' : 'Copy text'}</button>
           </div>
-          {!latin && <p class="text-xs text-muted dark:text-gray-400">Searchable PDF output is available for English. Urdu and Hindi text can be copied or saved as .txt.</p>}
           <button type="button" class="btn-ghost w-full" onClick={reset}>Recognise another file</button>
         </div>
       ))}

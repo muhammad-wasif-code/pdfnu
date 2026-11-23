@@ -4,7 +4,7 @@
 
 [Live site](https://pdfsherpa.com) · [Source](https://github.com/muhammad-wasif-code/pdfnu) · Contact: [hello@pdfsherpa.com](mailto:hello@pdfsherpa.com)
 
-PDFSherpa is a static website with **39 PDF and image tools** that run **100% in the browser**. Files are never uploaded to a server. There is no signup, no watermark, and no file-size limit imposed by a server. After the first visit, the site works offline as an installable PWA. How-to guides: [pdfsherpa.com/guides](https://pdfsherpa.com/guides).
+PDFSherpa is a static website with **41 PDF and image tools** that run **100% in the browser**. Files are never uploaded to a server. There is no signup, no watermark, and no file-size limit imposed by a server. After the first visit, the site works offline as an installable PWA. How-to guides: [pdfsherpa.com/guides](https://pdfsherpa.com/guides).
 
 ![PDFSherpa homepage](docs/screenshot-home.png)
 
@@ -47,9 +47,11 @@ Unlock PDF asks for a password only when you already know it; the password stays
 - **Extract Images** — save images embedded in a PDF
 - **Scan to PDF** — phone camera to PDF, with shadow removal
 - **PDF to Markdown** — text with headings
+- **PDF to Word** — editable .docx with headings and lists
+- **Word to PDF** — .docx to PDF in the browser, with tables, images, headers and footers
 - **PDF to PowerPoint** — pages to slides
 - **PDF to PDF/A** — archive-ready PDF
-- **OCR PDF** — English, Urdu and Hindi; searchable PDF for English
+- **OCR PDF** — English, Urdu and Hindi, with a searchable PDF for each
 
 ### Edit
 - **Edit PDF** — add text, images and shapes
@@ -198,13 +200,14 @@ Notes:
 
 - **Protect PDF** uses PDF standard security revision 3 (128-bit RC4) via Ghostscript 9.56. It's universally compatible but weaker than AES-256.
 - **Unlock PDF** only removes a password you already know. It does not crack, guess, or bypass unknown passwords, and it does not strip owner permission restrictions without the owner's password. Other tools still expect a file you can already open; unlock it first if you have the password.
-- **Text watermarks/page numbers** use the standard Helvetica font (WinAnsi characters only). Other scripts are replaced with "?".
-- **OCR PDF** recognises English, Urdu and Hindi. Searchable PDF output is available for English.
+- **Text in any language** (watermark, header/footer, edit, forms, Word to PDF) goes through `src/lib/textEngine.ts`: script fonts from `@fontsource` (Noto Naskh Arabic for Urdu/Arabic, Noto Sans for Hebrew and Indic scripts, Thai), OpenType shaping with fontkit, GPOS-positioned glyphs and a simplified bidi algorithm. Urdu is set in Naskh, not Nastaliq (fontkit can't lay out Noto Nastaliq). Chinese, Japanese, Korean and emoji are drawn by the browser as images with ActualText. Copying shaped Urdu/Hindi text out of a PDF depends on the viewer's ActualText support.
+- **Word to PDF** substitutes metric-compatible fonts (Carlito for Calibri, Tinos for Times New Roman, Cousine for Courier New, Caladea for Cambria, Liberation Sans for Arial); columns, footnotes, comments, charts and EMF/WMF drawings aren't rendered.
+- **OCR PDF** recognises English, Urdu and Hindi.
 - **Offline:** all pages and the core engines are cached on first visit. Heavier engines such as Ghostscript and Tesseract are cached the first time a tool that needs them is used online.
 - **Browsers:** needs WebAssembly + ES2022 (Chrome/Edge 100+, Safari 16.4+, Firefox 110+).
 
 ## Credits & licenses
 
-PDFSherpa © its contributors, AGPL-3.0-or-later. Bundled: Ghostscript (AGPL-3.0, Artifex), pdf.js (Apache-2.0, Mozilla), pdf-lib (MIT), JSZip (MIT/GPLv3), Preact (MIT), Inter font (OFL-1.1), Tesseract.js, heic2any, PptxGenJS.
+PDFSherpa © its contributors, AGPL-3.0-or-later. Bundled: Ghostscript (AGPL-3.0, Artifex), pdf.js (Apache-2.0, Mozilla), pdf-lib and @pdf-lib/fontkit (MIT), JSZip (MIT/GPLv3), Preact (MIT), Inter font (OFL-1.1), Tesseract.js, heic2any, PptxGenJS, and Carlito, Tinos, Cousine, Caladea and Noto fonts (OFL-1.1, via @fontsource).
 
 Contact: [hello@pdfsherpa.com](mailto:hello@pdfsherpa.com)

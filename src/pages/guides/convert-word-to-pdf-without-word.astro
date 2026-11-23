@@ -1,0 +1,57 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Do I need Microsoft Office?", a: "No. PDFSherpa reads the .docx file itself in your browser, so it works without Word, Office 365 or any app, on phones, Chromebooks and library computers too." },
+  { q: "Why does a line break at a different word than in Word?", a: "Calibri, Arial, Times New Roman, Courier New and Cambria are replaced by fonts with identical letter widths, so lines break as in Word. Other fonts are replaced by the nearest match, and with those a line can end one word earlier or later. The content is the same." },
+  { q: "Does it work with Urdu, Arabic or Hindi documents?", a: "Yes. Urdu and Arabic are written right-to-left with joined letters, and Hindi, Bengali, Tamil and other Indian scripts get matching fonts. Urdu is set in a Naskh font; if you need Nastaliq, save the PDF from Word itself." },
+  { q: "How do I convert an old .doc file?", a: "Open it in Word, Google Docs or LibreOffice and save it as .docx first. Then convert the .docx." },
+];
+---
+<GuideLayout slug="convert-word-to-pdf-without-word" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/word-to-pdf">Word to PDF</a>, select your .docx file and click <strong>Convert to PDF</strong>. You don’t need Microsoft Word, nothing is uploaded, and headings, lists, tables, images, headers and footers are kept.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/word-to-pdf">pdfsherpa.com/word-to-pdf</a>.</li>
+    <li>Tap <strong>Select Word file</strong> and pick your .docx.</li>
+    <li>Click <strong>Convert to PDF</strong>. Most documents take a second or two.</li>
+    <li>Download the PDF and open it once to check it before you send it.</li>
+  </ol>
+
+  <h2>On a phone</h2>
+  <ul>
+    <li><strong>iPhone:</strong> in Safari, tap <em>Select Word file</em> and choose <em>Browse</em> to find a .docx in Files, iCloud Drive or a WhatsApp download. The PDF is saved to Files → Downloads.</li>
+    <li><strong>Android:</strong> in Chrome, tap <em>Select Word file</em> and pick the document from Downloads, Drive or WhatsApp Documents. The PDF goes to your Downloads folder.</li>
+  </ul>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>What is kept</h2>
+  <ul>
+    <li>Bold, italic, underline, colours, highlights and font sizes.</li>
+    <li>Alignment, indents, line spacing and page breaks.</li>
+    <li>Bullets and numbered lists, including 1.1 and a), i) levels.</li>
+    <li>Tables with borders, shading and merged cells. Long tables continue on the next page.</li>
+    <li>Photos and logos, page size and orientation, and headers and footers with “Page X of Y”.</li>
+  </ul>
+
+  <h2>When to use something else</h2>
+  <p>
+    If you already have Word, <em>File → Save as → PDF</em> gives the most exact copy, because Word uses your real fonts. Google Docs can do the
+    same with <em>File → Download → PDF</em>, after the document is uploaded to your Google Drive. PDFSherpa is the quick option when you don’t have
+    either, or don’t want to upload a private document. Use Word or Google Docs for Urdu documents that must be in Nastaliq, and for layouts
+    with several columns or footnotes.
+  </p>
+
+  <h2>Before you send it</h2>
+  <ul>
+    <li><strong>Upload limit?</strong> Shrink the PDF with <a href="/compress-pdf">Compress PDF</a>.</li>
+    <li><strong>Several documents</strong> (CV, cover letter, certificates)? Combine them with <a href="/merge-pdf">Merge PDF</a>.</li>
+    <li><strong>Needs a signature?</strong> Add it with <a href="/sign-pdf">Sign PDF</a>.</li>
+    <li><strong>Private?</strong> Add a password with <a href="/protect-pdf">Protect PDF</a>.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Your Word file is read and the PDF is built in your browser. Nothing is uploaded, stored or logged.</p>
+</GuideLayout>
