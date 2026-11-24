@@ -18,3 +18,10 @@
 
 /manifest.webmanifest
   Cache-Control: public, max-age=86400
+
+# The pages.dev hosts (production + preview deploys) duplicate pdfsherpa.com: keep them out of search indexes.
+https://pdfnu.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:deploy.pdfnu.pages.dev/*
+  X-Robots-Tag: noindex
