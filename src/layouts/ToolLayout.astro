@@ -44,6 +44,8 @@ const jsonLd = {
   browserRequirements: 'Requires a modern browser with JavaScript and WebAssembly',
   isAccessibleForFree: true,
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  provider: { '@id': `${site}/#organization` },
+  publisher: { '@id': `${site}/#organization` },
 };
 ---
 <BaseLayout title={title} description={description} path={path} jsonLd={jsonLd} ads>

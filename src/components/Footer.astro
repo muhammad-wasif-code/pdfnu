@@ -14,6 +14,14 @@ const groups: { title: string; items: T[] }[] = [
   { title: 'Image tools', items: tools.filter(isImage) },
 ];
 const link = 'hover:text-brand dark:hover:text-brand-light';
+/** Popular preset pages that are not tools in their own right, listed under their group so every page links to them. */
+const extras: Record<string, { name: string; href: string }[]> = {
+  Convert: [
+    { name: 'PDF to PNG', href: '/pdf-to-png' },
+    { name: 'PNG to PDF', href: '/png-to-pdf' },
+    { name: 'Image to Text', href: '/image-to-text' },
+  ],
+};
 ---
 <footer class="mt-16 border-t border-gray-100 dark:border-white/10">
   <div class="container-page grid gap-10 py-10 lg:grid-cols-[minmax(0,15rem)_1fr] lg:gap-12">
@@ -29,6 +37,7 @@ const link = 'hover:text-brand dark:hover:text-brand-light';
           <p class="font-semibold text-ink dark:text-white">{g.title}</p>
           <ul class="mt-3 space-y-2 text-muted dark:text-gray-400">
             {g.items.map((t) => <li><a class={link} href={`/${t.slug}`}>{t.name}</a></li>)}
+            {(extras[g.title] ?? []).map((e) => <li><a class={link} href={e.href}>{e.name}</a></li>)}
           </ul>
         </div>
       ))}
@@ -38,6 +47,7 @@ const link = 'hover:text-brand dark:hover:text-brand-light';
           <li><a class={link} href="/">All tools</a></li>
           <li><a class={link} href="/about">About</a></li>
           <li><a class={link} href="/guides">Guides</a></li>
+          <li><a class={link} href="/ilovepdf-alternative">PDFSherpa vs iLovePDF</a></li>
           <li><a class={link} href="/contact">Contact</a></li>
           <li>
             <a class={link} href="/featured">Featured on</a>

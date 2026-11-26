@@ -3,6 +3,7 @@ import '../styles/global.css';
 import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { organizationLd } from '../data/site';
 
 interface Props {
   title: string;
@@ -22,7 +23,7 @@ const site = (Astro.site?.toString() ?? 'https://pdfsherpa.com/').replace(/\/$/,
 const canonical = site + (path ?? (Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'));
 const ogUrl = ogImage.startsWith('http') ? ogImage : site + ogImage;
 const adClient = import.meta.env.PUBLIC_ADSENSE_CLIENT as string | undefined;
-const lds = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const lds = [organizationLd(site), ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [])];
 ---
 <!doctype html>
 <html lang="en">

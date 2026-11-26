@@ -1,0 +1,119 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import FAQ from '../components/FAQ.astro';
+
+/**
+ * Comparison page. Every iLovePDF fact below comes from iLovePDF's own pages (linked under "Sources"),
+ * read on CHECKED. Re-check them and update CHECKED before changing any claim.
+ */
+const CHECKED = '2026-11-26';
+const checkedText = new Date(CHECKED).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const path = '/ilovepdf-alternative';
+
+const rows: { feature: string; us: string; them: string }[] = [
+  { feature: 'Where your file is processed', us: 'In your browser, on your device. The file is never uploaded.', them: 'Web tools upload the file (encrypted) to iLovePDF servers, in the European Economic Area by default.' },
+  { feature: 'How long files are kept', us: 'Never stored. Nothing reaches a server.', them: 'Deleted automatically within 2 hours. Signed documents and audit trails are kept 5 years.' },
+  { feature: 'Free usage limits', us: 'No daily limits and no fixed file size. Your device’s memory is the limit.', them: 'Free plan has “limited document processing” and per-tool size caps, e.g. 100 MB for Merge, 15 MB for Word to PDF.' },
+  { feature: 'OCR (scanned PDFs to text)', us: 'Free: OCR PDF, Image to Text, and PDF to Word for scans.', them: 'OCR tools are Premium only.' },
+  { feature: 'PDF to PDF/A', us: 'Free', them: 'Premium only' },
+  { feature: 'Works offline', us: 'Yes, in the browser after your first visit.', them: 'Desktop app processes files locally; it is a Premium feature.' },
+  { feature: 'Open source', us: 'Yes, AGPL-3.0. Anyone can read the code.', them: 'Not stated. They use their own processing engine.' },
+  { feature: 'Price', us: 'Free. A few ads, which never see your files.', them: 'Free plan, or Premium from US$4/month billed yearly (US$48), US$7 billed monthly.' },
+];
+
+const faqs = [
+  { q: 'Is PDFSherpa a good free alternative to iLovePDF?', a: 'For everyday jobs (compress, merge, split, convert, sign, edit, OCR) yes, and your files stay on your device. iLovePDF is the better choice if you need AI summaries or translation, signature workflows with an audit trail, or team plans.' },
+  { q: 'Does iLovePDF upload my files?', a: 'Its web tools do. iLovePDF says files travel encrypted to its servers and are deleted automatically within 2 hours. PDFSherpa never uploads files at all: everything runs inside your browser.' },
+  { q: 'Is OCR free on PDFSherpa?', a: 'Yes. <a href="/ocr-pdf">OCR PDF</a>, <a href="/image-to-text">Image to Text</a> and <a href="/pdf-to-word">PDF to Word</a> (for scanned pages) are free. On iLovePDF, OCR tools are part of Premium.' },
+  { q: 'Can I use PDFSherpa for confidential documents?', a: 'Yes. Because files are processed on your device and never sent to a server, there is nothing for anyone else to store or leak. Read <a href="/guides/are-online-pdf-tools-safe">are online PDF tools safe?</a> for how to check any tool yourself.' },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'PDFSherpa vs iLovePDF',
+  url: site + path,
+  description: 'A fact-checked comparison of PDFSherpa and iLovePDF: privacy, free limits, OCR, offline use and price.',
+  dateModified: CHECKED,
+  publisher: { '@id': site + '/#organization' },
+  about: [{ '@id': site + '/#organization' }, { '@type': 'Organization', name: 'iLovePDF', url: 'https://www.ilovepdf.com/' }],
+};
+const cell = 'border-b border-gray-100 px-3 py-3 align-top dark:border-white/10';
+---
+<PageLayout
+  title="iLovePDF Alternative That Never Uploads Files | PDFSherpa"
+  description="PDFSherpa vs iLovePDF: where files are processed, free limits, OCR, offline use and price, checked against iLovePDF's own pages. Free, no upload."
+  h1="PDFSherpa vs iLovePDF"
+  path={path}
+  jsonLd={jsonLd}
+  lead="The short answer: iLovePDF uploads your file to its servers and keeps some features for Premium. PDFSherpa does the work inside your browser, so the file never leaves your device, and every tool is free."
+>
+  <p class="text-sm text-muted dark:text-gray-400">Facts about iLovePDF checked on <time datetime={CHECKED}>{checkedText}</time> from iLovePDF’s own pages (sources below).</p>
+
+  <h2>Side-by-side comparison</h2>
+  <div class="not-prose">
+    <table class="compare w-full border-collapse text-left text-sm">
+      <caption class="sr-only">PDFSherpa compared with iLovePDF</caption>
+      <thead>
+        <tr class="text-ink dark:text-white">
+          <th scope="col" class={`${cell} w-[28%] font-semibold`}>Feature</th>
+          <th scope="col" class={`${cell} font-semibold`}>PDFSherpa</th>
+          <th scope="col" class={`${cell} font-semibold`}>iLovePDF</th>
+        </tr>
+      </thead>
+      <tbody class="text-muted dark:text-gray-300">
+        {rows.map((r) => (
+          <tr>
+            <th scope="row" class={`${cell} font-medium text-ink dark:text-white`}>{r.feature}</th>
+            <td class={cell} data-label="PDFSherpa">{r.us}</td>
+            <td class={cell} data-label="iLovePDF">{r.them}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>When PDFSherpa is the better choice</h2>
+  <ul>
+    <li><strong>Private documents:</strong> passports, bank statements, payslips, contracts and medical reports never leave your phone or computer.</li>
+    <li><strong>Free OCR and PDF/A:</strong> make scans searchable or convert to <a href="/pdf-to-pdfa">PDF/A</a> without paying.</li>
+    <li><strong>Big files and many jobs:</strong> no daily limits or fixed file size caps.</li>
+    <li><strong>Slow or no internet:</strong> nothing to upload, and the tools work offline after the first visit.</li>
+  </ul>
+
+  <h2>When iLovePDF is the better choice</h2>
+  <ul>
+    <li>You want AI summaries or document translation.</li>
+    <li>You need signature requests with an audit trail, or team and business plans.</li>
+    <li>You prefer installed desktop and mobile apps, and you have Premium.</li>
+  </ul>
+
+  <h2>Try the most-used tools</h2>
+  <p>
+    <a href="/compress-pdf">Compress PDF</a>, <a href="/merge-pdf">Merge PDF</a>, <a href="/pdf-to-word">PDF to Word</a>,
+    <a href="/edit-pdf">Edit PDF</a>, <a href="/sign-pdf">Sign PDF</a> and <a href="/jpg-to-pdf">JPG to PDF</a>. All free and all in your browser.
+  </p>
+
+  <h2>Sources</h2>
+  <ul class="text-sm">
+    <li><a href="https://www.ilovepdf.com/help/security" rel="nofollow noopener">iLovePDF: Security &amp; Privacy</a> (where files are processed, retention)</li>
+    <li><a href="https://www.ilovepdf.com/pricing" rel="nofollow noopener">iLovePDF: Pricing</a> (free limits, Premium-only tools, price)</li>
+  </ul>
+  <p class="text-sm text-muted dark:text-gray-400">iLovePDF is a trademark of its owner. PDFSherpa is not affiliated with iLovePDF. Spotted something out of date? Email us from the <a href="/contact">contact page</a>.</p>
+
+  <div slot="after" id="faq" class="mt-12 scroll-mt-24"><FAQ items={faqs} /></div>
+</PageLayout>
+
+<style>
+  /* Phones: one card per feature, each answer labelled, instead of a table that needs sideways scrolling. */
+  @media (max-width: 639px) {
+    .compare thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .compare tr { display: block; padding: 0.25rem 0 0.75rem; border-bottom: 1px solid rgb(0 0 0 / 0.08); }
+    :global(.dark) .compare tr { border-color: rgb(255 255 255 / 0.1); }
+    .compare th, .compare td { display: block; border: 0; padding: 0.35rem 0; }
+    .compare th[scope='row'] { padding-top: 0.75rem; font-size: 0.95rem; }
+    .compare td::before { content: attr(data-label) ': '; font-weight: 600; color: var(--color-ink, #111827); }
+    :global(.dark) .compare td::before { color: #fff; }
+  }
+</style>

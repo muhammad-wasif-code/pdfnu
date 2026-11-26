@@ -20,8 +20,8 @@ const jsonLd = {
   description: g.description,
   datePublished: g.published,
   dateModified: g.published,
-  author: { '@type': 'Organization', name: 'PDFSherpa', url: site + '/' },
-  publisher: { '@type': 'Organization', name: 'PDFSherpa', logo: { '@type': 'ImageObject', url: site + '/icon-512.png' } },
+  author: { '@type': 'Organization', '@id': site + '/#organization', name: 'PDFSherpa', url: site + '/' },
+  publisher: { '@id': site + '/#organization' },
   mainEntityOfPage: `${site}/guides/${slug}`,
   image: site + '/og.png',
 };
