@@ -1,0 +1,70 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PdfToExcel from '../islands/PdfToExcel';
+
+const faqs = [
+  { q: 'Will the numbers work in formulas?', a: 'Yes. Amounts such as 1,250.00, (75.00), -3, 15% or $9.99 become real numbers with a matching format, so SUM, sorting and charts work straight away. Dates, account numbers and codes with leading zeros stay as text so nothing is changed by mistake. Untick the option to keep everything as text.' },
+  { q: 'Does it work with bank statements?', a: 'Yes, that’s one of the main uses. Each transaction becomes a row with date, description, debit, credit and balance in their own columns. If the statement is password-protected, unlock it first with <a href="/unlock-pdf">Unlock PDF</a> using its password.' },
+  { q: 'What about scanned PDFs?', a: 'If the PDF has no text layer, PDFSherpa offers to read it with OCR first, in English, Urdu or Hindi, and then finds the rows and columns. Check the numbers afterwards, because OCR can misread blurry digits.' },
+  { q: 'Why is some text in the wrong column?', a: 'Columns are worked out from where the text sits on each page. Long headings or notes that stretch across several columns are put in the first column they start in. Tables with clear gaps between columns convert best.' },
+  { q: 'Can I open the file in Google Sheets?', a: 'Yes. The .xlsx file opens in Microsoft Excel, Google Sheets, Apple Numbers, LibreOffice Calc and WPS.' },
+  { q: 'Is my PDF uploaded?', a: 'No. PDFSherpa reads the PDF and builds the Excel file in your browser. Nothing is sent to a server.' },
+];
+---
+<ToolLayout
+  slug="pdf-to-excel"
+  title="PDF to Excel Converter – Free, Tables to XLSX, No Upload | PDFSherpa"
+  description="Convert PDF tables, bank statements and invoices to an editable Excel spreadsheet (.xlsx) with real numbers. Free, no signup, your file never leaves your device."
+  h1="PDF to Excel"
+  lead="Pull tables out of a PDF into an Excel spreadsheet. Rows, columns, shading, borders and logos are rebuilt, and amounts become numbers you can add up, all on your device."
+  howToTitle="How to Convert PDF to Excel"
+  steps={['Select or drop your PDF.', 'Click <strong>Convert to Excel</strong>.', '<strong>Download</strong> the .xlsx and open it in Excel or Google Sheets.']}
+  faqs={faqs}
+  related={['excel-to-pdf', 'pdf-to-word', 'pdf-to-text', 'ocr-pdf']}
+>
+  <PdfToExcel client:load />
+
+  <Fragment slot="content">
+    <h2>What does PDF to Excel do?</h2>
+    <p>
+      PDF to Excel reads the text on each page and works out which words belong on the same row and in the same column, then saves them as an Excel
+      workbook. Amounts are converted to real numbers, so you can total a statement, sort a price list or chart a report without retyping it.
+    </p>
+    <p>
+      It’s built for <strong>tables</strong>: bank and card statements, invoices, price lists, timetables, results sheets, inventory and financial reports.
+      For documents that are mostly paragraphs, <a href="/pdf-to-word">PDF to Word</a> gives a better result.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Add your PDF.</strong> Tap <em>Select PDF</em> or drop the file on the box.</li>
+      <li><strong>Choose the options.</strong> Keep <em>Turn amounts into numbers</em> on to calculate with them. Tick <em>Put each PDF page on its own sheet</em> if every page holds a different table.</li>
+      <li><strong>Convert and download.</strong> You see a preview of the first rows, and the .xlsx is named after your PDF, for example <code>statement.xlsx</code>.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>How the table is found</h2>
+    <ul>
+      <li><strong>Rows:</strong> words on the same line of the page become one row, from top to bottom.</li>
+      <li><strong>Columns:</strong> the white gaps that run down a page between groups of words become column boundaries, so right-aligned amounts stay together.</li>
+      <li><strong>Headings and notes</strong> above or below a table go into column A, so nothing is lost.</li>
+      <li><strong>Text that wraps</strong> onto a second line inside a cell, like long transaction descriptions, is joined back into one cell.</li>
+      <li><strong>Tables with lines:</strong> the table's own rules decide the columns, and become cell borders.</li>
+      <li><strong>Formatting:</strong> cell shading, bold and italic text, text colours (red debits stay red) and font sizes are kept, and row heights follow the PDF.</li>
+      <li><strong>Pictures and logos</strong> are placed at their rows.</li>
+      <li><strong>Right-to-left documents</strong> (Urdu, Arabic) are saved as right-to-left sheets with the first column on the right.</li>
+      <li><strong>Column widths</strong> are set to fit the content.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      Formulas cannot be recovered, because a PDF only contains their results. Charts drawn in the PDF come across as their labels, not as Excel
+      charts. Pages with two different tables side by side may need a little tidying in Excel. Password-protected PDFs must be unlocked first.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>The PDF is read locally with Mozilla’s pdf.js and the spreadsheet is created in your browser. Nothing is uploaded or stored.</p>
+  </Fragment>
+</ToolLayout>

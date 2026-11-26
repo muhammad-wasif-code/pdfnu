@@ -332,7 +332,7 @@ export class TextEngine {
         if (!fb || !fb.img) { this.missing += [...r.text].length; }
         return { face: null, fb, text: r.text, level: r.level, glyphs: [], pos: [], width: fb ? fb.w * size * ([...r.text].length / Math.max(1, [...segs[r.seg].text].length)) : 0, reversed: false };
       }
-      const run = safeLayout(face, r.text);
+      const run = safeLayout(face, r.level % 2 === 1 ? mirror(r.text) : r.text);
       if (!run) { this.missing += [...r.text].length; return { face: null, fb: null, text: r.text, level: r.level, glyphs: [], pos: [], width: 0, reversed: false }; }
       let glyphs = run.glyphs.slice(), pos = run.positions.slice();
       const rtlRun = run.direction === 'rtl';
@@ -412,6 +412,10 @@ export class TextEngine {
     page.pushOperators(...this.ops(sh, x, y, { color: o.color, rotate: o.rotate, opacity: gs, key: pageKeyer(page), scaleX: o.scaleX, invisible: o.invisible }));
   }
 }
+
+const MIRROR: Record<string, string> = { '(': ')', ')': '(', '[': ']', ']': '[', '{': '}', '}': '{', '<': '>', '>': '<', '«': '»', '»': '«', '‹': '›', '›': '‹' };
+/** Paired brackets are mirrored inside right-to-left text (Unicode Bidi_Mirrored). */
+export const mirror = (s: string) => (/[()[\]{}<>«»‹›]/.test(s) ? [...s].map((ch) => MIRROR[ch] ?? ch).join('') : s);
 
 export interface Keyer { font(f: PDFFont): PDFName; image(i: PDFImage): PDFName; }
 export const pageKeyer = (page: PDFPage): Keyer => {

@@ -1,0 +1,55 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Why does Excel cut my columns onto a second page?", a: "Excel prints at 100% by default, so a sheet wider than the paper continues on extra pages. Choosing Fit to width scales every column onto the page instead, and long sheets still continue downwards." },
+  { q: "How do I get the whole sheet on one page?", a: "Choose One page. Each sheet is scaled to fit a single page. For very large sheets the text becomes small, so Fit to width with landscape is often easier to read." },
+  { q: "Can I convert only part of a sheet?", a: "Yes. Set a print area in Excel (select the cells, then Page Layout → Print Area → Set Print Area) and save. PDFSherpa prints only that area." },
+  { q: "Do I need Excel installed?", a: "No. PDFSherpa reads the .xlsx file in your browser. It also works on phones, Chromebooks and computers without Office." },
+];
+---
+<GuideLayout slug="convert-excel-to-pdf-fit-to-page" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/excel-to-pdf">Excel to PDF</a>, select your .xlsx file, keep <strong>Fit to width</strong> selected and click <strong>Convert to PDF</strong>. Every column lands on the page, colours and number formats are kept, and you don’t need Excel.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/excel-to-pdf">pdfsherpa.com/excel-to-pdf</a>.</li>
+    <li>Tap <strong>Select Excel file</strong> and pick your .xlsx or .csv.</li>
+    <li>Untick any sheets you don’t want in the PDF. Each sheet starts on a new page.</li>
+    <li>Choose how it fits (see below), then <strong>Convert to PDF</strong>.</li>
+    <li>Open the PDF once to check it before you send it.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Fit to width, one page or actual size?</h2>
+  <ul>
+    <li><strong>Fit to width</strong> (recommended): all columns are scaled onto the page width; long sheets continue on the next pages. Good for statements, lists and reports.</li>
+    <li><strong>One page</strong>: each sheet is shrunk onto a single page. Good for invoices, timetables and dashboards.</li>
+    <li><strong>Actual size</strong>: prints at 100% and splits wide sheets across pages, exactly like Excel’s default. Good when you want large, readable text.</li>
+  </ul>
+  <p>
+    Leave <strong>Orientation</strong> on <em>Auto</em>: sheets wider than a portrait page are turned to landscape, so the text stays bigger.
+    <strong>Paper size</strong> <em>As in file</em> uses the paper chosen in Excel’s Page Layout; pick A4 or Letter to override it.
+  </p>
+
+  <h2>Tips for a tidy PDF</h2>
+  <ul>
+    <li><strong>Set a print area</strong> in Excel to leave out helper columns or notes; PDFSherpa respects it.</li>
+    <li><strong>Hide</strong> rows or columns you don’t want printed. Hidden rows, columns and sheets are left out.</li>
+    <li><strong>Gridlines:</strong> <em>Auto</em> prints them for plain lists and leaves them off when the sheet has its own borders or hides them. Choose <em>Always</em> or <em>Never</em> to decide yourself.</li>
+    <li><strong>Repeat the header row:</strong> set <em>Page Layout → Print Titles → Rows to repeat at top</em> in Excel, and every PDF page starts with your column headings.</li>
+    <li><strong>Charts and shapes</strong> are drawn as sharp vector graphics, and chart sheets get a page of their own.</li>
+  </ul>
+
+  <h2>Before you send it</h2>
+  <ul>
+    <li><strong>Several files?</strong> Combine the PDFs with <a href="/merge-pdf">Merge PDF</a>.</li>
+    <li><strong>Upload limit?</strong> Shrink it with <a href="/compress-pdf">Compress PDF</a>.</li>
+    <li><strong>Private figures?</strong> Add a password with <a href="/protect-pdf">Protect PDF</a>.</li>
+    <li><strong>Need the data back in a spreadsheet?</strong> Use <a href="/pdf-to-excel">PDF to Excel</a>.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>Your workbook is read and the PDF is built in your browser. Nothing is uploaded, stored or logged.</p>
+</GuideLayout>

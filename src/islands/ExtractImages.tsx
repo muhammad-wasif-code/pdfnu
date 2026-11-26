@@ -5,40 +5,10 @@ import { ErrorBox, FileRow, PrivacyNote } from '../components/ui/Notice';
 import { formatBytes, stripExt } from '../lib/format';
 import { friendlyError } from '../lib/errors';
 import { downloadBlob } from '../lib/download';
+import { toCanvas, hasAlpha } from '../lib/pdfImage';
 
 interface Found { name: string; blob: Blob; url: string; w: number; h: number; page: number; }
 const MIN = 24; // skip tiny icons, masks and pattern tiles
-
-/** Convert a pdf.js image object to a canvas, whatever internal form it has. */
-function toCanvas(img: any): HTMLCanvasElement | null {
-  const w = img?.width, h = img?.height;
-  if (!w || !h) return null;
-  const c = document.createElement('canvas');
-  c.width = w; c.height = h;
-  const ctx = c.getContext('2d')!;
-  if (img.bitmap) { ctx.drawImage(img.bitmap, 0, 0); return c; }
-  if (!img.data) return null;
-  const out = ctx.createImageData(w, h);
-  const src: Uint8Array = img.data, dst = out.data;
-  if (img.kind === 3) dst.set(src.subarray(0, dst.length));
-  else if (img.kind === 2) { for (let i = 0, j = 0; j < dst.length; i += 3, j += 4) { dst[j] = src[i]; dst[j + 1] = src[i + 1]; dst[j + 2] = src[i + 2]; dst[j + 3] = 255; } }
-  else if (img.kind === 1) {
-    const rowBytes = (w + 7) >> 3;
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      const bit = (src[y * rowBytes + (x >> 3)] >> (7 - (x & 7))) & 1;
-      const j = (y * w + x) * 4, v = bit ? 255 : 0;
-      dst[j] = dst[j + 1] = dst[j + 2] = v; dst[j + 3] = 255;
-    }
-  } else return null;
-  ctx.putImageData(out, 0, 0);
-  return c;
-}
-
-function hasAlpha(c: HTMLCanvasElement) {
-  const d = c.getContext('2d')!.getImageData(0, 0, c.width, c.height).data;
-  for (let i = 3; i < d.length; i += 4 * 7) if (d[i] < 250) return true;
-  return false;
-}
 
 export default function ExtractImages() {
   const [file, setFile] = useState<File | null>(null);

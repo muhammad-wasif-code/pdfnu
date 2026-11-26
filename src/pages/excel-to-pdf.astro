@@ -1,0 +1,77 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ExcelToPdf from '../islands/ExcelToPdf';
+
+const faqs = [
+  { q: 'Do I need Microsoft Excel?', a: 'No. PDFSherpa reads the .xlsx file itself in your browser, so it works without Excel or Office 365, on phones, Chromebooks and shared computers too.' },
+  { q: 'How do I stop columns being cut off onto another page?', a: 'Keep <strong>Fit to width</strong> selected (the default). Every column is scaled onto the page width, and long sheets continue on the next pages. Choose <strong>One page</strong> to squeeze each sheet onto a single page.' },
+  { q: 'Can I convert only some sheets?', a: 'Yes. When a workbook has several sheets, tick the ones you want. Each sheet starts on a new page. Hidden sheets are left out unless you tick them.' },
+  { q: 'Does it keep colours, borders and merged cells?', a: 'Yes. Cell colours, fonts and rich text, borders, merged cells, wrapped and rotated text, number formats such as currency, percentages and dates, conditional formatting (colour scales, data bars, icon sets and highlight rules), pictures and logos, and page headers and footers are kept.' },
+  { q: 'Are charts included?', a: 'Yes. Column, bar, line, area, pie, doughnut, scatter, bubble, radar and combination charts are drawn as sharp vector graphics with their titles, legends, axes and data labels, and chart sheets get a page of their own. Shapes, arrows and text boxes are drawn too. Only SmartArt and the Excel 2016 chart types (waterfall, treemap, funnel and similar) are left out, and the tool tells you when that happens.' },
+  { q: 'My formulas show no value in other viewers. Will they print?', a: 'Yes. Files made by apps, scripts or exports sometimes save formulas without their results. PDFSherpa calculates them itself, with about 90 common functions such as SUM, IF, VLOOKUP, INDEX/MATCH, SUMIFS, ROUND, TEXT and dates.' },
+  { q: 'Can I convert a CSV file?', a: 'Yes. Drop a .csv file and it is laid out as a table with columns sized to fit the content.' },
+  { q: 'Is my spreadsheet uploaded?', a: 'No. The workbook is read and the PDF is built inside your browser. Nothing is sent to a server, and the tool works offline after your first visit.' },
+];
+---
+<ToolLayout
+  slug="excel-to-pdf"
+  title="Excel to PDF Converter – Free, Fit to Page, No Upload | PDFSherpa"
+  description="Convert Excel spreadsheets (.xlsx, .csv) to PDF with columns fitted to the page. Keeps colours, borders and number formats. Free, no signup, nothing uploaded."
+  h1="Excel to PDF"
+  lead="Turn an Excel workbook into a clean PDF with every column on the page. Colours, borders, merged cells and number formats are kept, and nothing leaves your device."
+  howToTitle="How to Convert Excel to PDF"
+  steps={['Select or drop your .xlsx or .csv file.', 'Pick the sheets and choose <strong>Fit to width</strong>, <strong>One page</strong> or <strong>Actual size</strong>.', 'Click <strong>Convert to PDF</strong> and download it.']}
+  faqs={faqs}
+  related={['pdf-to-excel', 'word-to-pdf', 'compress-pdf', 'merge-pdf']}
+>
+  <ExcelToPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What does Excel to PDF do?</h2>
+    <p>
+      Excel to PDF prints your spreadsheet to a PDF file the way Excel would, but without Excel. It reads column widths, row heights, fonts,
+      fills and borders from the workbook, formats every number exactly as it appears in Excel (<code>$1,234.50</code>, <code>12%</code>,
+      <code>01-Jan-2024</code>), and lays the cells out on pages with text you can still select and search.
+    </p>
+    <p>
+      Use it to send an invoice, a price list, a timetable, a budget or a report to someone who doesn’t have Excel, or to submit a spreadsheet to a
+      portal that only accepts PDF.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Add your workbook.</strong> Tap <em>Select Excel file</em> or drop an .xlsx, .xlsm or .csv file on the box.</li>
+      <li><strong>Choose sheets.</strong> All visible sheets are ticked. Untick any you don’t want; each sheet starts on a new page.</li>
+      <li><strong>Choose how it fits.</strong> <em>Fit to width</em> keeps every column on the page. <em>One page</em> shrinks each sheet onto a single page. <em>Actual size</em> prints at 100% and splits wide sheets across pages, like Excel.</li>
+      <li><strong>Paper and orientation.</strong> <em>As in file</em> and <em>Auto</em> follow the sheet’s own page setup, and switch to landscape when a sheet is wider than a portrait page.</li>
+      <li><strong>Convert and download.</strong> The PDF is named after your workbook, for example <code>budget.pdf</code>.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>What is kept</h2>
+    <ul>
+      <li><strong>Formatting:</strong> fonts, sizes, bold, italic, underline, text colours, rich text with several styles in one cell, cell fills and every border style, including diagonal lines.</li>
+      <li><strong>Conditional formatting:</strong> colour scales, data bars, icon sets (arrows, traffic lights, flags, ratings) and highlight rules such as greater than, contains text, top 10, duplicates or your own formula.</li>
+      <li><strong>Charts and drawings:</strong> column, bar, line, area, pie, doughnut, scatter, bubble, radar and combination charts, chart sheets, shapes, arrows and text boxes.</li>
+      <li><strong>Formulas:</strong> results are printed as saved; formulas saved without a result are calculated.</li>
+      <li><strong>Numbers:</strong> currency, thousands separators, decimals, percentages, dates, times and negative numbers in red or brackets.</li>
+      <li><strong>Layout:</strong> column widths, row heights, merged cells, wrapped text, alignment, indents and hidden rows and columns.</li>
+      <li><strong>Long text:</strong> text that spills into empty cells on the right is printed in full, as in Excel.</li>
+      <li><strong>Print settings:</strong> the print area, rows repeated at the top of every page, manual page breaks, centring, paper size, orientation, margins, and headers and footers with “Page 1 of 3”, the date, the sheet name or the file name.</li>
+      <li><strong>Pictures and logos</strong> placed on the sheet.</li>
+      <li><strong>Any language:</strong> Urdu, Arabic, Hindi and other scripts, and right-to-left sheets are mirrored the way Excel shows them.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      SmartArt, embedded files and the newest Excel chart types (waterfall, treemap, sunburst, funnel, box and whisker) are left out, and the tool
+      lists them in a note. Fonts other than Calibri, Arial, Times New Roman, Courier New and Cambria are replaced by the closest match. Old .xls files
+      need to be saved as .xlsx first, and password-protected workbooks must be unlocked in Excel.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>The workbook is read and the PDF is created in your browser. Nothing is uploaded, stored or logged.</p>
+  </Fragment>
+</ToolLayout>

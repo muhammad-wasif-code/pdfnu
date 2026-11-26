@@ -1,0 +1,53 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+const faqs = [
+  { q: "Can I add up the amounts after converting?", a: "Yes. Amounts like 2,350.75, (10,000.00) or 15% are saved as real numbers with the same look, so =SUM(), sorting and filters work immediately. Dates and account numbers stay as text so they aren’t changed by Excel." },
+  { q: "My bank statement PDF asks for a password. What now?", a: "Banks often lock statements with a password such as your date of birth or CNIC digits. Remove it first with Unlock PDF using that password, then convert the unlocked copy." },
+  { q: "Does it work on a phone?", a: "Yes. It runs in Safari on iPhone and Chrome on Android. The .xlsx file goes to Files or Downloads and opens in the Excel or Google Sheets app." },
+  { q: "What if my PDF is a scan?", a: "PDFSherpa notices when a PDF has no text and offers OCR in English, Urdu or Hindi. The recognised words are then arranged into rows and columns. Always double-check numbers from a scan." },
+];
+---
+<GuideLayout slug="convert-pdf-to-excel-free" faqs={faqs}>
+<p><strong>Short answer:</strong> open <a href="/pdf-to-excel">PDF to Excel</a>, select your PDF and click <strong>Convert to Excel</strong>. Tables come out as rows and columns, and amounts become numbers you can total. It’s free, there’s no signup or watermark, and the PDF never leaves your device.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="/pdf-to-excel">pdfsherpa.com/pdf-to-excel</a> on your computer or phone.</li>
+    <li>Tap <strong>Select PDF</strong>, or drop the file on the box.</li>
+    <li>Keep <strong>Turn amounts into numbers</strong> ticked if you want to calculate with them.</li>
+    <li>Tick <strong>Put each PDF page on its own sheet</strong> only if every page holds a different table. Otherwise all pages go into one long sheet, which is easier to sort and total.</li>
+    <li>Click <strong>Convert to Excel</strong>, check the preview of the first rows, and download the .xlsx.</li>
+  </ol>
+
+  <AdSlot variant="inline" slot="guide-article" />
+
+  <h2>Bank statements</h2>
+  <p>
+    Statements are the most common reason to convert a PDF to Excel: to total spending by category, match payments or prepare a tax return.
+    Each transaction becomes one row with the date, description, debit, credit and balance in separate columns. After converting:
+  </p>
+  <ul>
+    <li>Select the header row and use <em>Data → Filter</em> to sort or filter transactions.</li>
+    <li>Type <code>=SUM(C:C)</code> under the debit column to total your spending.</li>
+    <li>If the statement spans many pages, the repeated column headers on each page can be removed with the filter.</li>
+  </ul>
+
+  <h2>Getting a cleaner table</h2>
+  <ul>
+    <li><strong>Download the original PDF</strong> from your bank or supplier rather than a scan or a photo. A real text PDF gives exact numbers.</li>
+    <li><strong>Only need some pages?</strong> Keep just those with <a href="/extract-pdf-pages">Extract Pages</a> first, then convert.</li>
+    <li><strong>Need just the text?</strong> <a href="/pdf-to-text">PDF to Text</a> copies everything as plain text without columns.</li>
+    <li><strong>Mostly paragraphs, not tables?</strong> <a href="/pdf-to-word">PDF to Word</a> gives an editable document instead.</li>
+  </ul>
+
+  <h2>What isn’t copied</h2>
+  <p>
+    A PDF only contains the final text and numbers, so formulas can’t be recovered, and charts come across as their labels. Shading, borders, text colours and logos are copied. Columns are
+    worked out from where the words sit on each page, so tables with clear gaps between columns convert best; a long note that stretches across the
+    table goes into the first column.
+  </p>
+
+  <h2>Privacy</h2>
+  <p>Statements and invoices are private. PDFSherpa reads the PDF and builds the spreadsheet inside your browser: nothing is uploaded, stored or logged.</p>
+</GuideLayout>

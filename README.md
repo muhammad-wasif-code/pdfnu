@@ -4,7 +4,7 @@
 
 [Live site](https://pdfsherpa.com) · [Source](https://github.com/muhammad-wasif-code/pdfnu) · [Follow PDFSherpa on LinkedIn](https://www.linkedin.com/company/pdfsherpa/) · Contact: [hello@pdfsherpa.com](mailto:hello@pdfsherpa.com)
 
-PDFSherpa is a static website with **41 PDF and image tools** that run **100% in the browser**. Files are never uploaded to a server. There is no signup, no watermark, and no file-size limit imposed by a server. After the first visit, the site works offline as an installable PWA. How-to guides: [pdfsherpa.com/guides](https://pdfsherpa.com/guides).
+PDFSherpa is a static website with **43 PDF and image tools** that run **100% in the browser**. Files are never uploaded to a server. There is no signup, no watermark, and no file-size limit imposed by a server. After the first visit, the site works offline as an installable PWA. How-to guides: [pdfsherpa.com/guides](https://pdfsherpa.com/guides).
 
 ![PDFSherpa homepage](docs/screenshot-home.png)
 
@@ -49,6 +49,8 @@ Unlock PDF asks for a password only when you already know it; the password stays
 - **PDF to Markdown** — text with headings
 - **PDF to Word** — editable .docx with headings and lists
 - **Word to PDF** — .docx to PDF in the browser, with tables, images, headers and footers
+- **PDF to Excel** — tables and statements to .xlsx with real numbers, shading, borders, colours, logos and joined wrapped lines (OCR for scans)
+- **Excel to PDF** — .xlsx/.csv to PDF: fit to width, number formats, rich text, borders, merged cells, conditional formatting, charts, shapes, pictures, print titles; formulas without saved results are calculated
 - **PDF to PowerPoint** — pages to slides
 - **PDF to PDF/A** — archive-ready PDF
 - **OCR PDF** — English, Urdu and Hindi, with a searchable PDF for each
@@ -97,7 +99,7 @@ Other scripts:
 | --- | --- |
 | `npm run build` | Copies engines → builds static site to `dist/` → generates `dist/sw.js` (and the IndexNow key file if `INDEXNOW_KEY` is set) |
 | `npm run preview` | Serves `dist/` locally |
-| `npm test` | Unit tests for PDF operations, text diff, Markdown conversion, password protection, and Ghostscript-backed tools (Node) |
+| `npm test` | Unit tests for PDF operations, text diff, Markdown conversion, Excel ⇄ PDF, password protection, and Ghostscript-backed tools (Node) |
 | `npm run check` | TypeScript / Astro type check |
 | `node scripts/make-og.mjs` | Regenerates `public/og.png` |
 | `node scripts/make-icons.mjs` | Regenerates favicons/PWA icons from `public/favicon.svg` |
