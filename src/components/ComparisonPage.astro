@@ -1,0 +1,86 @@
+---
+/** One "PDFSherpa vs X" page, filled from src/data/comparisons.ts. */
+import PageLayout from '../layouts/PageLayout.astro';
+import FAQ from './FAQ.astro';
+import { comparisons, getComparison } from '../data/comparisons';
+interface Props { slug: string; }
+const c = getComparison(Astro.props.slug);
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const path = `/${c.slug}`;
+const checkedText = new Date(c.checked).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const others = comparisons.filter((x) => x.slug !== c.slug);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: `PDFSherpa vs ${c.name}`,
+  url: site + path,
+  description: c.description,
+  dateModified: c.checked,
+  publisher: { '@id': site + '/#organization' },
+  about: [{ '@id': site + '/#organization' }, { '@type': 'Thing', name: c.name, url: new URL(c.sources[0].url).origin + '/' }],
+};
+const cell = 'border-b border-gray-100 px-3 py-3 align-top dark:border-white/10';
+---
+<PageLayout title={c.title} description={c.description} h1={`PDFSherpa vs ${c.name}`} path={path} jsonLd={jsonLd} lead={c.lead}>
+  <p class="text-sm text-muted dark:text-gray-400">Facts about {c.name} checked on <time datetime={c.checked}>{checkedText}</time> from {c.name}’s own pages (sources below).</p>
+
+  <h2>Side-by-side comparison</h2>
+  <div class="not-prose">
+    <table class="compare w-full border-collapse text-left text-sm">
+      <caption class="sr-only">PDFSherpa compared with {c.name}</caption>
+      <thead>
+        <tr class="text-ink dark:text-white">
+          <th scope="col" class={`${cell} w-[28%] font-semibold`}>Feature</th>
+          <th scope="col" class={`${cell} font-semibold`}>PDFSherpa</th>
+          <th scope="col" class={`${cell} font-semibold`}>{c.name}</th>
+        </tr>
+      </thead>
+      <tbody class="text-muted dark:text-gray-300">
+        {c.rows.map((r) => (
+          <tr>
+            <th scope="row" class={`${cell} font-medium text-ink dark:text-white`}>{r.feature}</th>
+            <td class={cell} data-label="PDFSherpa">{r.us}</td>
+            <td class={cell} data-label={c.name}>{r.them}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>When PDFSherpa is the better choice</h2>
+  <ul>
+    <li><strong>Private documents:</strong> passports, bank statements, payslips, contracts and medical reports never leave your phone or computer.</li>
+    <li><strong>Free OCR and PDF/A:</strong> make scans searchable or convert to <a href="/pdf-to-pdfa">PDF/A</a> without paying.</li>
+    <li><strong>Big files and many jobs:</strong> no daily limits or fixed file size caps.</li>
+    <li><strong>Slow or no internet:</strong> nothing to upload, and the tools work offline after the first visit.</li>
+  </ul>
+
+  <h2>When {c.name} is the better choice</h2>
+  <ul>{c.betterThem.map((b) => <li>{b}</li>)}</ul>
+
+  <h2>Try the most-used tools</h2>
+  <p>
+    <a href="/compress-pdf">Compress PDF</a>, <a href="/merge-pdf">Merge PDF</a>, <a href="/pdf-to-word">PDF to Word</a>,
+    <a href="/edit-pdf">Edit PDF</a>, <a href="/sign-pdf">Sign PDF</a> and <a href="/jpg-to-pdf">JPG to PDF</a>. All free and all in your browser.
+  </p>
+  <p>More comparisons: {others.map((o, i) => <><a href={`/${o.slug}`}>PDFSherpa vs {o.name}</a>{i < others.length - 1 ? ' · ' : ''}</>)}</p>
+
+  <h2>Sources</h2>
+  <ul class="text-sm">{c.sources.map((s) => <li><a href={s.url} rel="nofollow noopener">{s.label}</a></li>)}</ul>
+  <p class="text-sm text-muted dark:text-gray-400">{c.name} is a trademark of its owner. PDFSherpa is not affiliated with {c.name}. Spotted something out of date? Email us from the <a href="/contact">contact page</a>.</p>
+
+  <div slot="after" id="faq" class="mt-12 scroll-mt-24"><FAQ items={c.faqs} /></div>
+</PageLayout>
+
+<style>
+  /* Phones: one card per feature, each answer labelled, instead of a table that needs sideways scrolling. */
+  @media (max-width: 639px) {
+    .compare thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .compare tr { display: block; padding: 0.25rem 0 0.75rem; border-bottom: 1px solid rgb(0 0 0 / 0.08); }
+    :global(.dark) .compare tr { border-color: rgb(255 255 255 / 0.1); }
+    .compare th, .compare td { display: block; border: 0; padding: 0.35rem 0; }
+    .compare th[scope='row'] { padding-top: 0.75rem; font-size: 0.95rem; }
+    .compare td::before { content: attr(data-label) ': '; font-weight: 600; color: var(--color-ink, #111827); }
+    :global(.dark) .compare td::before { color: #fff; }
+  }
+</style>

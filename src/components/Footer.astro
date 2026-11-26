@@ -3,6 +3,7 @@ import Logo from './Logo.astro';
 import { tools } from '../data/tools';
 import { SOURCE_URL } from '../data/site';
 import { FOOTER_BADGES } from '../data/featured';
+import { comparisons } from '../data/comparisons';
 const year = new Date().getFullYear();
 const sourceUrl = SOURCE_URL;
 type T = (typeof tools)[number];
@@ -47,7 +48,7 @@ const extras: Record<string, { name: string; href: string }[]> = {
           <li><a class={link} href="/">All tools</a></li>
           <li><a class={link} href="/about">About</a></li>
           <li><a class={link} href="/guides">Guides</a></li>
-          <li><a class={link} href="/ilovepdf-alternative">PDFSherpa vs iLovePDF</a></li>
+          {comparisons.map((c) => <li><a class={link} href={`/${c.slug}`}>vs {c.name}</a></li>)}
           <li><a class={link} href="/contact">Contact</a></li>
           <li>
             <a class={link} href="/featured">Featured on</a>

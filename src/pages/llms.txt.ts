@@ -3,6 +3,7 @@ import { tools, categories } from '../data/tools';
 import { landings } from '../data/landings';
 import { guides } from '../data/guides';
 import { CONTACT_EMAIL, SOURCE_URL } from '../data/site';
+import { comparisons } from '../data/comparisons';
 
 /** /llms.txt: a plain-text map of the site for AI assistants (https://llmstxt.org). Built from the same data as the pages. */
 export const GET: APIRoute = ({ site }) => {
@@ -39,7 +40,7 @@ export const GET: APIRoute = ({ site }) => {
     '## About',
     '',
     `- [About PDFSherpa](${base}/about): how the in-browser tools work and why files stay private`,
-    `- [PDFSherpa vs iLovePDF](${base}/ilovepdf-alternative): a fact-checked comparison`,
+    ...comparisons.map((c) => `- [PDFSherpa vs ${c.name}](${base}/${c.slug}): ${c.description}`),
     `- [Privacy policy](${base}/privacy)`,
     `- [Terms of use](${base}/terms)`,
     '',
