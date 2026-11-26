@@ -1,12 +1,21 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import { FEATURED_BADGES } from '../data/featured';
+// Shown under each heading; read from the badge's own link so the badge HTML stays untouched.
+const host = (html: string) => new URL(html.match(/href="([^"]+)"/)![1]).hostname.replace(/^www\./, '');
 ---
-<PageLayout title="PDFSherpa is featured on" description="Directories and launch sites where PDFSherpa is listed." h1="PDFSherpa is featured on" path="/featured">
-  <ul slot="after" class="mt-8 flex list-none flex-wrap items-stretch justify-center gap-4 p-0 sm:justify-start sm:gap-6">
+<PageLayout title="PDFSherpa is featured on" description="Directories and launch sites where PDFSherpa is listed." h1="PDFSherpa is featured on" path="/featured"
+  lead={`PDFSherpa is listed on ${FEATURED_BADGES.length} software directories and launch sites. Thanks to every community that helps people find free, private PDF tools.`}>
+  <ul slot="after" class="mt-8 grid list-none gap-4 p-0 sm:grid-cols-2 sm:gap-5">
     {FEATURED_BADGES.map((b) => (
-      <li class="flex items-center justify-center rounded-xl border border-gray-100 p-4 dark:border-white/10">
-        <Fragment set:html={`<!-- ${b.name} -->\n${b.html}`} />
+      <li class="card flex flex-col p-4 sm:p-5 sm:odd:last:col-span-2">
+        <div class="flex items-baseline justify-between gap-3">
+          <h2 class="text-base font-semibold text-ink dark:text-white">{b.name}</h2>
+          <span class="truncate text-xs text-muted dark:text-gray-400">{host(b.html)}</span>
+        </div>
+        <div class="mt-4 flex min-h-28 flex-1 items-center justify-center rounded-xl border border-line bg-surface px-2 py-4 dark:border-white/10 dark:bg-white/5">
+          <Fragment set:html={`<!-- ${b.name} -->\n${b.html}`} />
+        </div>
       </li>
     ))}
   </ul>

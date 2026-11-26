@@ -5,8 +5,6 @@ import { tools, categories, getTool, type Category } from '../data/tools';
 
 const byCat = (c: Category) => tools.filter((t) => t.category === c);
 const cat = (c: Category) => categories.find((x) => x.name === c)!;
-// Desktop columns, balanced by hand (Convert is the longest group).
-const columns: Category[][] = [['Optimize', 'Organize'], ['Convert'], ['Edit'], ['Security', 'Image']];
 const popular = ['compress-pdf', 'merge-pdf', 'pdf-to-word', 'edit-pdf', 'sign-pdf', 'jpg-to-pdf'].map(getTool);
 const searchText = (t: (typeof tools)[number]) => `${t.name} ${t.short} ${t.category} ${t.keywords}`.toLowerCase().replace(/[^a-z0-9]+/g, " ");
 ---
@@ -84,31 +82,29 @@ const searchText = (t: (typeof tools)[number]) => `${t.name} ${t.short} ${t.cate
           </div>
         </div>
 
-        <div class="grid gap-x-3 gap-y-6 px-4 py-5 md:grid-cols-2 lg:grid-cols-4">
-          {columns.map((col) => (
-            <div class="space-y-6">
-              {col.map((c) => (
-                <section data-menu-group aria-label={c}>
-                  <p class={`mb-1.5 flex items-center gap-2 px-2 text-[11px] font-bold uppercase tracking-[0.12em] ${cat(c).accent}`}>
+        <!-- CSS columns balance the groups automatically (long groups like Convert flow into the next column),
+             so the panel stays short enough to fit a laptop screen without scrolling. -->
+        <div class="gap-x-3 px-4 pb-1 pt-4 md:columns-3 lg:columns-4">
+          {categories.map(({ name: c }) => (
+                <section data-menu-group aria-label={c} class="pb-3">
+                  <p class={`mb-1 flex break-after-avoid items-center gap-2 px-2 text-[11px] font-bold uppercase tracking-[0.12em] ${cat(c).accent}`}>
                     <span class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true"></span>{c}
                     <span class="font-semibold text-gray-400 dark:text-gray-500">{byCat(c).length}</span>
                   </p>
                   <ul>
                     {byCat(c).map((t) => (
-                      <li data-menu-item data-search={searchText(t)}>
-                        <a href={`/${t.slug}`} class="group flex min-h-11 items-center gap-3 rounded-xl px-2 py-1 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                      <li data-menu-item data-search={searchText(t)} class="break-inside-avoid">
+                        <a href={`/${t.slug}`} class="group flex items-center gap-3 rounded-xl px-2 py-[3px] transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
                           <ToolIcon tool={t} size="sm" />
                           <span class="min-w-0">
-                            <span class="block truncate text-sm font-semibold text-gray-800 group-hover:text-ink dark:text-gray-200 dark:group-hover:text-white">{t.name}</span>
-                            <span class="block truncate text-xs text-muted dark:text-gray-400">{t.tagline}</span>
+                            <span class="block truncate text-sm font-semibold leading-5 text-gray-800 group-hover:text-ink dark:text-gray-200 dark:group-hover:text-white">{t.name}</span>
+                            <span class="block text-xs leading-4 text-muted dark:text-gray-400">{t.tagline}</span>
                           </span>
                         </a>
                       </li>
                     ))}
                   </ul>
                 </section>
-              ))}
-            </div>
           ))}
         </div>
         <p data-menu-empty hidden class="px-6 pb-8 pt-2 text-center text-sm text-muted dark:text-gray-400">No tools match that search.</p>
