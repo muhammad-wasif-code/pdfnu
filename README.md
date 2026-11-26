@@ -188,9 +188,9 @@ Notes:
 
 1. Go to [bing.com/webmasters](https://www.bing.com/webmasters) → **Import from Google Search Console**, the fastest route since it copies the verified site and sitemaps. Alternatively add the site manually and verify by DNS CNAME or meta tag.
 2. **Sitemaps** → submit `https://pdfsherpa.com/sitemap-index.xml`.
-3. **IndexNow:** set `INDEXNOW_KEY` in Cloudflare, redeploy, then after each deploy with new pages run:
+3. **IndexNow:** the key file `public/1f0cc589877261f5a203d8bcf6f79853.txt` ships with the site. After each deploy with new or changed pages run:
    ```bash
-   INDEXNOW_KEY=yourkey SITE_URL=https://pdfsherpa.com node scripts/indexnow.mjs
+   node scripts/indexnow.mjs
    ```
    This notifies Bing, Yandex, Seznam and Naver. With Cloudflare Crawler Hints enabled this happens automatically.
 
