@@ -42,3 +42,6 @@ export const FEATURED_BADGES: { name: string; html: string }[] = [
 </a>`,
   },
 ];
+
+/** Badges also shown in the global footer (same verbatim markup), in this order. */
+export const FOOTER_BADGES = ['TheSaaSDir', 'SaaSDB', 'SumoDir'].map((n) => FEATURED_BADGES.find((b) => b.name === n)!);

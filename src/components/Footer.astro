@@ -2,6 +2,7 @@
 import Logo from './Logo.astro';
 import { tools } from '../data/tools';
 import { SOURCE_URL } from '../data/site';
+import { FOOTER_BADGES } from '../data/featured';
 const year = new Date().getFullYear();
 const sourceUrl = SOURCE_URL;
 type T = (typeof tools)[number];
@@ -38,7 +39,13 @@ const link = 'hover:text-brand dark:hover:text-brand-light';
           <li><a class={link} href="/about">About</a></li>
           <li><a class={link} href="/guides">Guides</a></li>
           <li><a class={link} href="/contact">Contact</a></li>
-          <li><a class={link} href="/featured">Featured on</a></li>
+          <li>
+            <a class={link} href="/featured">Featured on</a>
+            <!-- Directory badges: verbatim markup (directories verify it in the raw HTML); only scaled down with CSS -->
+            <div class="mt-2 flex flex-wrap items-center gap-2 [&_img]:h-7 [&_img]:w-auto">
+              {FOOTER_BADGES.map((b) => <Fragment set:html={b.html} />)}
+            </div>
+          </li>
           <li><a class={link} href="https://www.linkedin.com/company/pdfsherpa/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
           <li><a class={link} href="/privacy">Privacy</a></li>
           <li><a class={link} href="/terms">Terms</a></li>
