@@ -1,0 +1,13 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { FEATURED_BADGES } from '../data/featured';
+---
+<PageLayout title="PDFSherpa is featured on" description="Directories and launch sites where PDFSherpa is listed." h1="PDFSherpa is featured on" path="/featured">
+  <ul slot="after" class="mt-8 flex list-none flex-wrap items-stretch justify-center gap-4 p-0 sm:justify-start sm:gap-6">
+    {FEATURED_BADGES.map((b) => (
+      <li class="flex items-center justify-center rounded-xl border border-gray-100 p-4 dark:border-white/10">
+        <Fragment set:html={`<!-- ${b.name} -->\n${b.html}`} />
+      </li>
+    ))}
+  </ul>
+</PageLayout>
