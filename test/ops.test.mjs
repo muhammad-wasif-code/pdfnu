@@ -30,6 +30,20 @@ assert.deepEqual(await ops.inspect(small()), { pageCount: 3, encrypted: false })
 assert.equal((await ops.inspect(buf('test/fixtures/encrypted.pdf'))).encrypted, true);
 ok('inspect + encryption detection');
 
+// Adobe-style owner-locked form PDF (opens without a password) — same class iLovePDF accepts
+{
+  const raw = buf('test/fixtures/block-form-encrypted.pdf');
+  assert.equal((await ops.inspect(raw)).encrypted, true);
+  const d = await ops.decrypt(raw, '');
+  assert.equal(d.status, 'ok');
+  const plain = d.bytes.buffer.slice(d.bytes.byteOffset, d.bytes.byteOffset + d.bytes.byteLength);
+  assert.equal((await ops.inspect(plain)).encrypted, false);
+  const { fields } = await ops.formFields(plain);
+  assert.ok(fields.length > 10, 'AcroForm fields survive decrypt');
+  assert.ok((await ops.lossless(plain)).length < plain.byteLength * 1.05, 'lossless after decrypt');
+}
+ok('decrypt owner-restricted Adobe form PDF');
+
 // merge
 let d = await open(await ops.merge([small(), scanned()]));
 assert.equal(d.getPageCount(), 7); ok('merge 3+4 pages');

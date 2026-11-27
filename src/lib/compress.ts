@@ -57,7 +57,9 @@ const RASTER_Q = [0.82, 0.7, 0.58, 0.46, 0.36];
 interface Candidate { bytes: Uint8Array; method: CompressResult['method']; detail: string; textLost: boolean; }
 
 export async function compressPdf(file: File, opts: CompressOptions, onProgress: (p: Progress) => void, signal?: AbortSignal): Promise<CompressResult> {
-  const original = new Uint8Array(await file.arrayBuffer());
+  let original = new Uint8Array(await file.arrayBuffer());
+  const { preparePdfBytes } = await import('./pdfFile');
+  original = (await preparePdfBytes(original, file.name)).bytes;
   const target = opts.target ?? null;
   const check = () => { if (signal?.aborted) throw new DOMException('Cancelled', 'AbortError'); };
 
@@ -77,31 +79,18 @@ export async function compressPdf(file: File, opts: CompressOptions, onProgress:
   const info = await pdfOp('inspect', [original.slice().buffer]);
   check();
 
-  if (info.encrypted && target !== null && original.length <= target) return finish(best, target);
-
-  if (info.encrypted) {
-    // Owner-password-only PDFs open without a password; anything else is genuinely locked.
-    try {
-      const doc = await openPdf(original.slice());
-      await doc.destroy();
-    } catch (e: any) {
-      if (e?.name === 'PasswordException') throw new UserError('This PDF is password-protected. Open it with its password and save an unprotected copy first.', 'encrypted');
-      throw e;
-    }
-  }
+  if (target !== null && original.length <= target) return finish(best, target);
 
   // 1. Lossless
-  if (!info.encrypted) {
-    progress({ label: 'Optimizing PDF structure (lossless)…', value: 0.08 });
-    try {
-      const out = await pdfOp('lossless', [original.slice().buffer]);
-      consider({ bytes: out, method: 'lossless', detail: 'Lossless optimization', textLost: false });
-    } catch (e) {
-      console.warn('lossless step failed', e);
-    }
-    check();
-    if (target !== null && fits()) return finish(best, target);
+  progress({ label: 'Optimizing PDF structure (lossless)…', value: 0.08 });
+  try {
+    const out = await pdfOp('lossless', [original.slice().buffer]);
+    consider({ bytes: out, method: 'lossless', detail: 'Lossless optimization', textLost: false });
+  } catch (e) {
+    console.warn('lossless step failed', e);
   }
+  check();
+  if (target !== null && fits()) return finish(best, target);
 
   // 2. Ghostscript
   const ladder = target !== null ? TARGET_LADDER : [PROFILES[opts.preset]];
@@ -117,7 +106,7 @@ export async function compressPdf(file: File, opts: CompressOptions, onProgress:
     } catch (e: any) {
       if (/password/i.test(String(e?.message))) throw new UserError('This PDF is password-protected. Open it with its password and save an unprotected copy first.', 'encrypted');
       console.warn('ghostscript failed', e);
-      if (i === 0 && best.method === 'original' && info.encrypted) throw e;
+      if (i === 0 && best.method === 'original') throw e;
     }
     check();
     if (target !== null && fits()) return finish(best, target);

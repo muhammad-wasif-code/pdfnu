@@ -6,7 +6,7 @@ import UnlockPdf from '../islands/UnlockPdf';
 const faqs = [
   { q: 'Can PDFSherpa unlock a PDF if I forgot the password?', a: 'No. PDFSherpa never guesses, cracks or bypasses passwords. You need the password that opens the file. If you’ve lost it, ask the person or organisation that sent the PDF for a new copy.' },
   { q: 'Why do banks and companies send password-protected PDFs?', a: 'To protect statements and payslips in transit. The password is often a mix of your name, date of birth or account details, and it’s explained in the email that came with the file.' },
-  { q: 'What about PDFs that open fine but can’t be edited or printed?', a: 'Those have owner “permission restrictions” rather than an open password. PDFSherpa doesn’t remove restrictions without the owner’s password. Ask the document’s owner for an unrestricted copy.' },
+  { q: 'What about PDFs that open fine but can’t be edited or printed?', a: 'Those have owner “permission restrictions” rather than an open password. Drop the file in and choose Remove restrictions to save a copy you can edit, print and copy from. Form fields and bookmarks are kept. Every other PDFSherpa tool also works on these files directly.' },
   { q: 'Is my password sent anywhere?', a: 'No. The password and the PDF stay in your browser. Unlocking runs locally with pdf.js and a WebAssembly build of Ghostscript.' },
   { q: 'Will the quality change?', a: 'No. Images are passed through and text stays selectable. The file is only rewritten without encryption.' },
 ];
@@ -50,7 +50,7 @@ const faqs = [
 
     <h2>What it won’t do</h2>
     <p>
-      PDFSherpa doesn’t crack, guess or bypass passwords, and it doesn’t strip owner permission restrictions without the owner’s password. If a PDF
+      PDFSherpa doesn’t crack or guess passwords: a PDF that needs a password to open stays locked until you type it. If a PDF
       isn’t yours to unlock, ask its owner. To add a password back later, use <a href="/protect-pdf">Protect PDF</a>.
     </p>
 

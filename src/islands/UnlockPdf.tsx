@@ -17,6 +17,8 @@ export default function UnlockPdf() {
   const [show, setShow] = useState(false);
   const [out, setOut] = useState<Uint8Array | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [removed, setRemoved] = useState<'password' | 'restrictions'>('password');
+  const [restricted, setRestricted] = useState(false);
 
   const open = async (files: File[]) => {
     const f = files[0];
@@ -27,7 +29,7 @@ export default function UnlockPdf() {
       const b = new Uint8Array(await f.arrayBuffer());
       const { pdfOp } = await import('../lib/pdfWorker');
       const info = await pdfOp('inspect', [b.slice().buffer]);
-      setFile(f); setBytes(b);
+      setFile(f); setBytes(b); setRestricted(false);
       if (!info.encrypted) { setState('not-encrypted'); return; }
       // Does it open without a password? Then it only has permission restrictions.
       const { openPdf } = await import('../lib/pdfjs');
@@ -35,6 +37,7 @@ export default function UnlockPdf() {
         const doc = await openPdf(b.slice());
         await doc.destroy();
         setState('restrictions-only');
+        setRestricted(true);
       } catch (e: any) {
         if (e?.name !== 'PasswordException') throw e;
         setState('needs-password');
@@ -48,7 +51,12 @@ export default function UnlockPdf() {
     setError(null);
     setState('working');
     try {
-      // 1. Verify the password the user typed
+      // 1. Lossless: decrypt every object in place (keeps forms, bookmarks and links).
+      const { pdfOp } = await import('../lib/pdfWorker');
+      const d = await pdfOp('decrypt', [bytes.slice().buffer, pw]);
+      if (d.status === 'password') { setError('That password is incorrect. Check for typos, Caps Lock and the keyboard language, then try again.'); setState('needs-password'); return; }
+      if (d.status === 'ok') { setOut(d.bytes); setRemoved('password'); setState('done'); return; }
+      // 2. Unusual encryption: verify the password, then let Ghostscript re-write the file.
       const { openPdf } = await import('../lib/pdfjs');
       try {
         const doc = await openPdf(bytes.slice(), pw);
@@ -57,26 +65,38 @@ export default function UnlockPdf() {
         if (e?.name === 'PasswordException') { setError('That password is incorrect. Check for typos, Caps Lock and the keyboard language, then try again.'); setState('needs-password'); return; }
         throw e;
       }
-      // 2. Re-write without encryption
       const { runGhostscriptArgs, decryptArgs } = await import('../lib/ghostscript');
       const res = await runGhostscriptArgs(bytes, decryptArgs(pw));
-      const { pdfOp } = await import('../lib/pdfWorker');
       const check = await pdfOp('inspect', [res.slice().buffer]);
       if (check.encrypted || check.pageCount < 1) throw new Error('Unlock failed');
       setOut(res);
+      setRemoved('password');
       setState('done');
     } catch (e) { setError(friendlyError(e).message); setState('needs-password'); }
   };
 
-  const reset = () => { setFile(null); setBytes(null); setPw(''); setOut(null); setError(null); setState('idle'); };
+  /** Files that open without a password: drop the owner restrictions (no editing, printing, copying…). */
+  const removeRestrictions = async () => {
+    if (!bytes) return;
+    setError(null);
+    setState('working');
+    try {
+      const { pdfOp } = await import('../lib/pdfWorker');
+      const d = await pdfOp('decrypt', [bytes.slice().buffer, '']);
+      if (d.status !== 'ok') throw new UserError('PDFSherpa can’t remove this kind of protection. Try saving an unprotected copy from the app that made it.', 'encrypted');
+      setOut(d.bytes); setRemoved('restrictions'); setState('done');
+    } catch (e) { setError(friendlyError(e).message); setState('restrictions-only'); }
+  };
+
+  const reset = () => { setFile(null); setBytes(null); setPw(''); setOut(null); setError(null); setRestricted(false); setState('idle'); };
 
   if (state === 'done' && out && file) {
     return (
       <div class="card p-4 sm:p-6">
         <ResultCard
-          title="Password removed!"
-          stats={[['File', file.name.length > 18 ? file.name.slice(0, 16) + '…' : file.name], ['Size', formatBytes(out.length)], ['Password', 'None']]}
-          highlight="This copy opens without a password. Keep it somewhere safe, because anyone with the file can now read it."
+          title={removed === 'restrictions' ? 'Restrictions removed!' : 'Password removed!'}
+          stats={[['File', file.name.length > 18 ? file.name.slice(0, 16) + '…' : file.name], ['Size', formatBytes(out.length)], removed === 'restrictions' ? ['Restrictions', 'None'] : ['Password', 'None']]}
+          highlight={removed === 'restrictions' ? 'This copy can be edited, printed and copied freely. Form fields and bookmarks are kept.' : 'This copy opens without a password. Keep it somewhere safe, because anyone with the file can now read it.'}
           onDownload={() => downloadBlob(out, file.name)}
           downloadLabel={`Download ${file.name.length > 30 ? 'PDF' : file.name}`}
           onReset={reset}
@@ -99,14 +119,18 @@ export default function UnlockPdf() {
           This PDF isn’t password-protected, so there’s nothing to unlock. You can use it directly with any PDFSherpa tool.
         </p>
       )}
-      {state === 'restrictions-only' && (
-        <p class="rounded-control bg-surface px-4 py-3 text-sm text-gray-700 dark:bg-white/5 dark:text-gray-300">
-          This PDF opens without a password but has <strong>permission restrictions</strong> set by its owner (for example no editing or printing).
-          PDFSherpa doesn’t remove restrictions it wasn’t given the password for. Ask the document’s owner for an unrestricted copy.
-        </p>
+      {restricted && (state === 'restrictions-only' || state === 'working') && (
+        <div class="space-y-4">
+          <p class="rounded-control bg-surface px-4 py-3 text-sm text-gray-700 dark:bg-white/5 dark:text-gray-300">
+            This PDF opens without a password but has <strong>permission restrictions</strong> set by its owner (for example no editing, printing or copying).
+            You can save a copy without them. Every other PDFSherpa tool also works on this file as it is.
+          </p>
+          {state === 'working' ? <ProgressBar label="Removing restrictions…" value={null} />
+            : <button type="button" class="btn-primary min-h-12 w-full text-[15px]" onClick={removeRestrictions}>Remove restrictions</button>}
+        </div>
       )}
 
-      {(state === 'needs-password' || state === 'working') && (
+      {(state === 'needs-password' || (state === 'working' && !restricted)) && (
         <form class="space-y-4" onSubmit={(e) => { e.preventDefault(); unlock(); }}>
           <input type="text" name="username" autocomplete="username" value={file?.name ?? ''} class="hidden" readOnly aria-hidden="true" tabIndex={-1} />
           <label class="block">

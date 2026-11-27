@@ -35,14 +35,9 @@ export default function RepairPdf() {
     setError(null); setFile(f); setPhase('working');
     try {
       if (!isPdfName(f)) throw new UserError(`“${f.name}” doesn’t look like a PDF file.`, 'type');
-      const input = new Uint8Array(await f.arrayBuffer());
       setStep('Checking the file…');
-      // Never "repair" protected files: rewriting would strip their protection.
-      try {
-        const { pdfOp } = await import('../lib/pdfWorker');
-        const info = await pdfOp('inspect', [input.slice().buffer]);
-        if (info.encrypted) throw new UserError('This PDF is password-protected or restricted. Repair doesn’t change protected files. If you know its password, unlock it first with Unlock PDF.', 'encrypted');
-      } catch (e: any) { if (e?.code === 'encrypted') throw e; }
+      const { preparePdfBytes } = await import('../lib/pdfFile');
+      let input = (await preparePdfBytes(new Uint8Array(await f.arrayBuffer()), f.name)).bytes;
       const before = await probe(input);
 
       // 1. Lossless structural rebuild

@@ -15,12 +15,27 @@ export { setFontFetcher } from './textEngine';
 import { bookletOrder } from './booklet';
 export { bookletOrder };
 
-const load = (buf: ArrayBuffer) => PDFDocument.load(buf, { updateMetadata: false });
+const load = (buf: ArrayBuffer) => PDFDocument.load(buf, { updateMetadata: false, throwOnInvalidObject: false });
 const save = (doc: PDFDocument) => doc.save({ useObjectStreams: true, addDefaultPage: false });
 
 export async function inspect(input: ArrayBuffer) {
   const doc = await PDFDocument.load(input, { ignoreEncryption: true, updateMetadata: false, throwOnInvalidObject: false });
   return { pageCount: doc.getPageCount(), encrypted: doc.isEncrypted };
+}
+
+/**
+ * Remove encryption losslessly. An empty password works for files that open without one
+ * (they only carry owner restrictions). Never throws for a wrong password: check `status`.
+ */
+export async function decrypt(input: ArrayBuffer, password = ''): Promise<{ status: 'ok'; bytes: Uint8Array } | { status: 'password' | 'unsupported' }> {
+  const { decryptPdf, PdfPasswordError, PdfCryptUnsupported } = await import('./pdfDecrypt');
+  try {
+    return { status: 'ok', bytes: await decryptPdf(new Uint8Array(input), password) };
+  } catch (e) {
+    if (e instanceof PdfPasswordError) return { status: 'password' };
+    if (e instanceof PdfCryptUnsupported) return { status: 'unsupported' };
+    throw e;
+  }
 }
 
 export async function lossless(input: ArrayBuffer) {
