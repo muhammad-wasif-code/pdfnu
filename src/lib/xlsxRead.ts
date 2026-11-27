@@ -477,8 +477,9 @@ export function parseCsv(text: string, delim = detectDelimiter(text)): string[][
 }
 
 /** A CSV file as a one-sheet workbook; columns are sized to their content. */
-export function csvToWorkbook(text: string, name = 'Sheet1'): XWorkbook {
-  const rows = parseCsv(text.replace(/^﻿/, ''));
+export function csvToWorkbook(text: string, name = 'Sheet1', delim?: string): XWorkbook {
+  const clean = text.replace(/^\ufeff/, '');
+  const rows = delim ? parseCsv(clean, delim) : parseCsv(clean);
   const st = emptyStyle();
   const sheet = newSheet(name);
   sheet.gridLines = true;

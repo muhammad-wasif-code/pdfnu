@@ -1,0 +1,51 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import BookletPdf from '../islands/BookletPdf';
+
+const faqs = [
+  { q: 'How do I print a booklet from a PDF?', a: 'Create the booklet PDF here, print it double-sided with “flip on short edge”, stack the sheets in order, fold them in half and staple along the fold.' },
+  { q: 'Why are blank pages added?', a: 'Every sheet folded in half makes four pages, so a booklet needs a page count that is a multiple of 4. Blank pages are added at the end when needed.' },
+  { q: 'What size will my booklet be?', a: 'On A4 paper you get an A5 booklet; on A3 paper an A4 booklet; on Letter paper a 5.5 × 8.5 inch booklet. “Keep page size” makes each sheet twice the width of your pages.' },
+  { q: 'Can I make a right-to-left booklet for Urdu or Arabic?', a: 'Yes. Choose <strong>Right</strong> binding and the booklet opens from the right, with page 1 on the right-hand cover.' },
+  { q: 'What is creep compensation?', a: 'In thick booklets the inner sheets stick out a little after folding. Creep compensation moves inner pages slightly toward the edge so the margins look even after trimming.' },
+  { q: 'Is my file uploaded?', a: 'No. The booklet is arranged in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="booklet-pdf"
+  title="Booklet PDF Maker – Print, Fold & Staple | PDFSherpa"
+  description="Turn a PDF into a printable booklet: pages are reordered two per side so you can print double-sided, fold and staple. A4, Letter, right-to-left. Free."
+  h1="Make a Booklet from a PDF"
+  lead="Turn any PDF into a printable booklet. Pages are arranged two per side in the right order, so you can print double-sided, fold the stack in half and staple. Works for left- and right-bound languages."
+  howToTitle="How to Make a Booklet"
+  steps={['Select or drop your PDF.', 'Choose the paper and binding side.', 'Download, print double-sided (flip on short edge), fold and staple.']}
+  faqs={faqs}
+  related={['n-up-pdf', 'insert-blank-page-pdf', 'resize-pdf', 'merge-pdf']}
+>
+  <BookletPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What booklet printing does</h2>
+    <p>
+      In a folded booklet, the first and last pages share a side of the same sheet. Working out that order by hand is tedious and easy to
+      get wrong. PDFSherpa calculates it for you (this is called imposition) and shows each sheet before you download.
+    </p>
+
+    <h2>Printing tips</h2>
+    <ul>
+      <li>Print <strong>double-sided</strong> and choose <strong>flip on short edge</strong> (sometimes called “tablet” binding).</li>
+      <li>Set scaling to <strong>100%</strong> or “actual size”, not “fit to page”.</li>
+      <li>Test with the first two sheets before printing the whole booklet.</li>
+      <li>For more than about 40 pages, print in several smaller booklets and bind them together.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Good uses</h2>
+    <p>
+      Event programmes, wedding and funeral orders of service, zines, menus, school readers, instruction leaflets and small catalogues. If
+      you need a blank inside cover, add it first with <a href="/insert-blank-page-pdf">Insert Blank Page</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

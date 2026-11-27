@@ -1,0 +1,44 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import SplitByBookmarks from '../islands/SplitByBookmarks';
+
+const faqs = [
+  { q: 'What does splitting by bookmarks do?', a: 'It creates one PDF per bookmark (chapter or section). Each file runs from its bookmark to the page before the next one and is named after the bookmark.' },
+  { q: 'My PDF has chapters and sub-sections. Which are used?', a: 'You choose the level: top-level bookmarks for chapters, or a deeper level for sections. The number of files for each level is shown on the button.' },
+  { q: 'What happens to pages before the first bookmark?', a: 'Title pages and other pages before the first bookmark are saved as “Front matter”.' },
+  { q: 'My PDF has no bookmarks. What can I do?', a: 'Add them with <a href="/add-bookmarks-to-pdf">Add Bookmarks</a>, which can find headings automatically, then split here. Or split by page numbers with <a href="/split-pdf">Split PDF</a>.' },
+  { q: 'Is my file uploaded?', a: 'No. Everything runs in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="split-pdf-by-bookmarks"
+  title="Split PDF by Bookmarks – One File per Chapter | PDFSherpa"
+  description="Split a PDF into chapters using its bookmarks. Choose the bookmark level; each file is named after its chapter. Free, private, no upload."
+  h1="Split PDF by Bookmarks"
+  lead="Split a book, manual or report into one PDF per chapter using its bookmarks. Choose chapters or sub-sections, and each file is named after its bookmark. Nothing is uploaded."
+  howToTitle="How to Split a PDF into Chapters"
+  steps={['Select or drop a PDF with bookmarks.', 'Choose the bookmark level and check the list.', 'Click <strong>Split</strong> and download the files.']}
+  faqs={faqs}
+  related={['split-pdf', 'add-bookmarks-to-pdf', 'split-pdf-by-size', 'extract-pdf-pages']}
+>
+  <SplitByBookmarks client:load />
+
+  <Fragment slot="content">
+    <h2>Why split by bookmarks?</h2>
+    <p>
+      Long PDFs such as textbooks, manuals, theses and annual reports usually come with bookmarks for each chapter. Splitting by bookmarks
+      gives you separate, well-named files in one click, with no need to look up page ranges: handy for sharing one chapter, uploading
+      sections separately or reading on a phone.
+    </p>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>How the page ranges are worked out</h2>
+    <ul>
+      <li>Each part starts at its bookmark’s page and ends just before the next bookmark at the chosen level or above.</li>
+      <li>When two bookmarks point to the same page, they are combined into one part.</li>
+      <li>Files are numbered (01, 02, …) so they stay in order in any folder.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>

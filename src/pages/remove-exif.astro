@@ -1,0 +1,26 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import RemoveExif from '../islands/RemoveExif';
+
+const faqs = [
+  { q: "What is EXIF data?", a: "Hidden information saved inside photos by cameras and phones: GPS location, date and time, camera model and settings, sometimes the owner\u2019s name and the editing software." },
+  { q: "Does removing it reduce quality?", a: "No. For JPG, PNG and WebP only the metadata blocks are removed; the image data is copied byte for byte." },
+  { q: "Will my photo still be the right way up?", a: "Yes. The rotation flag is kept in a tiny block with nothing else in it, so the photo still displays correctly." },
+  { q: "Do WhatsApp and social networks remove it?", a: "Many do, but not all, and not e-mail, cloud links or file transfers. Removing it yourself is the safe option." },
+  { q: "Are my photos uploaded?", a: "No. Checking and cleaning happen in your browser, which is the point of a privacy tool." },
+];
+---
+<ToolLayout slug="remove-exif" title="Remove EXIF Data \u2013 Delete Photo Location & Metadata | PDFSherpa"
+  description="See and remove hidden photo metadata: GPS location, camera, date and software. Lossless for JPG, PNG and WebP, batch. Free, private, no upload."
+  h1="Remove EXIF Data from Photos" lead="Photos can reveal where they were taken, when, and with which phone. See that hidden data and remove it before sharing, without re-compressing the picture. Works on many photos at once."
+  howToTitle="How to Remove EXIF Data" steps={["Add your photos and check what hidden data they contain.", "Click <strong>Remove metadata</strong>.", "Download the clean photos."]}
+  faqs={faqs} related={["blur-image", "compress-image", "edit-pdf-metadata", "image-converter"]}>
+  <RemoveExif client:load />
+  <Fragment slot="content">
+    <h2>Your location can be inside your photos</h2>
+    <p>A photo of your new home, your child’s school or your car can contain GPS coordinates accurate to a few metres. Anyone who downloads the original file can read them. Clean photos before posting them online, selling items or sending them to strangers.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>For documents, clear hidden properties with <a href="/edit-pdf-metadata">Edit PDF Metadata</a>.</p>
+  </Fragment>
+</ToolLayout>

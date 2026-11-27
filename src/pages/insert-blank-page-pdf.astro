@@ -1,0 +1,50 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import InsertBlankPages from '../islands/InsertBlankPages';
+
+const faqs = [
+  { q: 'How do I add a blank page to a PDF?', a: 'Open the PDF, tap <strong>+ blank</strong> in the gap where you want the empty page, then click <strong>Insert</strong>. Tap again to add more than one page in the same place.' },
+  { q: 'What size is the blank page?', a: 'By default it matches the page next to it, including landscape pages. You can also choose A4 or Letter.' },
+  { q: 'Can I add a blank page after every page?', a: 'Yes. Choose <strong>After every page</strong>. This is handy for printing notes pages or for making single-sided documents print correctly on duplex printers.' },
+  { q: 'Why make the page count even?', a: 'When you print double-sided or combine several documents into one print job, an odd page count makes the next document start on the back of the last sheet. <strong>Make even</strong> adds one blank page at the end only when needed.' },
+  { q: 'Is my file uploaded?', a: 'No. Pages are added in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="insert-blank-page-pdf"
+  title="Insert Blank Page in PDF Online Free | PDFSherpa"
+  description="Add blank pages anywhere in a PDF: before, between or after pages, after every page, or to make the page count even. Free, no upload, no signup."
+  h1="Insert Blank Pages into a PDF"
+  lead="Add empty pages anywhere in a PDF: between two pages, at the start or end, after every page, or just enough to make the page count even for double-sided printing. Free, private, no watermark."
+  howToTitle="How to Insert a Blank Page in a PDF"
+  steps={['Select or drop your PDF.', 'Tap <strong>+ blank</strong> where each empty page should go.', 'Click <strong>Insert</strong> and download.']}
+  faqs={faqs}
+  related={['remove-blank-pages', 'organize-pdf', 'delete-pdf-pages', 'merge-pdf']}
+>
+  <InsertBlankPages client:load />
+
+  <Fragment slot="content">
+    <h2>Why add blank pages?</h2>
+    <ul>
+      <li><strong>Double-sided printing:</strong> make each chapter or section start on a right-hand (front) page.</li>
+      <li><strong>Notes:</strong> leave space for handwritten notes after each slide or page.</li>
+      <li><strong>Booklets and binding:</strong> pad the page count so a booklet folds correctly.</li>
+      <li><strong>Forms:</strong> add a page for extra answers, then write on it with <a href="/edit-pdf">Edit PDF</a>.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Matching page sizes</h2>
+    <p>
+      “Same as nearby page” copies the size and orientation of the page before the gap, so a blank page after a landscape table is
+      landscape too. Pick A4 or Letter when you need a fixed paper size.
+    </p>
+
+    <h2>Related tools</h2>
+    <p>
+      The opposite job, removing empty pages from scans, is done by <a href="/remove-blank-pages">Remove Blank Pages</a>. To move or
+      rotate pages, use <a href="/organize-pdf">Organize PDF</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

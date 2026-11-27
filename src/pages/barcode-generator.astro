@@ -1,0 +1,24 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import BarcodeGenerator from '../islands/BarcodeGenerator';
+
+const faqs = [
+  { q: "Which type should I use?", a: "EAN-13 (or UPC-A in North America) for retail products, Code 128 for shipping and inventory labels, ITF-14 for cartons, Code 39 for badges and older systems." },
+  { q: "Do I need to calculate the check digit?", a: "No. Leave it out and it is added automatically. If you include it, it is checked." },
+  { q: "Can I sell products with these barcodes?", a: "The barcode itself is standard, but retail product numbers must be issued by GS1 to your company." },
+  { q: "Is anything uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="barcode-generator" title="Barcode Generator \u2013 EAN-13, UPC, Code 128 Free | PDFSherpa"
+  description="Create barcodes free: EAN-13, UPC-A, EAN-8, Code 128, Code 39 and ITF-14 with automatic check digits. Download PNG or vector SVG. No signup."
+  h1="Barcode Generator" lead="Create product and shipping barcodes: EAN-13, UPC-A, EAN-8, Code 128, Code 39 and ITF-14. Check digits are calculated for you, and you can download a crisp PNG or a vector SVG for print."
+  howToTitle="How to Make a Barcode" steps={["Choose the barcode type.", "Type the number or text.", "Download PNG or SVG."]}
+  faqs={faqs} related={["qr-code-generator", "qr-code-scanner", "add-text-to-image", "jpg-to-pdf"]}>
+  <BarcodeGenerator client:load />
+  <Fragment slot="content">
+    <h2>Print tips</h2>
+    <ul><li>Use the SVG for print shops and label software: it stays sharp at any size.</li><li>Keep the white space on both sides (the quiet zone); scanners need it.</li><li>Print black bars on white for the best scanning.</li></ul>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

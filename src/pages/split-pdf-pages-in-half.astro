@@ -1,0 +1,25 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import SplitHalves from '../islands/SplitHalves';
+
+const faqs = [
+  { q: "Which way is the page cut?", a: "\u201cAuto\u201d cuts landscape pages into left and right halves and portrait pages into top and bottom. You can choose either explicitly." },
+  { q: "My book is in Urdu or Arabic. Which order?", a: "Choose <strong>Right first</strong> so the right-hand page comes before the left." },
+  { q: "What about the cover?", a: "Tick <strong>Keep first page whole</strong> (and/or last) to keep covers as one page." },
+  { q: "Is quality lost?", a: "No. The halves are made with the page crop box; nothing is re-compressed." },
+  { q: "Is my file uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="split-pdf-pages-in-half" title="Split PDF Pages in Half \u2013 Two-Page Scans to Single | PDFSherpa"
+  description="Split scanned PDF pages in half: two book pages per sheet become single pages, left/right or top/bottom, RTL order, cover kept. Lossless, free."
+  h1="Split PDF Pages in Half" lead="Scanned a book or booklet with two pages on each sheet? Split every page down the middle into single pages, in the right reading order, without losing quality."
+  howToTitle="How to Split PDF Pages in Half" steps={["Select your PDF.", "Choose the cut direction and reading order.", "Click <strong>Split pages in half</strong> and download."]}
+  faqs={faqs} related={["split-pdf", "crop-pdf", "booklet-pdf", "organize-pdf"]}>
+  <SplitHalves client:load />
+  <Fragment slot="content">
+    <h2>For book scans and A3 sheets</h2>
+    <p>Flatbed scans of open books, photocopied booklets and A3 sheets with two A4 pages are much easier to read, print and search once each page stands alone.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

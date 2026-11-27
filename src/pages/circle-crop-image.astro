@@ -1,0 +1,25 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import CircleCrop from '../islands/CircleCrop';
+
+const faqs = [
+  { q: "Why is the outside transparent?", a: "The picture is saved as PNG with a transparent background, so it looks round on any colour, slide or website." },
+  { q: "Which size should I choose?", a: "1080 px suits most social profiles; 400 px is enough for e-mail signatures; 2000 px is good for print." },
+  { q: "Can I make a rounded square instead?", a: "Yes. Choose <strong>Rounded</strong> or <strong>Square</strong> as the shape." },
+  { q: "Is my photo uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="circle-crop-image" title="Circle Crop Image \u2013 Round Profile Picture Maker | PDFSherpa"
+  description="Crop any photo into a circle for a profile picture or DP, with zoom, border ring and transparent PNG background. Free, private, no upload."
+  h1="Circle Crop Image" lead="Crop a photo into a perfect circle (or rounded square) for WhatsApp, LinkedIn, Instagram or your website. Zoom, drag to centre the face, add a coloured ring, and download a transparent PNG."
+  howToTitle="How to Crop a Picture into a Circle" steps={["Select your photo.", "Zoom and drag to centre the face; add a border if you like.", "Click <strong>Crop</strong> and download the PNG."]}
+  faqs={faqs} related={["crop-image", "passport-photo-maker", "resize-image", "add-border-to-image"]}>
+  <CircleCrop client:load />
+  <Fragment slot="content">
+    <h2>Profile pictures that look right everywhere</h2>
+    <p>Most apps show profile photos as circles. Cropping it yourself lets you decide exactly what is inside the circle, so faces are not cut off and the photo looks centred.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>Need a square or exact size for a form instead? Use <a href="/crop-image">Crop Image</a> or <a href="/passport-photo-maker">Passport Photo</a>.</p>
+  </Fragment>
+</ToolLayout>

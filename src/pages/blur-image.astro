@@ -1,0 +1,26 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import BlurImage from '../islands/BlurImage';
+
+const faqs = [
+  { q: 'How do I blur a face in a photo?', a: 'Add the photo, choose <strong>Oval</strong>, and drag over each face. Adjust the strength and save.' },
+  { q: 'Blur, pixelate or black box: which is safest?', a: 'For text such as names, addresses or account numbers, use a strong Blur or a Black box. Light pixelation can sometimes be partly reversed.' },
+  { q: 'Can I blur the whole picture?', a: 'Yes. Tick <strong>Whole image</strong>, for example for backgrounds or to soften a photo.' },
+  { q: 'Are the hidden details really removed?', a: 'Yes. The saved image contains only the blurred pixels in those areas, and hidden photo data such as GPS location is not copied.' },
+  { q: 'Is my photo uploaded?', a: 'No. Blurring happens in your browser, which matters most for sensitive pictures.' },
+];
+---
+<ToolLayout slug="blur-image" title="Blur Image – Blur Faces, Pixelate & Censor | PDFSherpa"
+  description="Blur or pixelate faces, number plates, names and screenshot details, or black them out. Drag to select areas. Free, private, no upload."
+  h1="Blur & Pixelate Image" lead="Hide faces, number plates, names and personal details in photos and screenshots. Drag over each area to blur, pixelate or black it out, or blur the whole picture. Private by design: nothing is uploaded."
+  howToTitle="How to Blur Part of an Image" steps={['Add your image.', 'Choose Blur, Pixelate or Black box, then drag over each area.', 'Click <strong>Save image</strong> and download.']}
+  faqs={faqs} related={['redact-pdf', 'crop-image', 'photo-editor', 'compress-image']}>
+  <BlurImage client:load />
+  <Fragment slot="content">
+    <h2>Share without oversharing</h2>
+    <p>Before posting a screenshot or a photo, hide what others shouldn’t see: faces of children or bystanders, car number plates, house numbers, chat names, email addresses and bank details.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>For PDFs, use <a href="/redact-pdf">Redact PDF</a>, which removes the text underneath too.</p>
+  </Fragment>
+</ToolLayout>

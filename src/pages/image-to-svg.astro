@@ -1,0 +1,26 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ImageToSvg from '../islands/ImageToSvg';
+
+const faqs = [
+  { q: 'What does converting an image to SVG do?', a: 'It traces the shapes and colours in your PNG or JPG and redraws them as vector paths, so the result can be scaled to any size without getting blurry.' },
+  { q: 'Which images work best?', a: 'Logos, icons, signatures, stamps, line drawings and flat illustrations. Photos become a stylised, poster-like image with a limited number of colours.' },
+  { q: 'How do I get a clean logo?', a: 'Use as few colours as the logo has, raise Detail for small text, and keep Smooth curves on. For one-colour logos and signatures, choose Black & white with a transparent background.' },
+  { q: 'Can I edit the SVG afterwards?', a: 'Yes. Each colour is a separate path, so you can recolour or tweak it in Inkscape, Illustrator, Figma or Canva.' },
+  { q: 'Is my image uploaded?', a: 'No. Tracing happens in your browser.' },
+];
+---
+<ToolLayout slug="image-to-svg" title="Image to SVG – Convert PNG/JPG to Vector Free | PDFSherpa"
+  description="Convert PNG or JPG to SVG vector: trace logos, icons and signatures in colour or black & white, with smooth curves. Free, private, no upload."
+  h1="Image to SVG (Vectorize)" lead="Turn a PNG or JPG logo, icon, signature or drawing into a scalable SVG vector. Choose colour or black & white, the number of colours and the detail level, and see the result live. Nothing is uploaded."
+  howToTitle="How to Convert an Image to SVG" steps={['Add your PNG or JPG.', 'Choose colour or black & white and adjust detail.', 'Download the SVG.']}
+  faqs={faqs} related={['svg-to-pdf', 'signature-cleaner', 'image-converter', 'resize-image']}>
+  <ImageToSvg client:load />
+  <Fragment slot="content">
+    <h2>Why vectors?</h2>
+    <p>Pixel images get blurry when enlarged. Vector SVGs stay crisp on business cards, banners, t-shirts and websites, and are often smaller. Cutting machines (Cricut, Silhouette) and laser engravers also need vector files.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>Clean up a scanned signature first with <a href="/signature-cleaner">Signature Cleaner</a>. Put the SVG into a print-ready file with <a href="/svg-to-pdf">SVG to PDF</a>.</p>
+  </Fragment>
+</ToolLayout>

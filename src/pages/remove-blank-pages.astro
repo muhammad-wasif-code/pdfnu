@@ -1,0 +1,50 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import RemoveBlankPages from '../islands/RemoveBlankPages';
+
+const faqs = [
+  { q: 'How are blank pages found?', a: 'Each page is drawn at low resolution in your browser and checked for marks. A page counts as blank when it has no text and almost no ink. Off-white scanner backgrounds are ignored.' },
+  { q: 'A page with a little noise was not detected. What can I do?', a: 'Choose <strong>Include near-empty scans</strong> to also catch pages with specks, a faint line or bleed-through from the other side. You can also tap any page to mark it yourself.' },
+  { q: 'Can it delete a page I want to keep?', a: 'Nothing is removed until you click the button. Every page marked as blank is shown with a red cross, and you can tap it to keep it.' },
+  { q: 'Does it work on scanned PDFs?', a: 'Yes. It was made for scans, especially double-sided scans of single-sided paper, where every other page is empty.' },
+  { q: 'Is my file uploaded?', a: 'No. Detection and removal both run in your browser. The PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="remove-blank-pages"
+  title="Remove Blank Pages from PDF Automatically | PDFSherpa"
+  description="Find and delete blank pages in a PDF automatically, including near-empty scanned pages. Review before saving. Free, private, no upload."
+  h1="Remove Blank Pages from a PDF"
+  lead="Find and delete empty pages in a PDF automatically, including scanned back sides with a little noise. You review every page before anything is removed. Free, no upload, no signup."
+  howToTitle="How to Remove Blank Pages"
+  steps={['Select or drop your PDF. Blank pages are found automatically.', 'Adjust the sensitivity or tap pages to keep or remove them.', 'Click <strong>Remove</strong> and download.']}
+  faqs={faqs}
+  related={['delete-pdf-pages', 'alternate-merge-pdf', 'compress-pdf', 'organize-pdf']}
+>
+  <RemoveBlankPages client:load />
+
+  <Fragment slot="content">
+    <h2>What Remove Blank Pages does</h2>
+    <p>
+      Duplex scanners and “scan both sides” settings create an empty page for every single-sided sheet. Remove Blank Pages looks at each
+      page, marks the empty ones and removes them in one click, so your file is shorter, smaller and easier to read.
+    </p>
+
+    <h2>Sensitivity levels</h2>
+    <ul>
+      <li><strong>Only truly empty:</strong> pages with no marks at all, such as blank pages in digital documents.</li>
+      <li><strong>Normal:</strong> also catches clean scanned pages with a few dust specks.</li>
+      <li><strong>Include near-empty scans:</strong> also catches pages with faint bleed-through, punch holes or a stray line.</li>
+    </ul>
+    <p>Pages that contain any real text are never marked automatically, even if the text is tiny.</p>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Tips</h2>
+    <ul>
+      <li>To remove specific pages by number instead, use <a href="/delete-pdf-pages">Delete PDF Pages</a>.</li>
+      <li>After cleaning a scan, make it smaller with <a href="/compress-pdf">Compress PDF</a> or searchable with <a href="/ocr-pdf">OCR PDF</a>.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>

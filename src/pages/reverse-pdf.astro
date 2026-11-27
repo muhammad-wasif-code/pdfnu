@@ -1,0 +1,57 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ReversePdf from '../islands/ReversePdf';
+
+const faqs = [
+  { q: 'What does reversing a PDF do?', a: 'It flips the page order: the last page becomes page 1, the second-to-last becomes page 2, and so on. The pages themselves are not changed or rotated.' },
+  { q: 'Why would I reverse the page order?', a: 'Most often because a scanner or a phone app saved the pages back to front, for example when a stack of paper was fed face up. Reversing also helps before printing on printers that stack pages face up.' },
+  { q: 'Can I keep the cover page first?', a: 'Yes. Choose <strong>Keep cover</strong>: page 1 stays where it is and all other pages are reversed.' },
+  { q: 'Can I reverse only some pages?', a: 'Yes. Choose <strong>Some pages</strong> and enter a range, for example 3 to 8. Pages outside the range stay in place.' },
+  { q: 'Does it reduce quality?', a: 'No. Pages are copied as they are, without re-compressing text or images, so the reversed PDF looks exactly like the original.' },
+  { q: 'Is my file uploaded?', a: 'No. Reversing happens in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="reverse-pdf"
+  title="Reverse PDF Page Order Online Free | PDFSherpa"
+  description="Reverse the page order of a PDF in one click: last page first. Keep the cover in place or flip only a range. Free, no upload, no signup."
+  h1="Reverse PDF Page Order"
+  lead="Flip the page order of a PDF in one click so the last page comes first. Keep the cover page in place or reverse only a range of pages. No upload, no signup, no watermark."
+  howToTitle="How to Reverse a PDF"
+  steps={['Select or drop your PDF.', 'Choose <strong>All pages</strong>, <strong>Keep cover</strong> or <strong>Some pages</strong>.', 'Click <strong>Reverse page order</strong> and download.']}
+  faqs={faqs}
+  related={['alternate-merge-pdf', 'organize-pdf', 'rotate-pdf', 'remove-blank-pages']}
+>
+  <ReversePdf client:load />
+
+  <Fragment slot="content">
+    <h2>What Reverse PDF does</h2>
+    <p>
+      Reverse PDF writes a new copy of your document with the pages in the opposite order. Page content, links, bookmarks inside pages and
+      quality stay exactly the same. You see the new order as thumbnails before you save, so you can check it at a glance.
+    </p>
+
+    <h2>Three ways to reverse</h2>
+    <ul>
+      <li><strong>All pages:</strong> a 10-page file becomes 10, 9, 8 … 1.</li>
+      <li><strong>Keep cover:</strong> page 1 stays first and the rest is reversed: 1, 10, 9 … 2. Useful when only the scanned body came out backwards.</li>
+      <li><strong>Some pages:</strong> reverse a range such as pages 4–9 and leave the rest untouched.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>When you need it</h2>
+    <ul>
+      <li>A sheet-fed scanner saved a stack back to front.</li>
+      <li>You scanned the back sides of double-sided pages and they came out in reverse. To combine fronts and backs in one step, use <a href="/alternate-merge-pdf">Alternate &amp; Mix PDF</a>, which can reverse the backs for you.</li>
+      <li>Your printer stacks pages face up and you want them in reading order when printing finishes.</li>
+    </ul>
+
+    <h2>More page tools</h2>
+    <p>
+      To move pages one by one, use <a href="/organize-pdf">Organize PDF</a>. To drop empty scanned pages first, run
+      <a href="/remove-blank-pages">Remove Blank Pages</a>. Everything runs in your browser, so your documents stay private.
+    </p>
+  </Fragment>
+</ToolLayout>

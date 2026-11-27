@@ -1,0 +1,24 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PosterPdf from '../islands/PosterPdf';
+
+const faqs = [
+  { q: "How big will the poster be?", a: "The size is shown as you choose the number of sheets: for example 2 A4 sheets across makes about 39 \u00d7 55 cm for an A4-shaped page." },
+  { q: "How do I put the sheets together?", a: "Trim along the dashed line, then glue each sheet over the red overlap line of its neighbour. Each sheet is labelled with its row and column." },
+  { q: "Will it be blurry?", a: "Text and vector graphics stay sharp at any size. Photos inside the PDF are only as sharp as their original resolution." },
+  { q: "Is my file uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="poster-pdf" title="Poster PDF \u2013 Print a Large Poster on A4 Sheets | PDFSherpa"
+  description="Enlarge a PDF page into a big poster printed across several A4, Letter or A3 sheets, with overlap and cut marks for gluing. Free, private."
+  h1="Poster PDF (Print Large on Several Sheets)" lead="Print a page as a large poster on a normal printer: the page is enlarged and split over several sheets with an overlap for gluing and guides for cutting. Choose how many sheets wide it should be."
+  howToTitle="How to Print a Large Poster" steps={["Select your PDF and the page to enlarge.", "Choose the number of sheets across and the paper.", "Print at 100%, trim and glue the sheets together."]}
+  faqs={faqs} related={["resize-pdf", "n-up-pdf", "booklet-pdf", "pdf-to-jpg"]}>
+  <PosterPdf client:load />
+  <Fragment slot="content">
+    <h2>Big prints without a big printer</h2>
+    <p>Classroom charts, event posters, floor plans, maps and banners can all be printed on home or office printers and assembled on the wall.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

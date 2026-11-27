@@ -1,0 +1,24 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ImageBase64 from '../islands/ImageBase64';
+
+const faqs = [
+  { q: "Why use Base64 images?", a: "Embedding small images (icons, logos, e-mail graphics) directly in HTML or CSS saves extra file requests and keeps a page self-contained." },
+  { q: "Is Base64 bigger than the file?", a: "Yes, about 33% larger. It suits small images; large photos are better as normal files." },
+  { q: "Can I decode Base64 to an image?", a: "Yes. Switch to <strong>Base64 \u2192 Image</strong> and paste the text, with or without the data: prefix." },
+  { q: "Is my image uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="image-to-base64" title="Image to Base64 Converter \u2013 Encode & Decode | PDFSherpa"
+  description="Convert images to Base64 data URIs for HTML, CSS and Markdown, or decode Base64 back to an image. PNG, JPG, GIF, SVG, WebP. Free, private."
+  h1="Image to Base64" lead="Turn an image into a Base64 data URI ready to paste into HTML, CSS, JSON or Markdown, or paste Base64 text to see and download the image. Everything stays in your browser."
+  howToTitle="How to Convert an Image to Base64" steps={["Select an image (or switch to Base64 \u2192 Image).", "Copy the format you need: data URI, HTML, CSS or Markdown.", "Paste it into your code."]}
+  faqs={faqs} related={["image-converter", "compress-image", "html-to-pdf", "favicon-generator"]}>
+  <ImageBase64 client:load />
+  <Fragment slot="content">
+    <h2>For developers and e-mail designers</h2>
+    <p>Data URIs are handy in single-file HTML pages, CSS sprites, JSON APIs and Markdown documents that must not depend on external files.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

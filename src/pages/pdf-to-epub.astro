@@ -1,0 +1,40 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PdfToHtml from '../islands/PdfToHtml';
+
+const faqs = [
+  { q: 'Why convert a PDF to EPUB?', a: 'PDF pages are fixed in size, so they are hard to read on phones and e-readers. An EPUB reflows: text wraps to your screen and you can change the font size.' },
+  { q: 'Which readers can open the EPUB?', a: 'Apple Books, Google Play Books, Kobo, Calibre, Moon+ Reader and most other e-book apps. Kindle accepts EPUB through Amazon’s Send to Kindle.' },
+  { q: 'Are chapters created?', a: 'Yes. Chapters are created at the main headings found in the PDF, and a table of contents is added.' },
+  { q: 'What about pictures and tables?', a: 'The e-book contains the text with its structure (headings, paragraphs, lists, bold and italic). Pictures and complex layouts are not carried over.' },
+  { q: 'Does it work on scanned PDFs?', a: 'Only with a text layer. Run <a href="/ocr-pdf">OCR PDF</a> first.' },
+  { q: 'Is my file uploaded?', a: 'No. The conversion runs in your browser.' },
+];
+---
+<ToolLayout
+  slug="pdf-to-epub"
+  title="PDF to EPUB – Convert PDF to E-book Free | PDFSherpa"
+  description="Convert PDF to a reflowable EPUB e-book with chapters and a table of contents, for Kindle, Kobo and Apple Books. Free, private, no upload."
+  h1="PDF to EPUB"
+  lead="Turn a PDF into a reflowable EPUB e-book with chapters and a table of contents, so it is comfortable to read on a phone or e-reader. Free, and nothing is uploaded."
+  howToTitle="How to Convert PDF to EPUB"
+  steps={['Select your PDF.', 'Optionally add the author name.', 'Click <strong>Convert to EPUB</strong> and download.']}
+  faqs={faqs}
+  related={['epub-to-pdf', 'pdf-to-html', 'pdf-to-word', 'ocr-pdf']}
+>
+  <PdfToHtml client:load target="epub" />
+
+  <Fragment slot="content">
+    <h2>Read PDFs comfortably on small screens</h2>
+    <p>
+      Zooming and scrolling sideways through a PDF on a phone is tiring. An EPUB adapts to the screen: choose your font size, night mode and
+      line spacing in your reading app. The conversion works best for text-heavy documents such as books, articles, theses and reports.
+    </p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <h2>Related tools</h2>
+    <p>
+      To go the other way, use <a href="/epub-to-pdf">EPUB to PDF</a>. For web pages, use <a href="/pdf-to-html">PDF to HTML</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

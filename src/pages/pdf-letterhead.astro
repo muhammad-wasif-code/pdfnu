@@ -1,0 +1,24 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import OverlayPdf from '../islands/OverlayPdf';
+
+const faqs = [
+  { q: "What is a letterhead PDF?", a: "A one-page PDF with only your logo, address, header and footer design, usually exported from Word, Canva or a designer." },
+  { q: "Behind or on top?", a: "Behind is normal for letterheads. Use on top for scanned documents (their white background would hide it) or for stamps and watermarks." },
+  { q: "Can the first page have a different design?", a: "Yes. Choose <strong>First only</strong> or <strong>All but first</strong>. If your template has two pages, choose <strong>Match page by page</strong>." },
+  { q: "Is my document uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="pdf-letterhead" title="Add Letterhead to PDF \u2013 Overlay a Template PDF | PDFSherpa"
+  description="Put your company letterhead or template PDF behind or on top of every page of a document. First page only or all pages. Free, private, no upload."
+  h1="Add Letterhead to PDF" lead="Combine a document with your letterhead or template PDF: logo, header and footer appear on every page (or only the first), behind the text or on top. Both layers stay sharp and selectable."
+  howToTitle="How to Put a Letterhead on a PDF" steps={["Select your document PDF.", "Select your letterhead or template PDF.", "Choose where it goes and click <strong>Apply letterhead</strong>."]}
+  faqs={faqs} related={["watermark-pdf", "header-footer-pdf", "stamp-pdf", "merge-pdf"]}>
+  <OverlayPdf client:load />
+  <Fragment slot="content">
+    <h2>Professional documents in one step</h2>
+    <p>Write letters, quotes and invoices in any program, export them as plain PDFs, and add the branded letterhead here, so the design is always exactly right.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

@@ -1,0 +1,51 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import NUpPdf from '../islands/NUpPdf';
+
+const faqs = [
+  { q: 'What does N-up mean?', a: 'N-up means printing N pages on one sheet of paper: 2-up puts two pages side by side, 4-up puts four pages in a 2 × 2 grid, and so on.' },
+  { q: 'How many pages can I put on one sheet?', a: '2, 4, 6, 8, 9 or 16. Four pages per A4 sheet is still easy to read; 9 and 16 are best for slide handouts and overviews.' },
+  { q: 'Will the text become blurry?', a: 'No. Pages are placed as vector graphics, not pictures, so text stays sharp at any zoom and in print. It is simply smaller.' },
+  { q: 'Which orientation is used?', a: '“Best fit” picks landscape for 2, 6 and 8 pages per sheet of a portrait document, so pages sit side by side at the largest size. You can force portrait or landscape.' },
+  { q: 'Can I print slides as handouts?', a: 'Yes. Convert the presentation with <a href="/powerpoint-to-pdf">PowerPoint to PDF</a>, then put 4, 6 or 9 slides on a sheet here.' },
+  { q: 'Is my file uploaded?', a: 'No. Everything happens in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="n-up-pdf"
+  title="N-up PDF – Print Multiple Pages per Sheet Free | PDFSherpa"
+  description="Put 2, 4, 6, 9 or 16 PDF pages on one sheet to save paper and make handouts. Sharp vector output, A4 or Letter. Free, no upload."
+  h1="Multiple Pages per Sheet (N-up PDF)"
+  lead="Put 2, 4, 6, 8, 9 or 16 pages on each sheet to save paper, print handouts or review a long document at a glance. Text stays sharp, and nothing is uploaded."
+  howToTitle="How to Put Several PDF Pages on One Page"
+  steps={['Select or drop your PDF.', 'Choose pages per sheet, paper size and order.', 'Click <strong>Create</strong> and download.']}
+  faqs={faqs}
+  related={['booklet-pdf', 'resize-pdf', 'merge-pdf', 'powerpoint-to-pdf']}
+>
+  <NUpPdf client:load />
+
+  <Fragment slot="content">
+    <h2>Save paper without losing quality</h2>
+    <p>
+      Printing a 40-page document 4-up uses 10 sheets instead of 40. Because PDFSherpa places each original page as vector content, the
+      result is as crisp as the original, only smaller. That makes N-up ideal for drafts, proofreading, lecture notes and slide handouts.
+    </p>
+
+    <h2>Layout options</h2>
+    <ul>
+      <li><strong>Pages per sheet:</strong> 2, 4, 6, 8, 9 or 16.</li>
+      <li><strong>Paper:</strong> A4, Letter, A3, or the same size as the original pages.</li>
+      <li><strong>Order:</strong> across then down (like reading), or down then across (like newspaper columns).</li>
+      <li><strong>Spacing and borders:</strong> tight, normal or wide gaps, with an optional thin frame around each page.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Related tools</h2>
+    <p>
+      To print a foldable booklet instead, use <a href="/booklet-pdf">Booklet PDF</a>. To change the paper size of every page, use
+      <a href="/resize-pdf">Resize PDF</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

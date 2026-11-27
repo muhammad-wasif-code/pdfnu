@@ -1,0 +1,59 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import HtmlToPdf from '../islands/HtmlToPdf';
+
+const faqs = [
+  { q: 'How do I convert a web page to PDF?', a: 'Open the page in your browser, press Ctrl+S (⌘+S on Mac) and save it as “Webpage, complete”. Add the .html file and the files from its folder here, then click <strong>Convert</strong>.' },
+  { q: 'Can I paste HTML code?', a: 'Yes. Choose <strong>Paste HTML code</strong> and paste a full page or a snippet, with &lt;style&gt; tags if you like. It is handy for invoices, emails and templates.' },
+  { q: 'Is the text in the PDF real text?', a: 'Yes. Every word is placed where the browser laid it out, as real text you can search, select and copy. Links stay clickable.' },
+  { q: 'Why are some pictures missing?', a: 'Pictures linked from other websites can’t be read for privacy and security reasons. Add the image files together with the HTML file and they are included.' },
+  { q: 'Do scripts in the page run?', a: 'No. The page is shown in a locked-down frame where JavaScript is switched off, so nothing in the file can run or send data.' },
+  { q: 'Are pages cut in the middle of a line?', a: 'No. Page breaks are placed between lines of text and never through a picture. CSS page-break rules in your HTML are respected too.' },
+];
+---
+<ToolLayout
+  slug="html-to-pdf"
+  title="HTML to PDF Converter – Save Web Pages as PDF | PDFSherpa"
+  description="Convert HTML files or pasted HTML code to PDF with real, selectable text and clickable links. A4 or Letter, margins, backgrounds. Free, private."
+  h1="HTML to PDF"
+  lead="Turn an HTML file or pasted HTML code into a clean PDF with real, selectable text and working links. Choose the page size and margins. Scripts never run and nothing is uploaded."
+  howToTitle="How to Convert HTML to PDF"
+  steps={['Select your .html file (with its images and CSS), or paste HTML code.', 'Choose page size, orientation and margins.', 'Click <strong>Convert to PDF</strong> and download.']}
+  faqs={faqs}
+  related={['word-to-pdf', 'pdf-to-markdown', 'compress-pdf', 'merge-pdf']}
+>
+  <HtmlToPdf client:load />
+
+  <Fragment slot="content">
+    <h2>What HTML to PDF does</h2>
+    <p>
+      Your browser lays out the page exactly as it would on screen, at the width of the paper you choose. PDFSherpa then copies every
+      box, border, picture and word onto PDF pages. The result looks like the page and keeps it useful: text can be searched and copied,
+      and links can be clicked.
+    </p>
+
+    <h2>Good uses</h2>
+    <ul>
+      <li><strong>Invoices and receipts</strong> generated as HTML by your shop or billing system.</li>
+      <li><strong>Email templates and newsletters</strong> you want to archive or share.</li>
+      <li><strong>Saved articles and documentation</strong> to read offline.</li>
+      <li><strong>Reports exported as HTML</strong> by apps and tools.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Options</h2>
+    <ul>
+      <li><strong>Fit page width</strong> lays the page out at the paper width, like printing. <strong>Desktop</strong> lays it out at 1200 px and scales it down, for pages designed for large screens.</li>
+      <li><strong>Background colours</strong> can be switched off to save ink.</li>
+      <li><strong>Margins:</strong> none, small or normal.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <p>
+      JavaScript doesn’t run, so content that a page builds with scripts after loading won’t appear. Save the page from your browser
+      after it has fully loaded to capture that content. CSS background images, shadows and transforms are not drawn.
+    </p>
+  </Fragment>
+</ToolLayout>

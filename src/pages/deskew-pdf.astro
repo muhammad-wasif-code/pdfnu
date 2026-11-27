@@ -1,0 +1,44 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import DeskewPdf from '../islands/DeskewPdf';
+
+const faqs = [
+  { q: 'What does deskew mean?', a: 'Deskewing straightens pages that were scanned or photographed at a slight angle, so the lines of text run level again.' },
+  { q: 'How is the tilt detected?', a: 'Each page is analysed in your browser to find the angle at which the lines of text line up best. Pages tilted by more than about 0.15° are straightened.' },
+  { q: 'How large a tilt can be fixed?', a: 'Up to about 8° either way, which covers almost all crooked scans. For pages that are sideways or upside down, use <a href="/rotate-pdf">Rotate PDF</a>.' },
+  { q: 'Does straightening reduce quality?', a: 'No. The page is turned as a whole, without re-scanning or re-compressing the image.' },
+  { q: 'Will it help OCR?', a: 'Yes. Text recognition works better on straight pages. Deskew first, then run <a href="/ocr-pdf">OCR PDF</a>.' },
+  { q: 'Is my file uploaded?', a: 'No. Detection and straightening happen in your browser.' },
+];
+---
+<ToolLayout
+  slug="deskew-pdf"
+  title="Deskew PDF – Straighten Crooked Scans Free | PDFSherpa"
+  description="Automatically straighten tilted, crooked scanned pages in a PDF. Each page's angle is detected and fixed without losing quality. Free, private."
+  h1="Deskew PDF (Straighten Scans)"
+  lead="Automatically straighten crooked scanned pages. PDFSherpa measures the tilt of each page and turns it level, without re-scanning or losing quality. Nothing is uploaded."
+  howToTitle="How to Straighten a Scanned PDF"
+  steps={['Select or drop your scanned PDF. Tilted pages are found automatically.', 'Check the previews and tap any page you want to skip.', 'Click <strong>Straighten</strong> and download.']}
+  faqs={faqs}
+  related={['ocr-pdf', 'rotate-pdf', 'scan-to-pdf', 'crop-pdf']}
+>
+  <DeskewPdf client:load />
+
+  <Fragment slot="content">
+    <h2>Why scans come out crooked</h2>
+    <p>
+      Paper slips in document feeders, phones are held at a slight angle and books don’t lie flat on the glass. Even a 2° tilt makes a
+      document look careless and makes OCR less accurate. Deskew PDF fixes every page in one go.
+    </p>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Tips</h2>
+    <ul>
+      <li>After straightening, trim uneven edges with <a href="/crop-pdf">Crop PDF</a>.</li>
+      <li>Remove empty scanned pages with <a href="/remove-blank-pages">Remove Blank Pages</a>.</li>
+      <li>Pages without lines of text (photos, drawings) are left alone, because there is nothing reliable to measure.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>

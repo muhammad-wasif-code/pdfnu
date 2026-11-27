@@ -1,0 +1,26 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import QrGenerator from '../islands/QrGenerator';
+
+const faqs = [
+  { q: "Do these QR codes expire?", a: "No. They are static codes: the information is inside the code itself, not on a server, so they work forever and nobody tracks the scans." },
+  { q: "Can I add my logo?", a: "Yes. The logo is placed in the middle and the error correction is raised automatically so the code still scans." },
+  { q: "Which format is best for printing?", a: "SVG is vector and stays sharp at any size, from business cards to banners. PNG suits websites and documents." },
+  { q: "How do Wi-Fi QR codes work?", a: "Phones that scan the code offer to join the network without typing the password." },
+  { q: "Is my data sent anywhere?", a: "No. The QR code is created in your browser." },
+];
+---
+<ToolLayout slug="qr-code-generator" title="Free QR Code Generator \u2013 Link, Wi-Fi, vCard, Logo | PDFSherpa"
+  description="Create free QR codes that never expire: links, text, Wi-Fi, contacts (vCard), e-mail, SMS and WhatsApp, with colours and a logo. PNG and SVG."
+  h1="QR Code Generator" lead="Make a QR code for a website, Wi-Fi network, contact card, e-mail, SMS or WhatsApp chat. Customise the colours, round the dots, add your logo, and download it as PNG or print-ready SVG. Codes never expire and contain no tracking."
+  howToTitle="How to Create a QR Code" steps={["Choose the type (link, Wi-Fi, contact\u2026) and fill in the details.", "Adjust colours, dots or add a logo.", "Download PNG or SVG and test it with your phone."]}
+  faqs={faqs} related={["qr-code-scanner", "barcode-generator", "add-text-to-image", "favicon-generator"]}>
+  <QrGenerator client:load />
+  <Fragment slot="content">
+    <h2>Ideas</h2>
+    <ul><li>A Wi-Fi code for guests at home, in a café or an office.</li><li>Your contact card on a business card or name badge.</li><li>A WhatsApp chat link on shop counters and flyers.</li><li>Links to menus, forms, reviews and payment pages.</li></ul>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>To read a QR code, use <a href="/qr-code-scanner">QR Code Scanner</a>.</p>
+  </Fragment>
+</ToolLayout>

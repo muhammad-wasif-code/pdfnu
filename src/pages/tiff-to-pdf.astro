@@ -1,0 +1,40 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import TiffToPdf from '../islands/TiffToPdf';
+
+const faqs = [
+  { q: 'Can it convert multi-page TIFF files?', a: 'Yes. Every page of a multi-page TIFF becomes a PDF page, and several TIFF files are combined into one PDF in the order you add them.' },
+  { q: 'Does it support fax TIFFs?', a: 'Yes: CCITT Group 3, Group 4 and Modified Huffman (fax) TIFFs, plus LZW, Deflate, PackBits, JPEG and uncompressed TIFFs in black-and-white, grey, colour, CMYK and palette colours.' },
+  { q: 'Is quality lost?', a: 'No. Fax, LZW, Deflate and JPEG image data is copied into the PDF unchanged, so scans keep their exact quality and the PDF is about the same size as the TIFF.' },
+  { q: 'What page size is used?', a: 'By default each page has the size of the original scan, using its resolution. You can also fit pages to A4 or Letter.' },
+  { q: 'Is my file uploaded?', a: 'No. The conversion runs in your browser.' },
+];
+---
+<ToolLayout
+  slug="tiff-to-pdf"
+  title="TIFF to PDF – Convert Multi-page TIFF & Fax Free | PDFSherpa"
+  description="Convert TIFF and multi-page TIFF (fax G3/G4, LZW, JPEG, CMYK) to PDF without quality loss. Combine several files. Free, private, no upload."
+  h1="TIFF to PDF"
+  lead="Convert TIFF images, including multi-page scans and faxes, to PDF without losing quality. Fax, LZW and JPEG data is copied as is, so files stay small and sharp. Nothing is uploaded."
+  howToTitle="How to Convert TIFF to PDF"
+  steps={['Select one or more .tif / .tiff files.', 'Choose the page size.', 'Click <strong>Convert to PDF</strong> and download.']}
+  faqs={faqs}
+  related={['jpg-to-pdf', 'ocr-pdf', 'compress-pdf', 'merge-pdf']}
+>
+  <TiffToPdf client:load />
+
+  <Fragment slot="content">
+    <h2>Why TIFF to PDF?</h2>
+    <p>
+      Scanners, fax servers, medical systems and archives often save documents as TIFF. Many phones, browsers and upload portals can’t open
+      TIFF files, but every device opens PDFs. Converting also lets you make the scan searchable with <a href="/ocr-pdf">OCR PDF</a>.
+    </p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <h2>Lossless by design</h2>
+    <p>
+      The PDF format includes the same decoders as TIFF (CCITT fax, LZW, Deflate and JPEG), so PDFSherpa places the original image data in
+      the PDF without decoding and re-compressing it. Black-and-white fax pages stay crisp and tiny.
+    </p>
+  </Fragment>
+</ToolLayout>

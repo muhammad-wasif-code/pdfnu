@@ -1,0 +1,26 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import VideoToGif from '../islands/VideoToGif';
+
+const faqs = [
+  { q: "How long can the GIF be?", a: "Up to 30 seconds and 300 frames. Short clips of 2\u20136 seconds make the best GIFs." },
+  { q: "Why is my GIF large?", a: "GIF is an old format: every frame is stored as an image. Lower the frame rate or width, or shorten the clip." },
+  { q: "Which video formats work?", a: "Any format your browser can play: MP4 (H.264) and WebM everywhere, MOV on Apple devices." },
+  { q: "Is there a watermark?", a: "No." },
+  { q: "Is my video uploaded?", a: "No. Frames are read and encoded in your browser." },
+];
+---
+<ToolLayout slug="video-to-gif" title="Video to GIF Converter \u2013 MP4 to GIF Free | PDFSherpa"
+  description="Convert a video clip to an animated GIF: pick start and end, frame rate, width and speed. MP4, WebM, MOV. No watermark, no upload."
+  h1="Video to GIF" lead="Turn a moment from a video into an animated GIF. Choose the start and end, the frames per second, size and speed, and download a GIF without a watermark. The video never leaves your device."
+  howToTitle="How to Convert a Video to GIF" steps={["Select your video.", "Set the start and end of the clip, frame rate and width.", "Click <strong>Make GIF</strong> and download."]}
+  faqs={faqs} related={["gif-maker", "meme-generator", "compress-image", "resize-image"]}>
+  <VideoToGif client:load />
+  <Fragment slot="content">
+    <h2>Uses</h2>
+    <p>Reactions for chats, product demos for websites, short tutorials for documentation and highlights from screen recordings.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>To make a GIF from photos instead, use <a href="/gif-maker">GIF Maker</a>.</p>
+  </Fragment>
+</ToolLayout>

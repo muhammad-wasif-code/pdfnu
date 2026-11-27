@@ -13,7 +13,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "node scripts/copy-vendor.mjs && node test/textengine.test.mjs && node test/ops.test.mjs && node test/diff.test.mjs && node test/markdown.test.mjs && node test/docx.test.mjs && node test/xlsx.test.mjs && node test/protect.test.cjs && node test/gs-tools.test.cjs",
+    "test": "node scripts/copy-vendor.mjs && node test/textengine.test.mjs && node test/ops.test.mjs && node test/diff.test.mjs && node test/markdown.test.mjs && node test/docx.test.mjs && node test/xlsx.test.mjs && node test/pptx.test.mjs && node test/tiff.test.mjs && node test/image.test.mjs && node test/qr.test.mjs && node test/exif.test.mjs && node test/protect.test.cjs && node test/gs-tools.test.cjs",
     "postbuild": "node scripts/postbuild.mjs"
   },
   "dependencies": {

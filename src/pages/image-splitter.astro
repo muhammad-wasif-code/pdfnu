@@ -1,0 +1,24 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import GridSplitter from '../islands/GridSplitter';
+
+const faqs = [
+  { q: "In which order do I post the tiles?", a: "Instagram shows the newest post first, so post the highest-numbered tile first and tile 01 last. Each file\u2019s note shows its post number." },
+  { q: "Why are the edges cropped?", a: "With <strong>Square tiles</strong> on, the image is centre-cropped so every tile is square, as Instagram grids need. Turn it off to keep the whole image." },
+  { q: "Can I split a panorama for a carousel?", a: "Yes. Use 2 \u00d7 1, 3 \u00d7 1 or any number of columns with one row." },
+  { q: "Is my image uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="image-splitter" title="Image Grid Splitter \u2013 Split Photo for Instagram | PDFSherpa"
+  description="Split an image into a 3\u00d73, 3\u00d72 or custom grid of tiles for Instagram profile grids and carousels. Download all tiles as a zip. Free, private."
+  h1="Image Grid Splitter" lead="Cut one picture into equal tiles: a 3\u00d73 Instagram grid, a 3\u00d71 banner row, a seamless carousel or any custom grid. Tiles are numbered in posting order and download together as a zip."
+  howToTitle="How to Split an Image into a Grid" steps={["Select your image.", "Choose the grid (for example 3 \u00d7 3).", "Click <strong>Split</strong> and download the tiles."]}
+  faqs={faqs} related={["crop-image", "resize-image", "collage-maker", "compress-image"]}>
+  <GridSplitter client:load />
+  <Fragment slot="content">
+    <h2>Big impact on your profile</h2>
+    <p>A grid post turns your profile into one large picture: great for launches, events and portfolios. A panorama split into a carousel lets people swipe across the full view.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

@@ -1,0 +1,39 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import DocToPdf from '../islands/DocToPdf';
+
+const faqs = [
+  { q: 'What is an ODT file?', a: 'ODT (OpenDocument Text) is the standard document format of LibreOffice Writer and OpenOffice, also supported by Google Docs and Microsoft Word.' },
+  { q: 'Do I need LibreOffice installed?', a: 'No. PDFSherpa reads the .odt file itself in your browser, on any device.' },
+  { q: 'What is kept?', a: 'Headings, paragraphs, bold, italic, underline, colours, font sizes, alignment, bullet and numbered lists, tables with shading and borders, pictures, links, footnotes and page breaks.' },
+  { q: 'Will it look exactly like LibreOffice?', a: 'Close for normal documents. Complex page layouts (columns, text frames, headers and footers) are simplified. For pixel-perfect results, export from LibreOffice with File → Export as PDF.' },
+  { q: 'Is my file uploaded?', a: 'No. The conversion runs in your browser.' },
+];
+---
+<ToolLayout
+  slug="odt-to-pdf"
+  title="ODT to PDF – Convert OpenDocument Text Free | PDFSherpa"
+  description="Convert LibreOffice / OpenOffice .odt documents to PDF in your browser: headings, lists, tables, images, links. Free, private, no install."
+  h1="ODT to PDF"
+  lead="Convert OpenDocument Text (.odt) files from LibreOffice, OpenOffice or Google Docs to PDF without installing anything. Headings, lists, tables, pictures and links are kept, and nothing is uploaded."
+  howToTitle="How to Convert ODT to PDF"
+  steps={['Select your .odt file.', 'Choose page size and margins.', 'Click <strong>Convert to PDF</strong> and download.']}
+  faqs={faqs}
+  related={['word-to-pdf', 'text-to-pdf', 'excel-to-pdf', 'pdf-to-word']}
+>
+  <DocToPdf client:load kind="odt" />
+
+  <Fragment slot="content">
+    <h2>Open office documents, anywhere</h2>
+    <p>
+      Schools, governments and many businesses use LibreOffice and its .odt format. Not everyone can open those files, but everyone can
+      open a PDF. Convert here on a phone, Chromebook or any computer, with no office software installed.
+    </p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <h2>Other formats</h2>
+    <p>
+      For Microsoft Word files use <a href="/word-to-pdf">Word to PDF</a>; for spreadsheets use <a href="/excel-to-pdf">Excel to PDF</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

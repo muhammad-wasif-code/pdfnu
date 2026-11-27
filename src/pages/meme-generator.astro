@@ -1,0 +1,25 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ImageText from '../islands/ImageText';
+
+const faqs = [
+  { q: 'How do I make a meme?', a: 'Add your own picture, type the top and bottom text, and save. The classic bold white letters with a black outline are set up for you.' },
+  { q: 'Is there a watermark on my meme?', a: 'No. Your meme is saved without any watermark.' },
+  { q: 'Can I add more text or move it?', a: 'Yes. Drag any text to move it, and tap <strong>+ Add text</strong> for extra captions.' },
+  { q: 'Which pictures can I use?', a: 'Your own photos, screenshots or drawings. Make sure you have the right to use and share the picture.' },
+  { q: 'Is my picture uploaded?', a: 'No. Memes are made in your browser.' },
+];
+---
+<ToolLayout slug="meme-generator" title="Meme Generator – Make Memes from Your Photos | PDFSherpa"
+  description="Make memes from your own photos: classic top and bottom text with bold outlined letters, extra captions, any language. No watermark, no upload."
+  h1="Meme Generator" lead="Turn your own photo into a meme in seconds: top and bottom text in classic bold outlined letters, drag to adjust, add more captions. No watermark, and nothing is uploaded."
+  howToTitle="How to Make a Meme" steps={['Add your picture.', 'Type the top and bottom text.', 'Click <strong>Make meme</strong> and download.']}
+  faqs={faqs} related={['add-text-to-image', 'gif-maker', 'collage-maker', 'crop-image']}>
+  <ImageText client:load meme={true} />
+  <Fragment slot="content">
+    <h2>Tips for a good meme</h2>
+    <ul><li>Keep the text short: two lines at most on top and bottom.</li><li>Crop the picture first with <a href="/crop-image">Crop Image</a> so the subject fills the frame.</li><li>Make an animated version with <a href="/gif-maker">GIF Maker</a>.</li></ul>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

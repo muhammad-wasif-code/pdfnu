@@ -1,0 +1,40 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PdfToHtml from '../islands/PdfToHtml';
+
+const faqs = [
+  { q: 'What is the difference between Exact copy and Clean HTML?', a: '<strong>Exact copy</strong> looks identical to the PDF (each page is a picture with invisible, selectable text on top). <strong>Clean HTML</strong> contains only the text structure (headings, paragraphs, lists, bold and italic) and reflows on any screen, ideal for websites and editing.' },
+  { q: 'Is the HTML a single file?', a: 'Yes. Pictures are embedded inside the HTML file, so you can open, email or upload one file.' },
+  { q: 'Can I search the text in the Exact copy?', a: 'Yes. The text layer is placed word by word over the page pictures, so Ctrl+F, selection and copy all work.' },
+  { q: 'Does it work on scanned PDFs?', a: 'Exact copy works, but there is no text to select. Run <a href="/ocr-pdf">OCR PDF</a> first to add a text layer.' },
+  { q: 'Is my file uploaded?', a: 'No. The conversion runs in your browser.' },
+];
+---
+<ToolLayout
+  slug="pdf-to-html"
+  title="PDF to HTML – Convert PDF to a Web Page Free | PDFSherpa"
+  description="Convert PDF to HTML: an exact-looking single file with selectable text, or clean semantic HTML with headings and lists. Free, private, no upload."
+  h1="PDF to HTML"
+  lead="Convert a PDF into a web page. Choose an exact copy that looks identical with searchable text, or clean HTML with headings, paragraphs and lists that reflows on any screen. Nothing is uploaded."
+  howToTitle="How to Convert PDF to HTML"
+  steps={['Select your PDF.', 'Choose <strong>Exact copy</strong> or <strong>Clean HTML</strong>.', 'Click <strong>Convert</strong> and download the .html file.']}
+  faqs={faqs}
+  related={['html-to-pdf', 'pdf-to-word', 'pdf-to-markdown', 'pdf-to-epub']}
+>
+  <PdfToHtml client:load target="html" />
+
+  <Fragment slot="content">
+    <h2>Two kinds of HTML</h2>
+    <ul>
+      <li><strong>Exact copy</strong> for publishing a brochure, menu or report online exactly as designed, while keeping text searchable.</li>
+      <li><strong>Clean HTML</strong> for putting the content into a website, blog or CMS, or editing it further. It is readable on phones because it reflows.</li>
+    </ul>
+    <AdSlot variant="inline" slot="tool-article" />
+    <h2>Related tools</h2>
+    <p>
+      For an editable document use <a href="/pdf-to-word">PDF to Word</a>; for plain structured text use <a href="/pdf-to-markdown">PDF to Markdown</a>.
+      Going the other way? Use <a href="/html-to-pdf">HTML to PDF</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

@@ -4,7 +4,7 @@
 
 [Live site](https://pdfsherpa.com) · [Source](https://github.com/muhammad-wasif-code/pdfnu) · [Follow PDFSherpa on LinkedIn](https://www.linkedin.com/company/pdfsherpa/) · Contact: [hello@pdfsherpa.com](mailto:hello@pdfsherpa.com)
 
-PDFSherpa is a static website with **43 PDF and image tools** that run **100% in the browser**. Files are never uploaded to a server. There is no signup, no watermark, and no file-size limit imposed by a server. After the first visit, the site works offline as an installable PWA. How-to guides: [pdfsherpa.com/guides](https://pdfsherpa.com/guides).
+PDFSherpa is a static website with **100 PDF and image tools** that run **100% in the browser**. Files are never uploaded to a server. There is no signup, no watermark, and no file-size limit imposed by a server. After the first visit, the site works offline as an installable PWA. How-to guides: [pdfsherpa.com/guides](https://pdfsherpa.com/guides).
 
 ![PDFSherpa homepage](docs/screenshot-home.png)
 
@@ -29,6 +29,7 @@ Unlock PDF asks for a password only when you already know it; the password stays
 - **Compress PDF** — reduce file size, including exact targets such as 100KB or 200KB
 - **Grayscale PDF** — convert a PDF to black and white
 - **Repair PDF** — attempt to fix a damaged PDF
+- **Deskew PDF** — detect and straighten tilted scanned pages
 
 ### Organize
 - **Merge PDF** — combine files
@@ -38,6 +39,17 @@ Unlock PDF asks for a password only when you already know it; the password stays
 - **Delete Pages** — remove pages
 - **Extract Pages** — save chosen pages as a new PDF
 - **Compare PDF** — word-level diff between two PDFs
+- **Reverse PDF** — last page first, keep the cover, or reverse a range
+- **Alternate & Mix** — interleave front and back scans into one double-sided PDF
+- **Insert Blank Page** — add empty pages anywhere, after every page, or to make the count even
+- **Split Pages in Half** — two-up scans to single pages, lossless, RTL order
+- **Poster PDF** — tile one page across several sheets with overlap and cut guides
+- **Remove Blank Pages** — find empty and near-empty scanned pages automatically
+- **N-up PDF** — 2, 4, 6, 8, 9 or 16 pages per sheet, as sharp vectors
+- **Booklet PDF** — saddle-stitch imposition (LTR/RTL, creep) to print, fold and staple
+- **Split by Size** — parts under a size limit, checked after saving
+- **Split by Bookmarks** — one file per chapter, named after its bookmark
+- **PDF Page Counter** — page counts, sizes and totals for many PDFs, CSV export
 
 ### Convert
 - **JPG to PDF** — turn images into a PDF
@@ -50,6 +62,14 @@ Unlock PDF asks for a password only when you already know it; the password stays
 - **PDF to Word** — editable .docx with headings and lists
 - **Word to PDF** — .docx to PDF in the browser, with tables, images, headers and footers
 - **PDF to Excel** — tables and statements to .xlsx with real numbers, shading, borders, colours, logos and joined wrapped lines (OCR for scans)
+- **PowerPoint to PDF** — .pptx to PDF: masters, themes, backgrounds, bullets, pictures, shapes, tables, charts, SmartArt
+- **HTML to PDF** — HTML files or pasted code to PDF with real text and clickable links (scripts never run)
+- **Text, Markdown, EPUB and ODT to PDF** — through the HTML engine, real text, any language
+- **CSV to PDF** — table with repeated header, stripes, fit to width
+- **TIFF to PDF** — multi-page, fax G3/G4, LZW, JPEG, CMYK; image data copied losslessly
+- **SVG to PDF** — true vector paths, gradients (shadings) and text
+- **PDF to HTML** — exact copy with selectable text layer, or clean semantic HTML
+- **PDF to EPUB** — reflowable e-book with chapters and table of contents
 - **Excel to PDF** — .xlsx/.csv to PDF: fit to width, number formats, rich text, borders, merged cells, conditional formatting, charts, shapes, pictures, print titles; formulas without saved results are calculated
 - **PDF to PowerPoint** — pages to slides
 - **PDF to PDF/A** — archive-ready PDF
@@ -58,6 +78,16 @@ Unlock PDF asks for a password only when you already know it; the password stays
 ### Edit
 - **Edit PDF** — add text, images and shapes
 - **Sign PDF** — add a signature
+- **Annotate PDF** — highlight, underline, strike, notes, text, pen, boxes and arrows as real PDF comments
+- **Add Image to PDF** — logos, photos and seals on one or every page, with transparency
+- **Stamp PDF** — APPROVED, PAID, DRAFT or custom vector stamps with a date line
+- **Add Bookmarks** — edit the outline or generate it from headings
+- **Invert PDF Colors** — dark mode / ink saving, text stays vector
+- **PDF Background Color** — tinted paper look, works on scans
+- **Remove Annotations** — delete comments, drawings, stamps, links or form fields by type
+- **Add Links** — auto-link URLs and e-mails, or link any area to a website or page
+- **Add Letterhead** — overlay a template PDF behind or on top of pages
+- **Edit PDF Metadata** — change or remove title, author, keywords and dates (XMP too)
 - **Fill PDF Form** — complete form fields
 - **Watermark** — add a text or image watermark
 - **Page Numbers** — add page numbers
@@ -70,6 +100,7 @@ Unlock PDF asks for a password only when you already know it; the password stays
 - **Protect PDF** — add a password
 - **Unlock PDF** — remove a password, only if you already have the correct one
 - **Redact PDF** — true redaction: the text is removed from the file, not just covered
+- **Flatten PDF to Images** — picture-only PDF: no selectable text, hidden layers removed
 
 ### Image
 - **Compress Image** — reduce image size, including targets such as 10KB, 20KB or 50KB
@@ -79,6 +110,21 @@ Unlock PDF asks for a password only when you already know it; the password stays
 - **Signature Cleaner** — make a transparent signature PNG
 - **HEIC to JPG** — convert iPhone photos
 - **Combine Images** — join photos into one image
+- **Rotate / Flip Image** — 90°/180°, straighten to the degree, mirror; batch
+- **Photo Editor** — auto enhance, light and colour sliders, sharpen, vignette, filters; batch
+- **Watermark Image** — text or logo, corner or repeated; batch
+- **Add Text to Image / Meme Generator** — draggable captions with fonts, outline, box
+- **Blur & Pixelate Image** — blur, pixelate or black out areas or the whole picture
+- **Collage Maker** — 2–16 photos, featured layouts, social and A4 sizes
+- **GIF Maker** — animated GIF from images (own encoder: median-cut palette, dithering, LZW)
+- **Circle Crop, Grid Splitter, Add Border** — profile pictures, Instagram grids, frames
+- **Remove EXIF** — view and strip GPS/camera data losslessly (JPG, PNG, WebP)
+- **Image Color Picker** — HEX/RGB/HSL/CMYK with lens and palette
+- **Signature Maker, Favicon Generator** — transparent signature PNG; ICO + app icons + manifest
+- **QR Code Generator / Scanner** — own encoder and decoder (perspective, error correction), camera or image
+- **Barcode Generator** — EAN-13, UPC-A, EAN-8, Code 128, Code 39, ITF-14
+- **Image to Base64, Change Image DPI, Video to GIF**
+- **Image to SVG** — colour or black & white tracing with smooth curves
 
 Useful deep links include [/compress-pdf-to-100kb](https://pdfsherpa.com/compress-pdf-to-100kb), [/compress-image-to-20kb](https://pdfsherpa.com/compress-image-to-20kb), [/passport-photo-maker](https://pdfsherpa.com/passport-photo-maker), [/redact-pdf](https://pdfsherpa.com/redact-pdf), [/ocr-pdf](https://pdfsherpa.com/ocr-pdf), [/scan-to-pdf](https://pdfsherpa.com/scan-to-pdf), [/sign-pdf](https://pdfsherpa.com/sign-pdf) and [/heic-to-jpg](https://pdfsherpa.com/heic-to-jpg).
 

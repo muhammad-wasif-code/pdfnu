@@ -1,0 +1,44 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PageCounter from '../islands/PageCounter';
+
+const faqs = [
+  { q: 'How do I count the pages in many PDFs at once?', a: 'Select or drop all the files together. Each file’s page count appears in a table, with the total at the top.' },
+  { q: 'Is there a limit on the number of files?', a: 'No fixed limit. Hundreds of PDFs are fine; they are counted one after another in your browser.' },
+  { q: 'Can I export the results?', a: 'Yes. Copy the table into Excel or Google Sheets, or download it as a CSV file.' },
+  { q: 'What else does it show?', a: 'The page size of each file (A4, Letter, Legal…), how many pages are landscape, and the file size. Handy for print quotes and court or portal limits.' },
+  { q: 'Are my files uploaded?', a: 'No. Files are read in your browser and never leave your device.' },
+];
+---
+<ToolLayout
+  slug="pdf-page-counter"
+  title="PDF Page Counter – Count Pages in Multiple PDFs | PDFSherpa"
+  description="Count the pages of one or hundreds of PDFs at once. See total pages, page sizes and file sizes, and export to CSV. Free, instant, no upload."
+  h1="PDF Page Counter"
+  lead="Count the pages in one or hundreds of PDFs at once. See the total, each file’s page size and file size, and export the list to Excel. Instant, free, and nothing is uploaded."
+  howToTitle="How to Count Pages in PDFs"
+  steps={['Select or drop your PDFs (as many as you like).', 'Read the page counts and the total.', 'Copy the table or download it as CSV.']}
+  faqs={faqs}
+  related={['merge-pdf', 'split-pdf', 'n-up-pdf', 'compress-pdf']}
+>
+  <PageCounter client:load />
+
+  <Fragment slot="content">
+    <h2>Who needs a page counter?</h2>
+    <ul>
+      <li><strong>Print shops and customers:</strong> quote printing jobs from a folder of files.</li>
+      <li><strong>Translators and typists:</strong> estimate work per page.</li>
+      <li><strong>Lawyers and students:</strong> check page limits for filings, applications and submissions.</li>
+      <li><strong>Office admins:</strong> audit archives and scanning projects.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Accurate counts</h2>
+    <p>
+      Pages are counted from each PDF’s own page tree, the same way PDF readers do, so the numbers match what you see when you open the
+      files. Password-protected PDFs are counted too, without needing the password.
+    </p>
+  </Fragment>
+</ToolLayout>

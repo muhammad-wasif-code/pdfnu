@@ -1,0 +1,41 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import SvgToPdf from '../islands/SvgToPdf';
+
+const faqs = [
+  { q: 'Will my SVG stay vector in the PDF?', a: 'Yes. Paths, shapes, strokes, gradients and text are converted to PDF vector graphics, so they stay sharp at any zoom and in print.' },
+  { q: 'What if my SVG uses filters or masks?', a: 'Drawings with filters (blur, shadows), masks, clip paths or patterns are added as a high-resolution picture instead, and you are told which ones.' },
+  { q: 'Can I convert several SVG files at once?', a: 'Yes. Each SVG becomes one page of the same PDF, in the order you add them.' },
+  { q: 'Is the text in the SVG kept as text?', a: 'Yes. Text is real, searchable text in the PDF, in any language.' },
+  { q: 'Is my file uploaded?', a: 'No. The conversion runs in your browser.' },
+];
+---
+<ToolLayout
+  slug="svg-to-pdf"
+  title="SVG to PDF – Convert Vector SVG to PDF Free | PDFSherpa"
+  description="Convert SVG logos, icons and illustrations to PDF as true vectors: shapes, gradients and text stay sharp. Several files in one PDF. Free, private."
+  h1="SVG to PDF"
+  lead="Convert SVG logos, icons, charts and illustrations to PDF as real vector graphics, so they stay razor-sharp at any size. Combine several SVGs into one PDF. Nothing is uploaded."
+  howToTitle="How to Convert SVG to PDF"
+  steps={['Select one or more .svg files.', 'Choose the page size.', 'Click <strong>Convert</strong> and download.']}
+  faqs={faqs}
+  related={['jpg-to-pdf', 'image-converter', 'merge-pdf', 'html-to-pdf']}
+>
+  <SvgToPdf client:load />
+
+  <Fragment slot="content">
+    <h2>For print and sharing</h2>
+    <p>
+      Print shops, sign makers and many upload forms ask for PDF rather than SVG. Converting keeps your artwork as vectors, so a logo prints
+      sharp on a business card or a banner, and the file opens on any device.
+    </p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <h2>What is supported</h2>
+    <ul>
+      <li>Paths, rectangles, circles, ellipses, lines, polylines and polygons, with fills, strokes, dashes and transparency.</li>
+      <li>Linear and radial gradients, drawn as smooth PDF shadings.</li>
+      <li>Text, embedded pictures, groups, transforms and reused symbols (&lt;use&gt;).</li>
+    </ul>
+  </Fragment>
+</ToolLayout>

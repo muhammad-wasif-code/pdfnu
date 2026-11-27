@@ -1,0 +1,50 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import SplitBySize from '../islands/SplitBySize';
+
+const faqs = [
+  { q: 'How do I split a PDF that is too big to email?', a: 'Choose a limit such as 20 MB for Gmail or 10 MB for many company mail servers. The PDF is split into parts that each stay under that size, and you can send them in separate emails.' },
+  { q: 'Are pages cut in half?', a: 'Never. Each part contains whole pages. Parts are saved and measured so they really are under the limit.' },
+  { q: 'What if a single page is bigger than the limit?', a: 'That page goes into a part on its own and is marked. Make it smaller with <a href="/compress-pdf">Compress PDF</a> first, or choose a higher limit.' },
+  { q: 'Should I compress or split?', a: 'Try <a href="/compress-pdf">Compress PDF</a> first: it often makes a file small enough without splitting. Split when the file is still too large or when every page must keep full quality.' },
+  { q: 'Is my file uploaded?', a: 'No. Splitting happens in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="split-pdf-by-size"
+  title="Split PDF by Size – Parts Under 5, 10, 20 MB | PDFSherpa"
+  description="Split a large PDF into parts under a size limit (2, 5, 10, 20 MB or custom) for email and upload portals. Whole pages, checked sizes. Free, private."
+  h1="Split PDF by File Size"
+  lead="Split a large PDF into parts that each stay under a size limit, such as 10 MB or 20 MB, so you can email or upload it. Pages are never cut, and every part is checked after saving."
+  howToTitle="How to Split a PDF by Size"
+  steps={['Select or drop your large PDF.', 'Pick a size limit, such as 10 MB.', 'Click <strong>Split</strong> and download the parts.']}
+  faqs={faqs}
+  related={['compress-pdf', 'split-pdf', 'split-pdf-by-bookmarks', 'merge-pdf']}
+>
+  <SplitBySize client:load />
+
+  <Fragment slot="content">
+    <h2>Common size limits</h2>
+    <ul>
+      <li><strong>Gmail:</strong> 25 MB per email, including encoding overhead, so about 20 MB of attachments is safe.</li>
+      <li><strong>Outlook / Microsoft 365:</strong> usually 20 MB.</li>
+      <li><strong>Government and university portals:</strong> often 2 MB, 5 MB or 10 MB per file.</li>
+      <li><strong>WhatsApp:</strong> large documents are fine, but smaller files send faster on mobile data.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>How it works</h2>
+    <p>
+      PDFSherpa measures how much each page adds to the file, groups pages in order until the next page would cross your limit, then saves
+      each part and checks its real size. Parts that are still too big are split again, and small neighbouring parts are joined, so you get
+      as few files as possible.
+    </p>
+
+    <h2>Other ways to split</h2>
+    <p>
+      Split by page ranges with <a href="/split-pdf">Split PDF</a>, or by chapters with <a href="/split-pdf-by-bookmarks">Split by Bookmarks</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

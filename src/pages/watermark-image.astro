@@ -1,0 +1,26 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import WatermarkImage from '../islands/WatermarkImage';
+
+const faqs = [
+  { q: 'How do I watermark many photos at once?', a: 'Add all your photos, set the text or logo once, and click <strong>Watermark</strong>. Every image gets the same watermark, scaled to its size, and they download together as a .zip.' },
+  { q: 'Can I use my logo?', a: 'Yes. Choose <strong>Logo image</strong> and pick a PNG. Transparent PNG logos look best.' },
+  { q: 'Which position protects photos best?', a: '<strong>Repeat</strong> tiles the mark across the whole photo, which is hardest to crop out. A corner mark is subtler, for portfolios and social media.' },
+  { q: 'Does it work on portrait and landscape photos?', a: 'Yes. The watermark size is relative to each photo, so it looks the same on every image in the batch.' },
+  { q: 'Are my photos uploaded?', a: 'No. Watermarks are added in your browser.' },
+];
+---
+<ToolLayout slug="watermark-image" title="Watermark Image – Add Logo or Text to Photos | PDFSherpa"
+  description="Add a text or logo watermark to photos, in a corner or repeated across the image. Batch watermark JPG, PNG, WebP. Free, private, no upload."
+  h1="Watermark Images" lead="Protect your photos with a text or logo watermark: one subtle mark in a corner or a repeated pattern across the picture. Watermark a whole batch in one go, without uploading anything."
+  howToTitle="How to Watermark Photos" steps={['Add one or more photos.', 'Type your text or choose a logo, then set position, size and opacity.', 'Click <strong>Watermark</strong> and download.']}
+  faqs={faqs} related={['watermark-pdf', 'add-text-to-image', 'photo-editor', 'compress-image']}>
+  <WatermarkImage client:load />
+  <Fragment slot="content">
+    <h2>For photographers, shops and creators</h2>
+    <p>Watermarks discourage people from reusing your pictures without credit and make your brand visible when images are shared. Product photos, real-estate listings, portfolios and social posts are all common uses.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>For documents, use <a href="/watermark-pdf">Watermark PDF</a>. For captions and labels, use <a href="/add-text-to-image">Add Text to Image</a>.</p>
+  </Fragment>
+</ToolLayout>

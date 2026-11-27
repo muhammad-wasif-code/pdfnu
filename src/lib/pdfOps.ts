@@ -6,10 +6,14 @@ import {
   PDFOptionList, PDFSignature, PDFButton, PDFArray, PDFStream, PDFRef, PDFNumber,
   pushGraphicsState, popGraphicsState, concatTransformationMatrix, drawObject, beginText, endText, setFontAndSize,
   setTextRenderingMode, TextRenderingMode, setTextMatrix, showText, setCharacterSqueeze, TextAlignment, type PDFPage, type PDFFont,
+  PDFHexString, PDFString, PDFOperator, setGraphicsState, setStrokingRgbColor, setFillingRgbColor, setLineWidth, setLineCap, setLineJoin,
+  LineCapStyle, LineJoinStyle, moveTo, lineTo, appendBezierCurve, closePath, stroke, fill, fillAndStroke, rectangle, clip, endPath, setDashPattern,
 } from 'pdf-lib';
-import { TextEngine, wrapLines, type Keyer, type TextStyle } from './textEngine';
+import { TextEngine, wrapLines, pageKeyer, type Keyer, type TextStyle } from './textEngine';
 /** Tests point font loading at the files on disk. */
 export { setFontFetcher } from './textEngine';
+import { bookletOrder } from './booklet';
+export { bookletOrder };
 
 const load = (buf: ArrayBuffer) => PDFDocument.load(buf, { updateMetadata: false });
 const save = (doc: PDFDocument) => doc.save({ useObjectStreams: true, addDefaultPage: false });
@@ -741,4 +745,906 @@ export async function searchablePdf(pages: OcrPage[]) {
   }
   doc.setProducer('PDFSherpa');
   return save(doc);
+}
+
+/* ---------------- Page order: alternate merge, blank pages ---------------- */
+
+/**
+ * Interleave two scans (fronts + backs) into one document: A1, B1, A2, B2…
+ * With `b` null, the single input holds all fronts followed by all backs.
+ * `reverseB`: the backs were scanned last page first (usual when the stack is flipped over).
+ */
+export async function alternateMerge(a: ArrayBuffer, b: ArrayBuffer | null, reverseB: boolean) {
+  const out = await PDFDocument.create();
+  const docA = await load(a);
+  const docB = b ? await load(b) : docA;
+  let ia = docA.getPageIndices(), ib = b ? docB.getPageIndices() : [];
+  if (!b) { const half = Math.ceil(ia.length / 2); ib = ia.slice(half); ia = ia.slice(0, half); }
+  if (reverseB) ib.reverse();
+  const pa = await out.copyPages(docA, ia);
+  const pb = await out.copyPages(docB, ib);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) { if (pa[i]) out.addPage(pa[i]); if (pb[i]) out.addPage(pb[i]); }
+  return save(out);
+}
+
+export interface BlankInsert { /** insert after this 0-based page; -1 = before the first page */ after: number; count: number; }
+
+/** Insert empty pages. size 'match' copies the neighbouring page's size and orientation. */
+export async function insertBlankPages(input: ArrayBuffer, inserts: BlankInsert[], size: 'match' | PageSizeName) {
+  const doc = await load(input);
+  const n = doc.getPageCount();
+  const sizes = doc.getPages().map((p) => { const f = frame(p); return [f.vw, f.vh] as [number, number]; });
+  // from the end, so earlier indexes stay valid
+  const list = inserts.filter((x) => x.count > 0 && x.after >= -1 && x.after < n).sort((x, y) => y.after - x.after);
+  let added = 0;
+  for (const ins of list) {
+    const ref = sizes[Math.max(0, ins.after)] ?? [595.28, 841.89];
+    const dims: [number, number] = size === 'match' ? ref : PAGE_SIZES[size] as [number, number];
+    // keep the neighbour's orientation for standard sizes too
+    const [w, h] = size !== 'match' && ref[0] > ref[1] ? [Math.max(...dims), Math.min(...dims)] : size !== 'match' ? [Math.min(...dims), Math.max(...dims)] : dims;
+    for (let k = 0; k < Math.min(ins.count, 500); k++) { doc.insertPage(ins.after + 1, [w, h]); added++; }
+  }
+  return { bytes: await save(doc), added };
+}
+
+/* ---------------- Metadata ---------------- */
+
+export interface PdfMeta { title: string; author: string; subject: string; keywords: string; creator: string; producer: string; created: string | null; modified: string | null; hasXmp: boolean; }
+
+export async function readMetadata(input: ArrayBuffer): Promise<PdfMeta> {
+  const doc = await load(input);
+  const iso = (d: Date | undefined) => (d && !isNaN(+d) ? d.toISOString() : null);
+  let created: Date | undefined, modified: Date | undefined;
+  try { created = doc.getCreationDate(); } catch { /* malformed date */ }
+  try { modified = doc.getModificationDate(); } catch { /* malformed date */ }
+  const safe = (f: () => string | undefined) => { try { return f() ?? ''; } catch { return ''; } };
+  return {
+    title: safe(() => doc.getTitle()), author: safe(() => doc.getAuthor()), subject: safe(() => doc.getSubject()),
+    keywords: safe(() => doc.getKeywords()), creator: safe(() => doc.getCreator()), producer: safe(() => doc.getProducer()),
+    created: iso(created), modified: iso(modified), hasXmp: !!doc.catalog.get(PDFName.of('Metadata')),
+  };
+}
+
+export interface MetaEdit { title: string; author: string; subject: string; keywords: string; creator: string; producer: string; created: string | null; modified: string | null; }
+
+/**
+ * Write document properties. Empty strings and null dates remove the entry.
+ * The XMP packet (which can hold an older copy of the same fields) is dropped so viewers show the new values.
+ */
+export async function writeMetadata(input: ArrayBuffer, m: MetaEdit) {
+  const doc = await load(input);
+  const info: PDFDict = (doc as any).getInfoDict();
+  const set = (key: string, v: string, apply: (s: string) => void) => { if (v.trim()) apply(v.trim()); else info.delete(PDFName.of(key)); };
+  set('Title', m.title, (s) => doc.setTitle(s, { showInWindowTitleBar: true }));
+  set('Author', m.author, (s) => doc.setAuthor(s));
+  set('Subject', m.subject, (s) => doc.setSubject(s));
+  set('Keywords', m.keywords, (s) => doc.setKeywords(s.split(/\s*[,;]\s*/).filter(Boolean)));
+  set('Creator', m.creator, (s) => doc.setCreator(s));
+  set('Producer', m.producer, (s) => doc.setProducer(s));
+  const date = (key: string, v: string | null, apply: (d: Date) => void) => { const d = v ? new Date(v) : null; if (d && !isNaN(+d)) apply(d); else info.delete(PDFName.of(key)); };
+  date('CreationDate', m.created, (d) => doc.setCreationDate(d));
+  date('ModDate', m.modified, (d) => doc.setModificationDate(d));
+  if (!m.title.trim()) { const vp = doc.catalog.lookup(PDFName.of('ViewerPreferences')); if (vp instanceof PDFDict) vp.delete(PDFName.of('DisplayDocTitle')); }
+  doc.catalog.delete(PDFName.of('Metadata'));
+  return save(doc);
+}
+
+/* ---------------- Drawing in a page's visual space ---------------- */
+
+/** Affine map from visual space (what the reader sees, y up, origin bottom-left) to user space. */
+function visualMatrix(page: PDFPage): [number, number, number, number, number, number] {
+  const f = frame(page);
+  const [ex, ey] = f.toUser(0, 0), [ax, ay] = f.toUser(1, 0), [cx, cy] = f.toUser(0, 1);
+  return [ax - ex, ay - ey, cx - ex, cy - ey, ex, ey];
+}
+const applyM = (m: number[], x: number, y: number): [number, number] => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
+
+/** Keyer that registers fonts, images and graphics states on a form XObject's resource dictionary. */
+function dictKeyer(doc: PDFDocument, res: PDFDict): Keyer & { gs(o: { ca?: number; CA?: number; BM?: string }): PDFName } {
+  const sub = (k: string) => { let d = res.lookup(PDFName.of(k)); if (!(d instanceof PDFDict)) { d = doc.context.obj({}); res.set(PDFName.of(k), d as PDFDict); } return d as PDFDict; };
+  let i = 0;
+  const add = (k: string, prefix: string, ref: PDFRef | PDFDict) => { const name = PDFName.of(`${prefix}${++i}`); sub(k).set(name, ref); return name; };
+  const fonts = new Map<PDFFont, PDFName>(), imgs = new Map<unknown, PDFName>();
+  return {
+    font: (f) => { let n = fonts.get(f); if (!n) { n = add('Font', 'F', f.ref); fonts.set(f, n); } return n; },
+    image: (im) => { let n = imgs.get(im); if (!n) { n = add('XObject', 'Im', im.ref); imgs.set(im, n); } return n; },
+    gs: (o) => add('ExtGState', 'GS', doc.context.obj({ ...(o.ca !== undefined ? { ca: o.ca } : {}), ...(o.CA !== undefined ? { CA: o.CA } : {}), ...(o.BM ? { BM: o.BM } : {}) })),
+  };
+}
+
+/* ---------------- Stamps ---------------- */
+
+export interface StampSpec {
+  page: number;
+  /** centre of the stamp, fractions of the visual page, origin top-left */
+  cx: number; cy: number;
+  /** stamp width as a fraction of the page width */
+  w: number;
+  text: string; sub: string;
+  color: string; angle: number; opacity: number;
+  shape: 'rect' | 'round' | 'oval';
+}
+
+/** Rubber-stamp marks (APPROVED, PAID…) drawn as vector graphics with real, selectable text. */
+export async function stampPdf(input: ArrayBuffer, stamps: StampSpec[]) {
+  const doc = await load(input);
+  const pages = doc.getPages();
+  const te = await TextEngine.create(doc);
+  await te.prepare(stamps.flatMap((s) => [{ text: s.text, style: { bold: true } }, { text: s.sub, style: { bold: true } }]).filter((x) => x.text.trim()));
+  for (const s of stamps) {
+    const page = pages[s.page];
+    if (!page || !s.text.trim()) continue;
+    const f = frame(page);
+    const W = s.w * f.vw;
+    const ops = stampOps(te, s, W, pageKeyer(page));
+    const gs = s.opacity < 1 ? page.node.newExtGState('GS', doc.context.obj({ ca: s.opacity, CA: s.opacity })) : null;
+    const [a, b, c, d, e, g] = visualMatrix(page);
+    const rad = (s.angle * Math.PI) / 180;
+    const vx = s.cx * f.vw, vy = f.vh - s.cy * f.vh;
+    page.pushOperators(pushGraphicsState(), ...(gs ? [setGraphicsState(gs)] : []), concatTransformationMatrix(a, b, c, d, e, g),
+      concatTransformationMatrix(Math.cos(rad), Math.sin(rad), -Math.sin(rad), Math.cos(rad), vx, vy), ...ops, popGraphicsState());
+  }
+  doc.setProducer('PDFSherpa');
+  return save(doc);
+}
+
+/** A stamp centred on (0, 0), `W` points wide. */
+function stampOps(te: TextEngine, s: StampSpec, W: number, key: Keyer): PDFOperator[] {
+  const col = rgbOf(s.color);
+  const main = s.text.trim(), sub = s.sub.trim();
+  const style = { bold: true };
+  // main text fills ~84% of the width; the second line is a third of its size
+  const probe = te.measure(main, style, 100) || 100;
+  let size = (W * 0.84 * 100) / probe;
+  const subSize0 = size * 0.32;
+  const subW = sub ? te.measure(sub, style, subSize0) : 0;
+  const subSize = sub && subW > W * 0.84 ? (subSize0 * W * 0.84) / subW : subSize0;
+  const H = size * 1.25 + (sub ? subSize * 1.5 : 0);
+  const lw = Math.max(1.2, size * 0.07);
+  const o: PDFOperator[] = [setStrokingRgbColor(...col), setFillingRgbColor(...col), setLineWidth(lw)];
+  const box = (inset: number) => {
+    const w = W / 2 - inset, h = H / 2 - inset;
+    if (s.shape === 'oval') {
+      const k = 0.5523;
+      o.push(moveTo(w, 0), appendBezierCurve(w, h * k, w * k, h, 0, h), appendBezierCurve(-w * k, h, -w, h * k, -w, 0), appendBezierCurve(-w, -h * k, -w * k, -h, 0, -h), appendBezierCurve(w * k, -h, w, -h * k, w, 0), closePath(), stroke());
+    } else if (s.shape === 'round') {
+      const r = Math.min(h, w) * 0.35, k = 0.5523 * r;
+      o.push(moveTo(-w + r, -h), lineTo(w - r, -h), appendBezierCurve(w - r + k, -h, w, -h + r - k, w, -h + r), lineTo(w, h - r), appendBezierCurve(w, h - r + k, w - r + k, h, w - r, h), lineTo(-w + r, h), appendBezierCurve(-w + r - k, h, -w, h - r + k, -w, h - r), lineTo(-w, -h + r), appendBezierCurve(-w, -h + r - k, -w + r - k, -h, -w + r, -h), closePath(), stroke());
+    } else o.push(rectangle(-w, -h, w * 2, h * 2), stroke());
+  };
+  box(lw / 2);
+  o.push(setLineWidth(lw * 0.45));
+  box(lw * 2.2);
+  if (s.shape === 'oval') { size *= 0.82; }
+  const mainSh = te.shape(main, style, size);
+  const top = H / 2 - (H - (mainSh.ascent * 0.92 + (sub ? subSize * 1.5 : 0))) / 2;
+  o.push(...te.ops(mainSh, -mainSh.width / 2, top - mainSh.ascent * 0.92, { color: col, key }));
+  if (sub) {
+    const sh = te.shape(sub, style, subSize);
+    o.push(...te.ops(sh, -sh.width / 2, top - mainSh.ascent * 0.92 - subSize * 1.3, { color: col, key }));
+  }
+  return o;
+}
+
+/* ---------------- Images on pages ---------------- */
+
+export interface ImagePlacement {
+  pages: number[];
+  /** box in visual space, fractions, origin top-left */
+  x: number; y: number; w: number; h: number;
+  png: ArrayBuffer; opacity: number;
+  /** JPEG photos are embedded as JPEG (much smaller than PNG) */
+  type?: 'png' | 'jpg';
+}
+
+/** Place images (logos, photos, signatures) on one or many pages, upright on rotated pages. */
+export async function placeImages(input: ArrayBuffer, items: ImagePlacement[]) {
+  const doc = await load(input);
+  const pages = doc.getPages();
+  for (const it of items) {
+    const img = it.type === 'jpg' ? await doc.embedJpg(it.png) : await doc.embedPng(it.png);
+    for (const p of it.pages) {
+      const page = pages[p];
+      if (!page) continue;
+      const f = frame(page);
+      const w = it.w * f.vw, h = it.h * f.vh;
+      const name = page.node.newXObject('Img', img.ref);
+      const gs = it.opacity < 1 ? page.node.newExtGState('GS', doc.context.obj({ ca: it.opacity, CA: it.opacity })) : null;
+      const [a, b, c, d, e, g] = visualMatrix(page);
+      page.pushOperators(pushGraphicsState(), ...(gs ? [setGraphicsState(gs)] : []), concatTransformationMatrix(a, b, c, d, e, g),
+        concatTransformationMatrix(w, 0, 0, h, it.x * f.vw, f.vh - it.y * f.vh - h), drawObject(name), popGraphicsState());
+    }
+  }
+  doc.setProducer('PDFSherpa');
+  return save(doc);
+}
+
+/* ---------------- Annotations (real PDF comments) ---------------- */
+
+/** Points are fractions of the visual page, origin top-left. */
+export type Annot =
+  | { kind: 'highlight' | 'underline' | 'strike'; page: number; color: string; quads: { x: number; y: number; w: number; h: number }[]; note?: string }
+  | { kind: 'ink'; page: number; color: string; width: number; paths: [number, number][][] }
+  | { kind: 'square' | 'circle'; page: number; color: string; width: number; x: number; y: number; w: number; h: number; note?: string }
+  | { kind: 'arrow'; page: number; color: string; width: number; x1: number; y1: number; x2: number; y2: number }
+  | { kind: 'text'; page: number; color: string; size: number; x: number; y: number; w: number; h: number; text: string }
+  | { kind: 'note'; page: number; color: string; x: number; y: number; text: string };
+
+const SUBTYPE: Record<Annot['kind'], string> = { highlight: 'Highlight', underline: 'Underline', strike: 'StrikeOut', ink: 'Ink', square: 'Square', circle: 'Circle', arrow: 'Line', text: 'FreeText', note: 'Text' };
+
+/**
+ * Add standard PDF annotations with appearance streams, so they look the same everywhere and stay
+ * editable as comments in Acrobat, Preview, Edge and other readers.
+ */
+export async function annotatePdf(input: ArrayBuffer, annots: Annot[], author: string) {
+  const doc = await load(input);
+  const ctx = doc.context;
+  const pages = doc.getPages();
+  const texts = annots.filter((a): a is Extract<Annot, { kind: 'text' }> => a.kind === 'text');
+  const te = await TextEngine.create(doc);
+  if (texts.length) await te.prepare(texts.flatMap((t) => t.text.split('\n').map((text) => ({ text }))));
+  const now = new Date();
+  const pdfDate = `D:${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, '0')}${String(now.getUTCDate()).padStart(2, '0')}${String(now.getUTCHours()).padStart(2, '0')}${String(now.getUTCMinutes()).padStart(2, '0')}${String(now.getUTCSeconds()).padStart(2, '0')}Z`;
+  const str = (s: string) => PDFHexString.fromText(s);
+  for (const an of annots) {
+    const page = pages[an.page];
+    if (!page) continue;
+    const f = frame(page);
+    const m = visualMatrix(page);
+    const V = (x: number, y: number): [number, number] => [x * f.vw, f.vh - y * f.vh]; // fraction → visual pt
+    const col = rgbOf(an.color);
+    const res = ctx.obj({}) as PDFDict;
+    const key = dictKeyer(doc, res);
+    const o: PDFOperator[] = [];
+    let bbox: [number, number, number, number];
+    const extra: Record<string, unknown> = {};
+    const toUserPts = (pts: [number, number][]) => pts.flatMap(([x, y]) => applyM(m, x, y));
+    switch (an.kind) {
+      case 'highlight': case 'underline': case 'strike': {
+        const quads = an.quads.map((q) => { const [x0, y1] = V(q.x, q.y), [x1, y0] = V(q.x + q.w, q.y + q.h); return { x0, y0, x1, y1 }; });
+        if (!quads.length) continue;
+        bbox = [Math.min(...quads.map((q) => q.x0)), Math.min(...quads.map((q) => q.y0)), Math.max(...quads.map((q) => q.x1)), Math.max(...quads.map((q) => q.y1))];
+        // QuadPoints order: top-left, top-right, bottom-left, bottom-right (visual, mapped to user space)
+        extra.QuadPoints = quads.flatMap((q) => toUserPts([[q.x0, q.y1], [q.x1, q.y1], [q.x0, q.y0], [q.x1, q.y0]]));
+        if (an.kind === 'highlight') {
+          o.push(setGraphicsState(key.gs({ ca: 1, BM: 'Multiply' })), setFillingRgbColor(...col));
+          for (const q of quads) o.push(rectangle(q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0));
+          o.push(fill());
+        } else {
+          o.push(setStrokingRgbColor(...col));
+          for (const q of quads) {
+            const h = q.y1 - q.y0, y = an.kind === 'underline' ? q.y0 + h * 0.08 : q.y0 + h * 0.45;
+            o.push(setLineWidth(Math.max(0.6, h * 0.07)), moveTo(q.x0, y), lineTo(q.x1, y), stroke());
+          }
+        }
+        break;
+      }
+      case 'ink': {
+        const paths = an.paths.map((p) => p.map(([x, y]) => V(x, y))).filter((p) => p.length);
+        if (!paths.length) continue;
+        const all = paths.flat();
+        const pad = an.width;
+        bbox = [Math.min(...all.map((p) => p[0])) - pad, Math.min(...all.map((p) => p[1])) - pad, Math.max(...all.map((p) => p[0])) + pad, Math.max(...all.map((p) => p[1])) + pad];
+        extra.InkList = paths.map((p) => toUserPts(p));
+        extra.BS = { W: an.width, S: PDFName.of('S') };
+        o.push(setStrokingRgbColor(...col), setLineWidth(an.width), setLineCap(LineCapStyle.Round), setLineJoin(LineJoinStyle.Round));
+        for (const p of paths) {
+          o.push(moveTo(p[0][0], p[0][1]));
+          if (p.length === 1) o.push(lineTo(p[0][0] + 0.01, p[0][1]));
+          for (let i = 1; i < p.length; i++) o.push(lineTo(p[i][0], p[i][1]));
+          o.push(stroke());
+        }
+        break;
+      }
+      case 'square': case 'circle': {
+        const [x0, y1] = V(an.x, an.y), [x1, y0] = V(an.x + an.w, an.y + an.h);
+        const hw = an.width / 2;
+        bbox = [x0 - hw, y0 - hw, x1 + hw, y1 + hw];
+        extra.BS = { W: an.width, S: PDFName.of('S') };
+        o.push(setStrokingRgbColor(...col), setLineWidth(an.width));
+        if (an.kind === 'square') o.push(rectangle(x0, y0, x1 - x0, y1 - y0), stroke());
+        else {
+          const rx = (x1 - x0) / 2, ry = (y1 - y0) / 2, cx = x0 + rx, cy = y0 + ry, k = 0.5523;
+          o.push(moveTo(cx + rx, cy), appendBezierCurve(cx + rx, cy + ry * k, cx + rx * k, cy + ry, cx, cy + ry), appendBezierCurve(cx - rx * k, cy + ry, cx - rx, cy + ry * k, cx - rx, cy), appendBezierCurve(cx - rx, cy - ry * k, cx - rx * k, cy - ry, cx, cy - ry), appendBezierCurve(cx + rx * k, cy - ry, cx + rx, cy - ry * k, cx + rx, cy), closePath(), stroke());
+        }
+        break;
+      }
+      case 'arrow': {
+        const [x1, y1] = V(an.x1, an.y1), [x2, y2] = V(an.x2, an.y2);
+        const L = Math.max(6, an.width * 4), ang = Math.atan2(y2 - y1, x2 - x1);
+        const h1: [number, number] = [x2 - L * Math.cos(ang - 0.45), y2 - L * Math.sin(ang - 0.45)], h2: [number, number] = [x2 - L * Math.cos(ang + 0.45), y2 - L * Math.sin(ang + 0.45)];
+        const xs = [x1, x2, h1[0], h2[0]], ys = [y1, y2, h1[1], h2[1]];
+        bbox = [Math.min(...xs) - an.width, Math.min(...ys) - an.width, Math.max(...xs) + an.width, Math.max(...ys) + an.width];
+        extra.L = toUserPts([[x1, y1], [x2, y2]]);
+        extra.LE = [PDFName.of('None'), PDFName.of('ClosedArrow')];
+        extra.IC = col;
+        extra.BS = { W: an.width, S: PDFName.of('S') };
+        o.push(setStrokingRgbColor(...col), setFillingRgbColor(...col), setLineWidth(an.width), setLineCap(LineCapStyle.Round),
+          moveTo(x1, y1), lineTo(x2 - (L * 0.8) * Math.cos(ang), y2 - (L * 0.8) * Math.sin(ang)), stroke(),
+          moveTo(x2, y2), lineTo(...h1), lineTo(...h2), closePath(), fill());
+        break;
+      }
+      case 'text': {
+        const [x0, y1] = V(an.x, an.y), [x1, y0] = V(an.x + an.w, an.y + an.h);
+        bbox = [x0, y0, x1, y1];
+        const lineH = an.size * 1.2;
+        let y = y1 - an.size * 0.95;
+        const lines = an.text.split('\n').flatMap((l) => wrapLines(te, l, {}, an.size, Math.max(10, x1 - x0 - 4)));
+        o.push(rectangle(x0, y0, x1 - x0, y1 - y0), clip(), endPath());
+        for (const line of lines) { if (line.trim()) o.push(...te.ops(te.shape(line, {}, an.size), x0 + 2, y, { color: col, key })); y -= lineH; }
+        const [r, g, b] = col;
+        extra.DA = PDFString.of(`/Helv ${an.size} Tf ${r.toFixed(3)} ${g.toFixed(3)} ${b.toFixed(3)} rg`);
+        extra.BS = { W: 0 };
+        break;
+      }
+      case 'note': {
+        const [x, y] = V(an.x, an.y);
+        bbox = [x, y - 20, x + 20, y];
+        extra.Name = PDFName.of('Comment');
+        extra.Open = false;
+        // speech-bubble icon
+        o.push(setFillingRgbColor(...col), setStrokingRgbColor(0.2, 0.2, 0.2), setLineWidth(0.8),
+          moveTo(x + 1, y - 1), lineTo(x + 19, y - 1), lineTo(x + 19, y - 14), lineTo(x + 9, y - 14), lineTo(x + 4, y - 19), lineTo(x + 5, y - 14), lineTo(x + 1, y - 14), closePath(), fillAndStroke(),
+          setStrokingRgbColor(0.2, 0.2, 0.2), setLineWidth(1), moveTo(x + 4, y - 5), lineTo(x + 16, y - 5), moveTo(x + 4, y - 9), lineTo(x + 13, y - 9), stroke());
+        break;
+      }
+    }
+    const [bx0, by0, bx1, by1] = bbox!;
+    const corners = toUserPts([[bx0, by0], [bx1, by0], [bx0, by1], [bx1, by1]]);
+    const ux = [corners[0], corners[2], corners[4], corners[6]], uy = [corners[1], corners[3], corners[5], corners[7]];
+    const rect = [Math.min(...ux), Math.min(...uy), Math.max(...ux), Math.max(...uy)];
+    const ap = ctx.formXObject(o, { BBox: [bx0, by0, bx1, by1], Matrix: [m[0], m[1], m[2], m[3], 0, 0], Resources: res });
+    const apRef = ctx.register(ap);
+    const contents = 'note' in an && an.note ? an.note : an.kind === 'text' || an.kind === 'note' ? an.text : '';
+    const dict = ctx.obj({
+      Type: 'Annot', Subtype: SUBTYPE[an.kind], Rect: rect, C: col, F: 4, M: PDFString.of(pdfDate), CreationDate: PDFString.of(pdfDate),
+      NM: PDFString.of(`pdfsherpa-${now.getTime().toString(36)}-${Math.random().toString(36).slice(2, 8)}`),
+      P: page.ref, AP: { N: apRef },
+      ...(an.kind === 'highlight' ? { CA: 1 } : {}),
+      ...extra,
+    }) as PDFDict;
+    if (contents) dict.set(PDFName.of('Contents'), str(contents));
+    if (author.trim()) dict.set(PDFName.of('T'), str(author.trim()));
+    const ref = ctx.register(dict);
+    const arr = page.node.Annots();
+    if (arr) arr.push(ref); else page.node.set(PDFName.of('Annots'), ctx.obj([ref]));
+  }
+  doc.setProducer('PDFSherpa');
+  return save(doc);
+}
+
+/* ---------------- Several pages per sheet (N-up, booklet) ---------------- */
+
+const invAffine = (m: number[]): [number, number, number, number, number, number] => {
+  const [a, b, c, d, e, f] = m; const det = a * d - b * c || 1;
+  return [d / det, -b / det, -c / det, a / det, (c * f - d * e) / det, (b * e - a * f) / det];
+};
+
+/** Embed source pages as form XObjects, each with its upright size and a draw function. */
+async function uprightPages(out: PDFDocument, src: PDFDocument) {
+  const pages = src.getPages();
+  const embedded = await out.embedPages(pages, pages.map((p) => { const c = p.getCropBox(); return { left: c.x, bottom: c.y, right: c.x + c.width, top: c.y + c.height }; }), pages.map(() => [1, 0, 0, 1, 0, 0]) as any);
+  return pages.map((p, i) => {
+    const f = frame(p);
+    const inv = invAffine(visualMatrix(p));
+    return {
+      w: f.vw, h: f.vh,
+      /** draw with the page's visual bottom-left at (x, y), scaled by s */
+      draw(target: PDFPage, x: number, y: number, s: number): PDFOperator[] {
+        const name = target.node.newXObject('Pg', embedded[i].ref);
+        return [pushGraphicsState(), concatTransformationMatrix(s, 0, 0, s, x, y), concatTransformationMatrix(...inv), drawObject(name), popGraphicsState()];
+      },
+    };
+  });
+}
+
+export interface NUpOpts { perSheet: 2 | 4 | 6 | 8 | 9 | 16; sheet: 'a4' | 'letter' | 'a3' | 'source'; orientation: 'auto' | 'portrait' | 'landscape'; order: 'across' | 'down'; margin: number; gap: number; border: boolean; }
+
+/** Grid layout for n pages per sheet: [cols, rows] for a portrait sheet. */
+function grid(n: number): [number, number] {
+  return ({ 2: [1, 2], 4: [2, 2], 6: [2, 3], 8: [2, 4], 9: [3, 3], 16: [4, 4] } as Record<number, [number, number]>)[n] ?? [2, 2];
+}
+
+export async function nUp(input: ArrayBuffer, o: NUpOpts) {
+  const src = await load(input);
+  const out = await PDFDocument.create();
+  const pages = await uprightPages(out, src);
+  const first = pages[0] ?? { w: 595.28, h: 841.89 };
+  let [sw, sh] = o.sheet === 'source' ? [first.w, first.h] : (PAGE_SIZES[o.sheet] as unknown as [number, number]);
+  [sw, sh] = [Math.min(sw, sh), Math.max(sw, sh)];
+  let [cols, rows] = grid(o.perSheet);
+  // 2, 6, 8 pages of a portrait document fit best on a landscape sheet (pages side by side)
+  const srcLandscape = first.w > first.h;
+  let landscape = o.orientation === 'landscape' || (o.orientation === 'auto' && ([2, 6, 8].includes(o.perSheet) ? !srcLandscape : srcLandscape));
+  if (o.orientation === 'portrait') landscape = false;
+  if (landscape) { [sw, sh] = [sh, sw]; [cols, rows] = [rows, cols]; }
+  const cellW = (sw - 2 * o.margin - (cols - 1) * o.gap) / cols, cellH = (sh - 2 * o.margin - (rows - 1) * o.gap) / rows;
+  for (let i = 0; i < pages.length; i += o.perSheet) {
+    const sheet = out.addPage([sw, sh]);
+    const ops: PDFOperator[] = [];
+    for (let k = 0; k < o.perSheet && i + k < pages.length; k++) {
+      const pg = pages[i + k];
+      const col = o.order === 'across' ? k % cols : Math.floor(k / rows), row = o.order === 'across' ? Math.floor(k / cols) : k % rows;
+      const cx = o.margin + col * (cellW + o.gap), cyTop = sh - o.margin - row * (cellH + o.gap);
+      const s = Math.min(cellW / pg.w, cellH / pg.h);
+      const x = cx + (cellW - pg.w * s) / 2, y = cyTop - cellH + (cellH - pg.h * s) / 2;
+      ops.push(...pg.draw(sheet, x, y, s));
+      if (o.border) ops.push(pushGraphicsState(), setStrokingRgbColor(0.6, 0.6, 0.6), setLineWidth(0.5), rectangle(x, y, pg.w * s, pg.h * s), stroke(), popGraphicsState());
+    }
+    sheet.pushOperators(...ops);
+  }
+  out.setProducer('PDFSherpa');
+  return save(out);
+}
+
+export interface BookletOpts { sheet: 'a4' | 'letter' | 'a3' | 'source'; rtl: boolean; margin: number; creep: number; }
+
+/** Imposition for printing double-sided and folding in half: two pages per landscape side. */
+export async function booklet(input: ArrayBuffer, o: BookletOpts) {
+  const src = await load(input);
+  const out = await PDFDocument.create();
+  const pages = await uprightPages(out, src);
+  const first = pages[0] ?? { w: 595.28, h: 841.89 };
+  // the sheet holds two pages side by side: same size as the source page doubled, or a standard sheet
+  let [sw, sh] = o.sheet === 'source' ? [first.w * 2, first.h] : (PAGE_SIZES[o.sheet] as unknown as [number, number]);
+  if (o.sheet !== 'source') [sw, sh] = [Math.max(sw, sh), Math.min(sw, sh)];
+  const half = sw / 2;
+  const sides = bookletOrder(pages.length, o.rtl);
+  sides.forEach(([l, r], si) => {
+    const sheet = out.addPage([sw, sh]);
+    const ops: PDFOperator[] = [];
+    const sheetNo = Math.floor(si / 2), sheets = sides.length / 2;
+    // creep: inner sheets get pushed outward slightly so the trimmed edge stays even
+    const shift = o.creep * (sheets > 1 ? (sheets - 1 - sheetNo) / (sheets - 1) : 0);
+    [l, r].forEach((idx, side) => {
+      if (idx < 0) return;
+      const pg = pages[idx];
+      const boxW = half - o.margin, boxH = sh - 2 * o.margin;
+      const s = Math.min(boxW / pg.w, boxH / pg.h);
+      const w = pg.w * s, h = pg.h * s;
+      // pages sit against the fold
+      const x = side === 0 ? half - w - shift : half + shift;
+      ops.push(...pg.draw(sheet, x, (sh - h) / 2, s));
+    });
+    sheet.pushOperators(...ops);
+  });
+  out.setProducer('PDFSherpa');
+  return save(out);
+}
+
+/* ---------------- Split by file size ---------------- */
+
+/**
+ * Split into parts no larger than maxBytes (where possible). Parts are built greedily from
+ * per-page size estimates, then checked by saving; a part that is still too big is split again.
+ */
+export async function splitBySize(input: ArrayBuffer, maxBytes: number) {
+  const src = await load(input);
+  const n = src.getPageCount();
+  const build = async (idx: number[]) => { const d = await PDFDocument.create(); (await d.copyPages(src, idx)).forEach((p) => d.addPage(p)); return save(d); };
+  // shared resources (fonts, images used on many pages) make single-page sizes overestimate; scale by the whole file
+  const single: number[] = [];
+  for (let i = 0; i < n; i++) single.push((await build([i])).length);
+  const whole = (await save(src)).length;
+  const k = Math.min(1, whole / Math.max(1, single.reduce((a, b) => a + b, 0)));
+  const groups: number[][] = [];
+  let cur: number[] = [], sum = 0;
+  for (let i = 0; i < n; i++) {
+    const est = single[i] * k;
+    if (cur.length && sum + est > maxBytes * 0.97) { groups.push(cur); cur = []; sum = 0; }
+    cur.push(i); sum += est;
+  }
+  if (cur.length) groups.push(cur);
+  const parts: { pages: number[]; bytes: Uint8Array }[] = [];
+  const emit = async (g: number[]): Promise<void> => {
+    const bytes = await build(g);
+    if (bytes.length > maxBytes && g.length > 1) { const h = Math.ceil(g.length / 2); await emit(g.slice(0, h)); await emit(g.slice(h)); return; }
+    parts.push({ pages: g, bytes });
+  };
+  for (const g of groups) await emit(g);
+  // merge neighbours that fit together after the exact check
+  for (let i = 0; i < parts.length - 1; i++) {
+    const a = parts[i], b = parts[i + 1];
+    if (a.bytes.length + b.bytes.length > maxBytes * 1.3) continue;
+    const both = await build([...a.pages, ...b.pages]);
+    if (both.length <= maxBytes) { parts.splice(i, 2, { pages: [...a.pages, ...b.pages], bytes: both }); i--; }
+  }
+  return parts.map((p) => ({ first: p.pages[0], last: p.pages[p.pages.length - 1], bytes: p.bytes, tooBig: p.bytes.length > maxBytes }));
+}
+
+/* ---------------- Bookmarks (outline) ---------------- */
+
+export interface Bookmark { title: string; page: number; level: number; }
+
+/** Replace the document outline. Items are in reading order; level 0 = top level. */
+export async function writeBookmarks(input: ArrayBuffer, items: Bookmark[], openLevels = 1) {
+  const doc = await load(input);
+  const ctx = doc.context;
+  const pages = doc.getPages();
+  const clean = items.filter((b) => b.title.trim() && pages[b.page]);
+  if (!clean.length) {
+    doc.catalog.delete(PDFName.of('Outlines'));
+    return save(doc);
+  }
+  type Node = { b: Bookmark; ref: PDFRef; dict: PDFDict; kids: Node[] };
+  const rootRef = ctx.nextRef();
+  const root: Node = { b: { title: '', page: 0, level: -1 }, ref: rootRef, dict: ctx.obj({ Type: 'Outlines' }) as PDFDict, kids: [] };
+  const stack: Node[] = [root];
+  for (const b of clean) {
+    const level = Math.max(0, Math.min(b.level, stack.length - 1));
+    while (stack.length > level + 1) stack.pop();
+    const parent = stack[stack.length - 1];
+    const dict = ctx.obj({ Title: PDFHexString.fromText(b.title.trim()), Parent: parent.ref, Dest: [pages[b.page].ref, PDFName.of('XYZ'), null, null, null] }) as PDFDict;
+    const node: Node = { b, ref: ctx.nextRef(), dict, kids: [] };
+    parent.kids.push(node);
+    stack.push(node);
+  }
+  // an entry is expanded when its level is above openLevels; Count = visible descendants (negative when collapsed)
+  const isOpen = (n: Node) => n.b.level + 1 < openLevels;
+  const visible = (n: Node): number => n.kids.reduce((t, k) => t + 1 + (isOpen(k) ? visible(k) : 0), 0);
+  const link = (n: Node) => {
+    n.kids.forEach((k, i) => {
+      if (i > 0) k.dict.set(PDFName.of('Prev'), n.kids[i - 1].ref);
+      if (i < n.kids.length - 1) k.dict.set(PDFName.of('Next'), n.kids[i + 1].ref);
+      link(k);
+    });
+    if (n.kids.length) {
+      n.dict.set(PDFName.of('First'), n.kids[0].ref);
+      n.dict.set(PDFName.of('Last'), n.kids[n.kids.length - 1].ref);
+      n.dict.set(PDFName.of('Count'), PDFNumber.of(n === root || isOpen(n) ? visible(n) : -n.kids.length));
+    }
+    ctx.assign(n.ref, n.dict);
+  };
+  link(root);
+  doc.catalog.set(PDFName.of('Outlines'), rootRef);
+  doc.catalog.set(PDFName.of('PageMode'), PDFName.of('UseOutlines'));
+  doc.setProducer('PDFSherpa');
+  return save(doc);
+}
+
+/* ---------------- Colours: invert, paper background ---------------- */
+
+/** Put operators underneath the existing page content. */
+function prependOps(doc: PDFDocument, page: PDFPage, ops: PDFOperator[]) {
+  const stream = doc.context.register(doc.context.contentStream(ops));
+  const contents = page.node.get(PDFName.of('Contents'));
+  const arr = contents instanceof PDFArray ? contents : doc.context.obj(contents ? [contents] : []) as PDFArray;
+  arr.insert(0, stream);
+  page.node.set(PDFName.of('Contents'), arr);
+}
+/** Wrap existing content in q … Q so state changes in it can't leak into what we add on top. */
+function isolateContent(doc: PDFDocument, page: PDFPage) {
+  prependOps(doc, page, [pushGraphicsState()]);
+  page.pushOperators(popGraphicsState());
+}
+
+/**
+ * Invert colours (night mode for reading or saving ink is the reverse: white on black → black on white).
+ * Content stays vector: a white "difference" layer is drawn on top of a white base.
+ */
+export async function invertColors(input: ArrayBuffer, pagesToInvert: number[] | null) {
+  const doc = await load(input);
+  doc.getPages().forEach((page, i) => {
+    if (pagesToInvert && !pagesToInvert.includes(i)) return;
+    const { x, y, width, height } = page.getMediaBox();
+    isolateContent(doc, page);
+    prependOps(doc, page, [pushGraphicsState(), setFillingRgbColor(1, 1, 1), rectangle(x, y, width, height), fill(), popGraphicsState()]);
+    const gs = page.node.newExtGState('GS', doc.context.obj({ BM: 'Difference', ca: 1, CA: 1 }));
+    page.pushOperators(pushGraphicsState(), setGraphicsState(gs), setFillingRgbColor(1, 1, 1), rectangle(x, y, width, height), fill(), popGraphicsState());
+  });
+  doc.setProducer('PDFSherpa');
+  return save(doc);
+}
+
+/**
+ * Colour the paper. 'multiply' tints everything white (works on scans too, text stays dark);
+ * 'behind' paints under the content (only shows where the page itself is transparent).
+ */
+export async function pageBackground(input: ArrayBuffer, color: string, mode: 'multiply' | 'behind', pagesToColor: number[] | null) {
+  const doc = await load(input);
+  const [r, g, b] = rgbOf(color);
+  doc.getPages().forEach((page, i) => {
+    if (pagesToColor && !pagesToColor.includes(i)) return;
+    const { x, y, width, height } = page.getMediaBox();
+    if (mode === 'behind') { prependOps(doc, page, [pushGraphicsState(), setFillingRgbColor(r, g, b), rectangle(x, y, width, height), fill(), popGraphicsState()]); return; }
+    isolateContent(doc, page);
+    prependOps(doc, page, [pushGraphicsState(), setFillingRgbColor(1, 1, 1), rectangle(x, y, width, height), fill(), popGraphicsState()]);
+    const gs = page.node.newExtGState('GS', doc.context.obj({ BM: 'Multiply', ca: 1, CA: 1 }));
+    page.pushOperators(pushGraphicsState(), setGraphicsState(gs), setFillingRgbColor(r, g, b), rectangle(x, y, width, height), fill(), popGraphicsState());
+  });
+  doc.setProducer('PDFSherpa');
+  return save(doc);
+}
+
+/* ---------------- Annotations: list / remove ---------------- */
+
+export type AnnotGroup = 'comments' | 'drawings' | 'links' | 'stamps' | 'attachments' | 'forms' | 'other';
+const GROUP_OF: Record<string, AnnotGroup> = {
+  Text: 'comments', FreeText: 'comments', Highlight: 'comments', Underline: 'comments', StrikeOut: 'comments', Squiggly: 'comments', Caret: 'comments', Popup: 'comments', Redact: 'comments',
+  Ink: 'drawings', Square: 'drawings', Circle: 'drawings', Line: 'drawings', Polygon: 'drawings', PolyLine: 'drawings',
+  Link: 'links', Stamp: 'stamps', FileAttachment: 'attachments', Sound: 'attachments', Movie: 'attachments', RichMedia: 'attachments', Screen: 'attachments', Widget: 'forms',
+};
+
+export async function annotationSummary(input: ArrayBuffer) {
+  const doc = await load(input);
+  const counts: Record<AnnotGroup, number> = { comments: 0, drawings: 0, links: 0, stamps: 0, attachments: 0, forms: 0, other: 0 };
+  for (const page of doc.getPages()) {
+    const arr = page.node.Annots();
+    if (!arr) continue;
+    for (let i = 0; i < arr.size(); i++) {
+      const a = doc.context.lookup(arr.get(i));
+      if (!(a instanceof PDFDict)) continue;
+      const sub = a.get(PDFName.of('Subtype'))?.toString().slice(1) ?? '';
+      if (sub === 'Popup') continue;
+      counts[GROUP_OF[sub] ?? 'other']++;
+    }
+  }
+  return counts;
+}
+
+/** Remove annotations by group. Removing forms also drops the form definition so readers don't show empty fields. */
+export async function removeAnnotations(input: ArrayBuffer, groups: AnnotGroup[]) {
+  const doc = await load(input);
+  const drop = new Set(groups);
+  let removed = 0;
+  for (const page of doc.getPages()) {
+    const arr = page.node.Annots();
+    if (!arr) continue;
+    const keep: unknown[] = [];
+    for (let i = 0; i < arr.size(); i++) {
+      const ref = arr.get(i);
+      const a = doc.context.lookup(ref);
+      if (!(a instanceof PDFDict)) continue;
+      const sub = a.get(PDFName.of('Subtype'))?.toString().slice(1) ?? '';
+      // a popup goes with its parent comment
+      const g: AnnotGroup = sub === 'Popup' ? 'comments' : GROUP_OF[sub] ?? 'other';
+      if (drop.has(g)) { if (sub !== 'Popup') removed++; continue; }
+      keep.push(ref);
+    }
+    if (keep.length) page.node.set(PDFName.of('Annots'), doc.context.obj(keep as never[]));
+    else page.node.delete(PDFName.of('Annots'));
+  }
+  if (drop.has('forms')) doc.catalog.delete(PDFName.of('AcroForm'));
+  if (drop.has('attachments')) { const names = doc.catalog.lookup(PDFName.of('Names')); if (names instanceof PDFDict) names.delete(PDFName.of('EmbeddedFiles')); }
+  doc.setProducer('PDFSherpa');
+  return { bytes: await save(doc), removed };
+}
+
+/* ---------------- Deskew ---------------- */
+
+/** Rotate page content by small angles (degrees, counter-clockwise as seen) around the page centre. */
+export async function rotateContent(input: ArrayBuffer, angles: (number | null)[]) {
+  const doc = await load(input);
+  doc.getPages().forEach((page, i) => {
+    const a = angles[i];
+    if (!a) return;
+    const { x, y, width, height } = page.getCropBox();
+    const cx = x + width / 2, cy = y + height / 2, r = (a * Math.PI) / 180;
+    const c = Math.cos(r), s = Math.sin(r);
+    prependOps(doc, page, [pushGraphicsState(), concatTransformationMatrix(c, s, -s, c, cx - c * cx + s * cy, cy - s * cx - c * cy)]);
+    page.pushOperators(popGraphicsState());
+  });
+  doc.setProducer('PDFSherpa');
+  return save(doc);
+}
+
+/* ---------------- TIFF → PDF ---------------- */
+
+export interface TiffPdfOpts { page: 'image' | 'a4' | 'letter'; margin: number; }
+
+/**
+ * Multi-page TIFF to PDF. Fax (CCITT G3/G4), LZW, Deflate and JPEG data go into the PDF unchanged
+ * (PDF has the same decoders), so scans stay lossless and small. Strips/tiles become image pieces.
+ */
+export async function tiffToPdf(inputs: ArrayBuffer[], o: TiffPdfOpts) {
+  const { readTiff, decodeChunk, reverseBits } = await import('./tiff');
+  const doc = await PDFDocument.create();
+  const ctx = doc.context;
+  let pages = 0;
+  const skipped: string[] = [];
+  for (const input of inputs) {
+    const tp = readTiff(new Uint8Array(input));
+    for (const p of tp) {
+      try {
+        const colors = p.photometric === 2 || p.photometric === 6 ? 3 : p.photometric === 5 ? 4 : 1;
+        const hasAlpha = p.spp > colors && p.extra > 0;
+        const [dx, dy] = p.dpi ?? [72, 72];
+        const imgW = (p.width / dx) * 72, imgH = (p.height / dy) * 72;
+        let pageW = imgW, pageH = imgH;
+        if (o.page !== 'image') { const s = PAGE_SIZES[o.page]; [pageW, pageH] = imgW > imgH ? [s[1], s[0]] : [s[0], s[1]]; }
+        const scale = o.page === 'image' ? 1 : Math.min((pageW - 2 * o.margin) / imgW, (pageH - 2 * o.margin) / imgH);
+        const ox = (pageW - imgW * scale) / 2, oy = (pageH - imgH * scale) / 2;
+        const page = doc.addPage([pageW, pageH]);
+        const ops: PDFOperator[] = [pushGraphicsState(), rectangle(ox, oy, imgW * scale, imgH * scale), clip(), endPath()];
+        // colour space
+        let cs: unknown = colors === 3 ? 'DeviceRGB' : colors === 4 ? 'DeviceCMYK' : 'DeviceGray';
+        let decode: number[] | undefined = p.photometric === 0 && !(p.compression >= 2 && p.compression <= 4) ? [1, 0] : undefined;
+        if (p.photometric === 3 && p.colormap) {
+          const n = 1 << p.bps, lut = new Uint8Array(n * 3);
+          for (let i = 0; i < n; i++) { lut[i * 3] = p.colormap[i] >> 8; lut[i * 3 + 1] = p.colormap[n + i] >> 8; lut[i * 3 + 2] = p.colormap[2 * n + i] >> 8; }
+          cs = [PDFName.of('Indexed'), PDFName.of('DeviceRGB'), n - 1, PDFHexString.of(Array.from(lut, (b) => b.toString(16).padStart(2, '0')).join(''))];
+          decode = undefined;
+        }
+        const csObj = typeof cs === 'string' ? PDFName.of(cs) : ctx.obj(cs as never);
+        const sx = (imgW * scale) / p.width, sy = (imgH * scale) / p.height;
+        const pieces = p.planar === 2 ? p.chunks.slice(0, p.chunks.length / p.spp) : p.chunks;
+        for (let ci = 0; ci < pieces.length; ci++) {
+          const c = pieces[ci];
+          const base = { Type: 'XObject', Subtype: 'Image', Width: c.w, Height: c.h, ColorSpace: csObj, BitsPerComponent: p.bps, ...(decode ? { Decode: decode } : {}) };
+          let stream;
+          if (p.compression >= 2 && p.compression <= 4) {
+            // fax: bilevel, CCITTFaxDecode
+            const data = p.fillOrder === 2 ? reverseBits(c.data) : c.data;
+            const K = p.compression === 4 ? -1 : p.compression === 3 && p.t4 & 1 ? 1 : 0;
+            stream = ctx.stream(data, { ...base, ColorSpace: PDFName.of('DeviceGray'), BitsPerComponent: 1, Filter: 'CCITTFaxDecode',
+              DecodeParms: { K, Columns: c.w, Rows: c.h, BlackIs1: p.photometric === 1, EncodedByteAlign: p.compression === 2, EndOfLine: p.compression === 3 } });
+          } else if (p.compression === 7) {
+            // JPEG: put the shared tables in front of each strip's data
+            let data = c.data;
+            if (p.jpegTables && p.jpegTables.length > 4) {
+              const t = p.jpegTables.subarray(0, p.jpegTables.length - 2); // drop EOI
+              const body = data[0] === 0xff && data[1] === 0xd8 ? data.subarray(2) : data;
+              data = new Uint8Array(t.length + body.length); data.set(t); data.set(body, t.length);
+            }
+            stream = ctx.stream(data, { ...base, BitsPerComponent: 8, Filter: 'DCTDecode', ...(p.photometric === 2 ? { DecodeParms: { ColorTransform: 0 } } : {}) });
+          } else if ((p.compression === 5 || p.compression === 8 || p.compression === 32946) && p.planar === 1 && !hasAlpha && p.spp === colors && !(p.bps === 16 && p.littleEndian)) {
+            stream = ctx.stream(c.data, { ...base, Filter: p.compression === 5 ? 'LZWDecode' : 'FlateDecode',
+              ...(p.predictor === 2 ? { DecodeParms: { Predictor: 2, Colors: p.spp, BitsPerComponent: p.bps, Columns: c.w } } : {}) });
+          } else {
+            // decode ourselves: PackBits, uncompressed, alpha, separate planes, little-endian 16-bit
+            let raw: Uint8Array;
+            if (p.planar === 2) {
+              const planes = await Promise.all(Array.from({ length: p.spp }, (_, k) => decodeChunk(p, p.chunks[ci + k * pieces.length], 1)));
+              const bpsB = p.bps / 8;
+              raw = new Uint8Array(c.w * c.h * p.spp * bpsB);
+              for (let px = 0; px < c.w * c.h; px++) for (let k = 0; k < p.spp; k++) for (let b = 0; b < bpsB; b++) raw[(px * p.spp + k) * bpsB + b] = planes[k][px * bpsB + b];
+            } else raw = await decodeChunk(p, c, p.spp);
+            let smask: PDFRef | undefined;
+            if (hasAlpha && p.bps >= 8) {
+              const bpsB = p.bps / 8, n = c.w * c.h;
+              const col = new Uint8Array(n * colors * bpsB), alpha = new Uint8Array(n * bpsB);
+              for (let px = 0; px < n; px++) {
+                for (let b = 0; b < colors * bpsB; b++) col[px * colors * bpsB + b] = raw[px * p.spp * bpsB + b];
+                for (let b = 0; b < bpsB; b++) alpha[px * bpsB + b] = raw[(px * p.spp + colors) * bpsB + b];
+              }
+              raw = col;
+              smask = ctx.register(ctx.flateStream(alpha, { Type: 'XObject', Subtype: 'Image', Width: c.w, Height: c.h, ColorSpace: 'DeviceGray', BitsPerComponent: p.bps }));
+            }
+            stream = ctx.flateStream(raw, { ...base, ...(smask ? { SMask: smask } : {}) });
+          }
+          const ref = ctx.register(stream);
+          const name = page.node.newXObject('Im', ref);
+          // TIFF rows run top-down; PDF images are drawn into a unit square from the top
+          ops.push(pushGraphicsState(), concatTransformationMatrix(c.w * sx, 0, 0, c.h * sy, ox + c.x * sx, oy + (p.height - c.y - c.h) * sy), drawObject(name), popGraphicsState());
+        }
+        ops.push(popGraphicsState());
+        page.pushOperators(...ops);
+        pages++;
+      } catch (e) { skipped.push(String((e as Error)?.message ?? e)); }
+    }
+  }
+  if (!pages) throw new Error(skipped[0] === 'UNSUPPORTED_COMPRESSION' ? 'UNSUPPORTED_COMPRESSION' : 'NO_IMAGES');
+  doc.setProducer('PDFSherpa');
+  return { bytes: await save(doc), pages, skipped: skipped.length };
+}
+
+/* ---------------- Links ---------------- */
+
+export interface LinkSpec { page: number; /** visual fractions, origin top-left */ x: number; y: number; w: number; h: number; url?: string; toPage?: number; }
+
+/** Add clickable link areas: web/email links or jumps to another page. Invisible border. */
+export async function addLinks(input: ArrayBuffer, links: LinkSpec[]) {
+  const doc = await load(input);
+  const ctx = doc.context;
+  const pages = doc.getPages();
+  let added = 0;
+  for (const l of links) {
+    const page = pages[l.page];
+    if (!page || (!l.url && (l.toPage === undefined || !pages[l.toPage]))) continue;
+    const f = frame(page);
+    const pts = [[l.x, l.y], [l.x + l.w, l.y], [l.x, l.y + l.h], [l.x + l.w, l.y + l.h]].map(([fx, fy]) => f.toUser(fx * f.vw, f.vh - fy * f.vh));
+    const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+    const action = l.url
+      ? { A: { Type: 'Action', S: 'URI', URI: PDFString.of(/^(https?:|mailto:|tel:|ftp:)/i.test(l.url) ? l.url : /@/.test(l.url) && !/\//.test(l.url) ? `mailto:${l.url}` : `https://${l.url}`) } }
+      : { Dest: [pages[l.toPage!].ref, PDFName.of('Fit')] };
+    const annot = ctx.register(ctx.obj({ Type: 'Annot', Subtype: 'Link', Rect: [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)], Border: [0, 0, 0], F: 4, P: page.ref, ...action } as any));
+    const arr = page.node.Annots();
+    if (arr) arr.push(annot); else page.node.set(PDFName.of('Annots'), ctx.obj([annot]));
+    added++;
+  }
+  doc.setProducer('PDFSherpa');
+  return { bytes: await save(doc), added };
+}
+
+/* ---------------- Overlay (letterhead), split in half, poster ---------------- */
+
+export interface OverlayOpts { layer: 'under' | 'over'; pages: 'all' | 'first' | 'not-first'; repeat: 'first' | 'cycle'; opacity: number; fit: 'stretch' | 'fit'; }
+
+/** Put pages of a second PDF (letterhead, template, watermark) under or over each page. */
+export async function overlayPdf(input: ArrayBuffer, layer: ArrayBuffer, o: OverlayOpts) {
+  const doc = await load(input);
+  const src = await load(layer);
+  const lp = await uprightPages(doc, src);
+  if (!lp.length) throw new Error('EMPTY_LAYER');
+  doc.getPages().forEach((page, i) => {
+    if (o.pages === 'first' && i > 0) return;
+    if (o.pages === 'not-first' && i === 0) return;
+    const L = lp[o.repeat === 'cycle' ? i % lp.length : 0];
+    const f = frame(page);
+    const vm = visualMatrix(page);
+    let sx = f.vw / L.w, sy = f.vh / L.h, dx = 0, dy = 0;
+    if (o.fit === 'fit') { const s = Math.min(sx, sy); sx = sy = s; dx = (f.vw - L.w * s) / 2; dy = (f.vh - L.h * s) / 2; }
+    const gs = o.opacity < 1 ? page.node.newExtGState('GS', doc.context.obj({ ca: o.opacity, CA: o.opacity })) : null;
+    // L.draw scales uniformly; stretch needs separate x/y scale, so wrap in an extra matrix
+    const ops = [pushGraphicsState(), ...(gs ? [setGraphicsState(gs)] : []), concatTransformationMatrix(...vm), concatTransformationMatrix(sx, 0, 0, sy, dx, dy), ...L.draw(page, 0, 0, 1), popGraphicsState()];
+    if (o.layer === 'over') { isolateContent(doc, page); page.pushOperators(...ops); }
+    else prependOps(doc, page, ops);
+  });
+  doc.setProducer('PDFSherpa');
+  return save(doc);
+}
+
+/**
+ * Split every page into two halves (book scans with two pages per sheet), losslessly via the crop box.
+ * direction 'auto': landscape pages split left/right, portrait pages top/bottom. rtl: right half first.
+ */
+export async function splitHalves(input: ArrayBuffer, o: { direction: 'auto' | 'vertical' | 'horizontal'; rtl: boolean; skipFirst: boolean; skipLast: boolean }) {
+  const src = await load(input);
+  const out = await PDFDocument.create();
+  const n = src.getPageCount();
+  for (let i = 0; i < n; i++) {
+    const keepWhole = (o.skipFirst && i === 0) || (o.skipLast && i === n - 1 && n > 1);
+    if (keepWhole) { const [p] = await out.copyPages(src, [i]); out.addPage(p); continue; }
+    const sp = src.getPage(i);
+    const f = frame(sp);
+    const lr = o.direction === 'vertical' || (o.direction === 'auto' && f.vw >= f.vh);
+    // halves in visual space, converted to the user-space crop box
+    const halves: [number, number, number, number][] = lr ? [[0, 0, f.vw / 2, f.vh], [f.vw / 2, 0, f.vw / 2, f.vh]] : [[0, f.vh / 2, f.vw, f.vh / 2], [0, 0, f.vw, f.vh / 2]];
+    if (lr && o.rtl) halves.reverse();
+    const copies = await out.copyPages(src, [i, i]);
+    copies.forEach((p, k) => {
+      const [x, y, w, h] = halves[k];
+      const pts = [f.toUser(x, y), f.toUser(x + w, y), f.toUser(x, y + h), f.toUser(x + w, y + h)];
+      const xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1]);
+      const box = [Math.min(...xs), Math.min(...ys), Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)] as const;
+      p.setCropBox(...box); p.setMediaBox(...box);
+      out.addPage(p);
+    });
+  }
+  out.setProducer('PDFSherpa');
+  return save(out);
+}
+
+export interface PosterOpts { page: number; sheet: 'a4' | 'letter' | 'a3'; across: number; landscape: boolean; overlap: number; marks: boolean; }
+
+/** Enlarge one page over several sheets (tiles) with overlap and cut marks, to tape together. */
+export async function posterPdf(input: ArrayBuffer, o: PosterOpts) {
+  const src = await load(input);
+  const out = await PDFDocument.create();
+  const [pg] = await uprightPages(out, await (async () => { const d = await PDFDocument.create(); const [p] = await d.copyPages(src, [Math.min(o.page, src.getPageCount() - 1)]); d.addPage(p); return d; })());
+  let [sw, sh] = PAGE_SIZES[o.sheet] as unknown as [number, number];
+  if (o.landscape) [sw, sh] = [sh, sw];
+  const margin = 18, ov = o.overlap;
+  const cw = sw - 2 * margin, ch = sh - 2 * margin; // printable area per sheet
+  // scale so `across` sheets cover the width (minus overlaps)
+  const totalW = o.across * cw - (o.across - 1) * ov;
+  const s = totalW / pg.w;
+  const totalH = pg.h * s;
+  const down = Math.max(1, Math.ceil((totalH - ov) / (ch - ov) - 1e-6));
+  const font = await out.embedFont(StandardFonts.Helvetica);
+  for (let r = 0; r < down; r++) for (let c = 0; c < o.across; c++) {
+    const sheet = out.addPage([sw, sh]);
+    // the poster's top-left lands at the sheet's printable top-left for tile (0, 0)
+    const ox = margin - c * (cw - ov), oy = sh - margin - totalH + r * (ch - ov);
+    const ops: PDFOperator[] = [pushGraphicsState(), rectangle(margin, margin, cw, ch), clip(), endPath(), ...pg.draw(sheet, ox, oy, s), popGraphicsState()];
+    if (o.marks) {
+      ops.push(pushGraphicsState(), setStrokingRgbColor(0.5, 0.5, 0.5), setLineWidth(0.4), setDashPattern([3, 2], 0), rectangle(margin, margin, cw, ch), stroke(), popGraphicsState());
+      if (ov > 0) ops.push(pushGraphicsState(), setStrokingRgbColor(0.85, 0.2, 0.2), setLineWidth(0.4), setDashPattern([2, 2], 0),
+        ...(c > 0 ? [moveTo(margin + ov, margin), lineTo(margin + ov, sh - margin)] : []), ...(r > 0 ? [moveTo(margin, sh - margin - ov), lineTo(sw - margin, sh - margin - ov)] : []), stroke(), popGraphicsState());
+    }
+    sheet.pushOperators(...ops);
+    if (o.marks) sheet.drawText(`Row ${r + 1} / ${down} · Column ${c + 1} / ${o.across}${ov ? ' · glue over the red line' : ''}`, { x: margin, y: 6, size: 7, font, color: rgb(0.4, 0.4, 0.4) });
+  }
+  out.setProducer('PDFSherpa');
+  return { bytes: await save(out), sheets: down * o.across, down, sizeCm: [(totalW / 72) * 2.54, (totalH / 72) * 2.54] };
 }

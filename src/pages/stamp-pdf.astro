@@ -1,0 +1,53 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import StampPdf from '../islands/StampPdf';
+
+const faqs = [
+  { q: 'Which stamps can I add?', a: 'Ready-made stamps include APPROVED, PAID, RECEIVED, DRAFT, CONFIDENTIAL, REJECTED, COPY, FINAL, VOID, URGENT, VERIFIED and FOR REVIEW. You can also type your own text in any language.' },
+  { q: 'Can I add the date to the stamp?', a: 'Yes. Turn on the second line and click <strong>Today</strong>, or type a date, a name or a reference number.' },
+  { q: 'Can I stamp every page at once?', a: 'Yes. Choose <strong>All pages</strong> and the stamp is placed at the same spot on every page. You can also stamp only the first or last page.' },
+  { q: 'Does the stamp look real when printed?', a: 'The stamp is drawn as sharp vector graphics with a double border, so it prints crisply at any size. Adjust the tilt and opacity for a natural rubber-stamp look.' },
+  { q: 'Is a stamp the same as a signature?', a: 'No. A stamp marks the status of a document. To sign it, use <a href="/sign-pdf">Sign PDF</a>.' },
+  { q: 'Is my file uploaded?', a: 'No. Stamping happens in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="stamp-pdf"
+  title="Stamp PDF Online – Approved, Paid, Draft Stamps | PDFSherpa"
+  description="Add APPROVED, PAID, DRAFT, CONFIDENTIAL or custom stamps with a date to PDF pages. Choose colour, tilt and pages. Free, no upload, no watermark."
+  h1="Stamp PDF"
+  lead="Add a rubber stamp such as APPROVED, PAID, RECEIVED or DRAFT to your PDF, with today’s date or your name underneath. Place it anywhere, on one page or all pages. Free, private, no watermark."
+  howToTitle="How to Stamp a PDF"
+  steps={['Select or drop your PDF.', 'Pick a stamp, colour and border, and drag it into place.', 'Choose the pages, click <strong>Stamp</strong> and download.']}
+  faqs={faqs}
+  related={['sign-pdf', 'watermark-pdf', 'annotate-pdf', 'add-image-to-pdf']}
+>
+  <StampPdf client:load />
+
+  <Fragment slot="content">
+    <h2>Mark documents at a glance</h2>
+    <p>
+      A stamp tells everyone the status of a document before they read a word: an invoice is <em>PAID</em>, a contract is
+      <em>APPROVED</em>, a report is still a <em>DRAFT</em>. PDFSherpa draws stamps as vector graphics with real text, so they stay sharp
+      when zoomed or printed and the text can be searched.
+    </p>
+
+    <h2>Customise your stamp</h2>
+    <ul>
+      <li><strong>Text:</strong> choose a preset or type anything, in English, Urdu, Arabic, Hindi or any other language.</li>
+      <li><strong>Second line:</strong> today’s date, a name, an invoice number or a department.</li>
+      <li><strong>Look:</strong> red, green, blue, purple, orange, black or grey; rounded, square or oval border; tilt and opacity.</li>
+      <li><strong>Pages:</strong> the current page, all pages, the first page or the last page.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Stamp vs watermark</h2>
+    <p>
+      A stamp is a small mark in one spot, like ink from a rubber stamp. A watermark is large, faint text or a logo across the whole page.
+      For a page-wide CONFIDENTIAL or DRAFT mark, use <a href="/watermark-pdf">Watermark PDF</a>. To place your company seal or logo as an
+      image, use <a href="/add-image-to-pdf">Add Image to PDF</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

@@ -1,0 +1,26 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PhotoEditor from '../islands/PhotoEditor';
+
+const faqs = [
+  { q: 'What can I adjust?', a: 'Exposure, brightness, contrast, highlights, shadows, saturation, warmth, sharpness and vignette, plus one-tap filters such as Vivid, B&W, Noir, Sepia, Vintage, Warm and Cool.' },
+  { q: 'Is there an automatic option?', a: 'Yes. <strong>Auto enhance</strong> analyses the photo and sets contrast, brightness, saturation and sharpness for you. You can fine-tune afterwards.' },
+  { q: 'Can I edit many photos the same way?', a: 'Yes. Add several photos, adjust while previewing any of them, and all are saved with the same settings.' },
+  { q: 'Will my photos be uploaded or watermarked?', a: 'No upload and no watermark. Editing happens in your browser.' },
+  { q: 'Is location and camera data kept?', a: 'No. Saved photos contain only the picture, without EXIF data such as GPS location.' },
+];
+---
+<ToolLayout slug="photo-editor" title="Free Online Photo Editor – Filters & Adjust | PDFSherpa"
+  description="Edit photos online: brightness, contrast, saturation, warmth, sharpen, vignette and filters, with one-tap auto enhance. Batch edit. Free, private."
+  h1="Online Photo Editor" lead="Improve photos in seconds: auto enhance, adjust light and colour, sharpen, and apply filters such as B&W, Vintage or Vivid, with a live preview. Edit one photo or a whole batch, without uploading anything."
+  howToTitle="How to Edit a Photo" steps={['Add one or more photos.', 'Tap Auto enhance or a filter, then fine-tune the sliders.', 'Click <strong>Save</strong> and download.']}
+  faqs={faqs} related={['compress-image', 'resize-image', 'crop-image', 'watermark-image']}>
+  <PhotoEditor client:load />
+  <Fragment slot="content">
+    <h2>Quick fixes that make a difference</h2>
+    <ul><li><strong>Too dark?</strong> Raise Exposure or Shadows.</li><li><strong>Washed out?</strong> Add Contrast and a little Saturation.</li><li><strong>Blue indoor light?</strong> Move Warmth to the right.</li><li><strong>Soft focus?</strong> Add a touch of Sharpen.</li></ul>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>Tip: double-click a slider to reset it. When you are done, make photos smaller for email with <a href="/compress-image">Compress Image</a>.</p>
+  </Fragment>
+</ToolLayout>

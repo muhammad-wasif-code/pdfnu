@@ -1,0 +1,25 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import RasterizePdf from '../islands/RasterizePdf';
+
+const faqs = [
+  { q: "Why turn a PDF into images?", a: "To stop easy copying or editing of the text, to remove hidden content, or to fix printing and display problems with complex PDFs." },
+  { q: "Is the text still searchable?", a: "No. If you need searchable text later, run <a href=\"/ocr-pdf\">OCR PDF</a> on the result." },
+  { q: "Which quality should I choose?", a: "150 DPI is good for screen and e-mail; 300 DPI for printing." },
+  { q: "Is this the same as Flatten PDF?", a: "<a href=\"/flatten-pdf\">Flatten PDF</a> merges form fields and comments into the page but keeps text as text. This tool turns everything into images." },
+  { q: "Is my file uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="pdf-to-image-pdf" title="Flatten PDF to Images \u2013 Make a Non-Editable PDF | PDFSherpa"
+  description="Convert every PDF page into an image so text can\u2019t be selected, copied or edited, and hidden layers, forms and comments are removed. Free."
+  h1="Flatten PDF to Images" lead="Turn every page into a picture: the PDF looks the same, but text can no longer be selected, copied or edited, and hidden layers, form fields and comments are removed. Choose the image quality."
+  howToTitle="How to Convert a PDF to an Image PDF" steps={["Select your PDF.", "Choose the image quality (DPI).", "Click <strong>Flatten to images</strong> and download."]}
+  faqs={faqs} related={["flatten-pdf", "redact-pdf", "compress-pdf", "protect-pdf"]}>
+  <RasterizePdf client:load />
+  <Fragment slot="content">
+    <h2>When to use it</h2>
+    <ul><li>Sending a price list or certificate that should not be edited easily.</li><li>Removing invisible layers, hidden text or scripts before publishing.</li><li>Printing PDFs that fail on some printers because of fonts or transparency.</li></ul>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

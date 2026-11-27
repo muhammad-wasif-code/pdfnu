@@ -1,0 +1,48 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PageColors from '../islands/PageColors';
+
+const faqs = [
+  { q: 'How do I change the background colour of a PDF?', a: 'Open the PDF, pick a paper colour such as cream, yellow or mint (or any custom colour), choose the pages and click <strong>Colour</strong>.' },
+  { q: 'Does it work on scanned PDFs?', a: 'Yes, with “Tint the whole page”. The colour is blended over the page so white areas take the paper colour and dark text stays dark.' },
+  { q: 'Why use coloured pages?', a: 'Many readers with dyslexia or visual stress find cream, yellow or pastel backgrounds easier to read than bright white. Coloured pages also help tell sections or versions apart.' },
+  { q: 'Will the colour print?', a: 'Yes. The colour is part of the page, so it appears on screen and in print. For coloured paper you already have, there is no need to add it.' },
+  { q: 'Is my file uploaded?', a: 'No. Everything happens in your browser.' },
+];
+---
+<ToolLayout
+  slug="pdf-background-color"
+  title="Change PDF Background Color – Cream, Yellow, Custom | PDFSherpa"
+  description="Change the page background colour of a PDF: cream, yellow, mint, blue or any colour. Works on scans, keeps text selectable. Free, no upload."
+  h1="Change PDF Background Color"
+  lead="Give PDF pages a coloured paper look (cream, yellow, mint, blue or any colour you like) to make reading easier or to tell documents apart. Works on scanned pages too, and text stays selectable."
+  howToTitle="How to Change a PDF’s Background Colour"
+  steps={['Select or drop your PDF.', 'Pick a paper colour and the pages to change.', 'Click <strong>Colour</strong> and download.']}
+  faqs={faqs}
+  related={['invert-pdf-colors', 'grayscale-pdf', 'watermark-pdf', 'header-footer-pdf']}
+>
+  <PageColors client:load kind="background" />
+
+  <Fragment slot="content">
+    <h2>Easier reading with tinted pages</h2>
+    <p>
+      Bright white backgrounds can make text appear to shimmer for some readers, including many people with dyslexia, Irlen syndrome or
+      visual stress. A soft cream or pastel tint is a simple, widely recommended adjustment, and it works for worksheets, books and handouts.
+    </p>
+
+    <h2>Two modes</h2>
+    <ul>
+      <li><strong>Tint the whole page</strong> blends the colour over everything, like printing on coloured paper. Text stays dark. Photos take on a slight tint.</li>
+      <li><strong>Behind content only</strong> paints under the page content. Photos stay true, but pages that paint their own white background (most scans) won’t change.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Related tools</h2>
+    <p>
+      For a dark page with light text, use <a href="/invert-pdf-colors">Invert PDF Colors</a>. To remove colour, use
+      <a href="/grayscale-pdf">Grayscale PDF</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

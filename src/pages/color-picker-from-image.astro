@@ -1,0 +1,24 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ColorPicker from '../islands/ColorPicker';
+
+const faqs = [
+  { q: "Which colour formats are shown?", a: "HEX (#RRGGBB) for the web, RGB, HSL and an approximate CMYK for print." },
+  { q: "Can I get a colour palette from an image?", a: "Yes. The main colours of the image are shown automatically; tap one to copy its code." },
+  { q: "Can I pick a colour from my screen?", a: "In Chrome and Edge, use <strong>Pick a colour from anywhere on your screen</strong>." },
+  { q: "Is my image uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="color-picker-from-image" title="Image Color Picker \u2013 Get HEX & RGB from a Photo | PDFSherpa"
+  description="Pick colours from any image: HEX, RGB, HSL and CMYK codes with a zoom lens, plus the image\u2019s main colour palette. Free, private, no upload."
+  h1="Image Color Picker" lead="Tap anywhere on a picture or screenshot to get its exact colour as HEX, RGB, HSL or CMYK, with a magnifier for precision. The main colours of the image are extracted as a palette too."
+  howToTitle="How to Get a Colour Code from an Image" steps={["Select an image or screenshot.", "Move over it and tap the colour you want.", "Copy the HEX, RGB, HSL or CMYK code."]}
+  faqs={faqs} related={["image-to-svg", "photo-editor", "image-converter", "favicon-generator"]}>
+  <ColorPicker client:load />
+  <Fragment slot="content">
+    <h2>For designers, developers and makers</h2>
+    <p>Match a brand colour from a logo, copy a shade from a photo for your website, or build a palette for slides and social posts.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

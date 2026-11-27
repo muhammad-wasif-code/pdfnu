@@ -1,0 +1,26 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import RotateImage from '../islands/RotateImage';
+
+const faqs = [
+  { q: 'How do I mirror an image?', a: 'Add the picture and choose <strong>Horizontal</strong> to mirror it left to right, or <strong>Vertical</strong> to turn it upside down like a reflection in water. Then save.' },
+  { q: 'Why are my selfies mirrored?', a: 'Many front cameras save selfies mirrored, so text appears backwards. Flipping horizontally fixes it.' },
+  { q: 'Can I flip several images at once?', a: 'Yes. Add as many as you like; they are all flipped the same way and download as a .zip.' },
+  { q: 'Is quality lost?', a: 'No pixels are changed, only their order. Save as PNG for a lossless copy.' },
+  { q: 'Are my photos uploaded?', a: 'No. Flipping happens in your browser.' },
+];
+---
+<ToolLayout slug="flip-image" title="Flip Image Online – Mirror Photos Free | PDFSherpa"
+  description="Flip images horizontally or vertically to mirror them. Fix mirrored selfies and text. Batch JPG, PNG, WebP. Free, private, no upload."
+  h1="Flip Image (Mirror)" lead="Mirror a photo horizontally or flip it vertically in one tap: fix backwards selfie text or create reflection effects. Works on one image or many, and nothing is uploaded."
+  howToTitle="How to Flip an Image" steps={['Add one or more images.', 'Choose Horizontal and/or Vertical.', 'Click <strong>Flip</strong> and download.']}
+  faqs={faqs} related={['rotate-image', 'crop-image', 'photo-editor', 'resize-image']}>
+  <RotateImage client:load mode="flip" />
+  <Fragment slot="content">
+    <h2>Horizontal vs vertical</h2>
+    <ul><li><strong>Horizontal</strong> swaps left and right, like looking in a mirror. Use it for mirrored selfies, product photos facing the wrong way, or design symmetry.</li><li><strong>Vertical</strong> swaps top and bottom, like a reflection in water.</li></ul>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>You can also rotate in the same step. For straightening, use <a href="/rotate-image">Rotate Image</a>.</p>
+  </Fragment>
+</ToolLayout>

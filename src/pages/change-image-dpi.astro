@@ -1,0 +1,25 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ChangeDpi from '../islands/ChangeDpi';
+
+const faqs = [
+  { q: "Does changing DPI change quality?", a: "No. DPI is only a note inside the file saying how large to print it. The pixels stay exactly the same." },
+  { q: "Why does a form ask for 300 DPI?", a: "Many portals check the DPI value of uploaded photos and signatures. Setting it here satisfies that check without re-saving the photo." },
+  { q: "What size will it print?", a: "Width in inches = pixels \u00f7 DPI. The list shows the printed size for each image at the DPI you choose." },
+  { q: "Need exact pixel dimensions too?", a: "Use <a href=\"/resize-image\">Resize Image</a> first, then set the DPI here." },
+  { q: "Is my photo uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="change-image-dpi" title="Change Image DPI \u2013 300 DPI Photo Converter | PDFSherpa"
+  description="Change the DPI of JPG and PNG images to 300, 200 or any value without losing quality, for forms and printing. Shows print size. Free, private."
+  h1="Change Image DPI" lead="Set the DPI of a photo to 300, 200 or any value, as many application forms and print shops require, without changing a single pixel. See the printed size in centimetres and inches before saving."
+  howToTitle="How to Change Image DPI" steps={["Add your JPG or PNG images.", "Choose the DPI (for example 300).", "Click <strong>Set DPI</strong> and download."]}
+  faqs={faqs} related={["resize-image", "passport-photo-maker", "compress-image", "remove-exif"]}>
+  <ChangeDpi client:load />
+  <Fragment slot="content">
+    <h2>DPI explained simply</h2>
+    <p>A 1800 × 1200 px photo at 300 DPI prints at 6 × 4 inches (15 × 10 cm). At 72 DPI the same photo would be noted as 25 × 16 inches, but it is the same picture. Printers and many forms use the DPI value to know the intended size.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

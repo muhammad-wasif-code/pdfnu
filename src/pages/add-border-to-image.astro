@@ -1,0 +1,24 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import AddBorder from '../islands/AddBorder';
+
+const faqs = [
+  { q: "Does the border cover part of my photo?", a: "No. The picture gets bigger and the border is added around it, so nothing is cut off." },
+  { q: "How do I get transparent rounded corners?", a: "Set rounded corners and save as PNG." },
+  { q: "Can I frame many photos the same way?", a: "Yes. Add as many as you like and they are framed identically." },
+  { q: "Is my photo uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="add-border-to-image" title="Add Border to Image \u2013 Photo Frame & Rounded Corners | PDFSherpa"
+  description="Add a border or frame to photos: solid, double line, Polaroid or shadow, any colour, rounded corners. Batch edit JPG, PNG. Free, private."
+  h1="Add Border to Image" lead="Put a clean frame around your photos: a white border for Instagram, a Polaroid-style frame, a double line or a soft shadow, in any colour and with rounded corners. Frame many photos at once."
+  howToTitle="How to Add a Border to a Photo" steps={["Add one or more photos.", "Choose the style, thickness, colour and corners.", "Click <strong>Add border</strong> and download."]}
+  faqs={faqs} related={["photo-editor", "collage-maker", "circle-crop-image", "resize-image"]}>
+  <AddBorder client:load />
+  <Fragment slot="content">
+    <h2>Styles</h2>
+    <ul><li><strong>Solid:</strong> a clean single-colour frame.</li><li><strong>Double line:</strong> a frame with a thin inner line, like a mount.</li><li><strong>Polaroid:</strong> a white frame with a deeper bottom edge for captions.</li><li><strong>Shadow:</strong> the photo floats above the background.</li></ul>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

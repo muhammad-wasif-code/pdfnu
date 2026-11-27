@@ -1,0 +1,25 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import QrScanner from '../islands/QrScanner';
+
+const faqs = [
+  { q: "Can I scan a QR code from a screenshot?", a: "Yes. Drop the screenshot or image; codes in photos, PDFs exported as images and screenshots all work." },
+  { q: "Does it show Wi-Fi passwords?", a: "Yes. Wi-Fi codes show the network name and password, with a button to copy the password." },
+  { q: "Are links opened automatically?", a: "No. You see the address first and decide whether to open it, which protects you from malicious codes." },
+  { q: "Why can\u2019t it read my code?", a: "Make sure the whole code is visible, in focus and not too small, with some empty space around it." },
+  { q: "Are images or camera video uploaded?", a: "No. Decoding happens in your browser; nothing is sent anywhere." },
+];
+---
+<ToolLayout slug="qr-code-scanner" title="QR Code Scanner Online \u2013 Scan from Camera or Image | PDFSherpa"
+  description="Scan QR codes online with your camera or from a photo or screenshot. Reads links, Wi-Fi passwords, contacts and text. Free, private, no app."
+  h1="QR Code Scanner" lead="Read a QR code with your phone or laptop camera, or from a screenshot or photo, without installing an app. Links, Wi-Fi details, contact cards and text are shown clearly, and nothing opens until you choose to."
+  howToTitle="How to Scan a QR Code" steps={["Tap <strong>Scan with camera</strong>, or drop a photo or screenshot.", "Point at the code and hold steady.", "Copy the result or open it."]}
+  faqs={faqs} related={["qr-code-generator", "barcode-generator", "scan-to-pdf", "ocr-pdf"]}>
+  <QrScanner client:load />
+  <Fragment slot="content">
+    <h2>Safe scanning</h2>
+    <p>QR codes on posters and parking meters are sometimes replaced with fake ones. This scanner shows you exactly where a code leads before anything opens, so you can check the address first.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

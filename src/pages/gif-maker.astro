@@ -1,0 +1,25 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import GifMaker from '../islands/GifMaker';
+
+const faqs = [
+  { q: 'How do I make a GIF from photos?', a: 'Add two or more pictures, put them in order, choose the speed and size, and click <strong>Make GIF</strong>. A live preview shows the animation first.' },
+  { q: 'How fast can the animation be?', a: 'From 0.04 seconds per frame (25 frames per second) to 2 seconds per frame.' },
+  { q: 'What is boomerang?', a: 'The animation plays forward and then backward, for a smooth back-and-forth loop.' },
+  { q: 'Why is my GIF large?', a: 'GIFs grow with size and number of frames. Choose a smaller width or fewer frames. Turning off smooth colours makes simple graphics smaller.' },
+  { q: 'Is there a watermark?', a: 'No watermark, and nothing is uploaded: the GIF is made in your browser.' },
+];
+---
+<ToolLayout slug="gif-maker" title="GIF Maker – Turn Images into an Animated GIF | PDFSherpa"
+  description="Make animated GIFs from photos: set the order, speed, size and loop, with boomerang mode and live preview. No watermark, free, private."
+  h1="GIF Maker" lead="Turn a series of photos or screenshots into an animated GIF. Set the order, speed and size, loop it or play it as a boomerang, and preview before saving. No watermark, nothing uploaded."
+  howToTitle="How to Make a GIF" steps={['Add two or more pictures and put them in order.', 'Choose speed, size and looping.', 'Click <strong>Make GIF</strong> and download.']}
+  faqs={faqs} related={['meme-generator', 'collage-maker', 'resize-image', 'compress-image']}>
+  <GifMaker client:load />
+  <Fragment slot="content">
+    <h2>Good uses</h2>
+    <ul><li>Step-by-step tutorials from screenshots.</li><li>Product photos from several angles.</li><li>Before/after comparisons and simple animations for chats and websites.</li></ul>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

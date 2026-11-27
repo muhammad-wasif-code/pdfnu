@@ -1,0 +1,61 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import AlternateMerge from '../islands/AlternateMerge';
+
+const faqs = [
+  { q: 'What is an alternate merge?', a: 'It combines two PDFs by taking pages in turn: page 1 from the first file, page 1 from the second, page 2 from the first, page 2 from the second, and so on. It is the fastest way to rebuild a double-sided document from separate front and back scans.' },
+  { q: 'My back pages are in reverse order. What should I do?', a: 'Leave <strong>Backs are in reverse order</strong> switched on. When you flip a stack over to scan the back sides, the last back side is scanned first, and this option puts them back in the right order automatically.' },
+  { q: 'I scanned everything into one PDF. Can I still use it?', a: 'Yes. Choose <strong>One PDF</strong>. The first half of the file is treated as the fronts and the second half as the backs.' },
+  { q: 'What if the two files have a different number of pages?', a: 'The pages are interleaved as far as both files go, then the remaining pages of the longer file are added at the end. You see a warning and a preview before you save.' },
+  { q: 'Is it the same as Merge PDF?', a: 'No. <a href="/merge-pdf">Merge PDF</a> puts one file after the other. Alternate &amp; Mix shuffles the pages of two files together like a deck of cards.' },
+  { q: 'Are my scans uploaded?', a: 'No. Both PDFs are processed in your browser and never leave your device.' },
+];
+---
+<ToolLayout
+  slug="alternate-merge-pdf"
+  title="Alternate & Mix PDF – Merge Odd and Even Pages | PDFSherpa"
+  description="Merge front and back scans into one double-sided PDF. Interleave odd and even pages, with reversed backs fixed automatically. Free, no upload."
+  h1="Alternate & Mix PDF Pages"
+  lead="Combine front-side and back-side scans into one correctly ordered double-sided PDF. Pages are interleaved 1, 2, 3, 4…, and reversed back pages are fixed automatically. Free, private, no upload."
+  howToTitle="How to Merge Front and Back Scans"
+  steps={['Select the PDF with the <strong>fronts</strong> (odd pages).', 'Select the PDF with the <strong>backs</strong> (even pages).', 'Check the preview and click <strong>Merge</strong>.']}
+  faqs={faqs}
+  related={['merge-pdf', 'reverse-pdf', 'scan-to-pdf', 'remove-blank-pages']}
+>
+  <AlternateMerge client:load />
+
+  <Fragment slot="content">
+    <h2>Fix double-sided scans without a duplex scanner</h2>
+    <p>
+      Many home and office scanners only scan one side. The usual trick is to scan the stack once for the fronts, flip it, and scan
+      again for the backs. You end up with two files: pages 1, 3, 5… and pages … 6, 4, 2. Alternate &amp; Mix puts them together as
+      1, 2, 3, 4, 5, 6 in one step.
+    </p>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Scan the fronts</strong> of all sheets into one PDF.</li>
+      <li><strong>Flip the stack</strong> and scan the backs into a second PDF.</li>
+      <li><strong>Add both files here.</strong> Keep “Backs are in reverse order” on if you flipped the whole stack.</li>
+      <li><strong>Check the preview.</strong> Each thumbnail shows whether it is a front or a back.</li>
+      <li><strong>Download</strong> the finished double-sided PDF.</li>
+    </ol>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>One file instead of two?</h2>
+    <p>
+      If your scanner app saved fronts and backs into a single file, choose <strong>One PDF</strong>. The first half becomes the fronts
+      and the second half the backs. Blank back sides from single-sided pages can be removed afterwards with
+      <a href="/remove-blank-pages">Remove Blank Pages</a>.
+    </p>
+
+    <h2>Other uses</h2>
+    <ul>
+      <li>Combine a document with its translation, page by page.</li>
+      <li>Put question sheets and answer sheets next to each other.</li>
+      <li>Rebuild a book scanned as left pages and right pages.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>

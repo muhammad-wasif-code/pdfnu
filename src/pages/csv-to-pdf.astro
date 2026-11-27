@@ -1,0 +1,41 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import CsvToPdf from '../islands/CsvToPdf';
+
+const faqs = [
+  { q: 'How do I convert a CSV file to PDF?', a: 'Select the .csv file, check the preview, choose a style and paper, then click <strong>Convert to PDF</strong>.' },
+  { q: 'My CSV uses semicolons. Does that work?', a: 'Yes. The separator (comma, semicolon, tab or pipe) is detected automatically, and you can also pick it yourself.' },
+  { q: 'Is the header repeated on every page?', a: 'Yes, with the Striped or Header only styles the first row is bold, shaded and repeated at the top of every page.' },
+  { q: 'What if the table is too wide?', a: '<strong>Fit all columns</strong> scales the table to the page width, and landscape is chosen automatically for wide tables. Long cell text wraps.' },
+  { q: 'Will ID numbers with leading zeros be kept?', a: 'Yes. Values like 00123 are kept as written. Tick <strong>Keep values exactly as written</strong> to stop any number formatting.' },
+  { q: 'Is my file uploaded?', a: 'No. The conversion runs in your browser.' },
+];
+---
+<ToolLayout
+  slug="csv-to-pdf"
+  title="CSV to PDF – Convert CSV to a Printable Table | PDFSherpa"
+  description="Convert CSV files to a clean PDF table: header repeated on every page, striped rows, fit to width, auto separator. Free, private, no upload."
+  h1="CSV to PDF"
+  lead="Turn a CSV export into a clean, printable PDF table. The header row repeats on every page, rows are striped for easy reading, and wide tables fit the page. Nothing is uploaded."
+  howToTitle="How to Convert CSV to PDF"
+  steps={['Select your .csv file and check the preview.', 'Choose a table style, paper and fit.', 'Click <strong>Convert to PDF</strong> and download.']}
+  faqs={faqs}
+  related={['excel-to-pdf', 'pdf-to-excel', 'text-to-pdf', 'merge-pdf']}
+>
+  <CsvToPdf client:load />
+
+  <Fragment slot="content">
+    <h2>From data export to report</h2>
+    <p>
+      Banks, shops, CRMs and accounting tools export data as CSV. It opens fine in a spreadsheet but prints badly. This tool lays it out as a
+      proper table, with page numbers in the footer, so you can attach it to an email, file it or print it.
+    </p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <h2>Related tools</h2>
+    <p>
+      For formatted spreadsheets with colours, formulas and charts, use <a href="/excel-to-pdf">Excel to PDF</a>. To get tables out of a
+      PDF, use <a href="/pdf-to-excel">PDF to Excel</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

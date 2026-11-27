@@ -1,0 +1,41 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import AddLinks from '../islands/AddLinks';
+
+const faqs = [
+  { q: 'How do I make links in a PDF clickable?', a: 'Open the PDF. Web addresses and e-mail addresses in the text are found automatically; keep the ones you want ticked and click <strong>Save</strong>.' },
+  { q: 'Can I add a link to an image or a button?', a: 'Yes. Drag a box over any area of the page, then type a web address, an e-mail address or a page number to jump to.' },
+  { q: 'Can a link jump to another page of the PDF?', a: 'Yes. Enter a page number instead of a web address, for example to make a table of contents clickable.' },
+  { q: 'Do the links show a border?', a: 'No. Links are invisible, so the page looks exactly the same. Most PDF readers show a pointer cursor when hovering.' },
+  { q: 'Is my file uploaded?', a: 'No. Everything happens in your browser.' },
+];
+---
+<ToolLayout
+  slug="add-links-to-pdf"
+  title="Add Links to PDF – Make URLs & Text Clickable | PDFSherpa"
+  description="Add clickable links to a PDF: web addresses and e-mails are found automatically, or drag a box to link any area to a website or page. Free, private."
+  h1="Add Links to PDF"
+  lead="Make a PDF clickable. Web addresses and e-mails in the text are turned into links automatically, and you can link any area (a logo, a button, a contents line) to a website or another page. Nothing is uploaded."
+  howToTitle="How to Add Hyperlinks to a PDF"
+  steps={['Select your PDF. Web and e-mail addresses are found automatically.', 'Drag a box over anything else you want to link and type the address or page.', 'Click <strong>Save</strong> and download.']}
+  faqs={faqs}
+  related={['add-bookmarks-to-pdf', 'edit-pdf', 'annotate-pdf', 'html-to-pdf']}
+>
+  <AddLinks client:load />
+
+  <Fragment slot="content">
+    <h2>Why links go missing</h2>
+    <p>
+      Printing to PDF, scanning, or some “Save as PDF” options keep the text of a web address but not the link itself. Readers then have to
+      copy and paste. This tool restores clickable links in a few seconds, without changing how the pages look.
+    </p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <h2>Ideas</h2>
+    <ul>
+      <li>Link your logo to your website and your e-mail address to a pre-filled e-mail.</li>
+      <li>Make a contents page jump to each chapter (or add <a href="/add-bookmarks-to-pdf">bookmarks</a> for the side panel).</li>
+      <li>Link “Pay now” or “Book a call” buttons in a brochure or invoice.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>

@@ -1,0 +1,41 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import DocToPdf from '../islands/DocToPdf';
+
+const faqs = [
+  { q: 'What Markdown is supported?', a: 'Headings, bold, italic, strikethrough, links, images, ordered and unordered lists (nested), task lists, tables with alignment, block quotes, code blocks and horizontal rules: the CommonMark basics plus GitHub extras.' },
+  { q: 'Can I convert a GitHub README to PDF?', a: 'Yes. Upload README.md or paste its contents. Images referenced by web address can’t be loaded for privacy reasons; everything else is kept.' },
+  { q: 'Are links clickable in the PDF?', a: 'Yes. Links stay clickable, and the text is real text you can search and copy.' },
+  { q: 'Can I paste Markdown instead of uploading?', a: 'Yes. Choose <strong>Type or paste</strong> and paste your Markdown, for example notes from Obsidian, Notion or an AI chat.' },
+  { q: 'Is my file uploaded?', a: 'No. The conversion runs in your browser.' },
+];
+---
+<ToolLayout
+  slug="markdown-to-pdf"
+  title="Markdown to PDF – Convert MD Files Free Online | PDFSherpa"
+  description="Convert Markdown (.md) to a clean, styled PDF: headings, lists, tables, code blocks and links. Upload or paste. Free, private, no signup."
+  h1="Markdown to PDF"
+  lead="Convert Markdown into a clean, well-styled PDF with headings, lists, tables, code blocks and clickable links. Upload a .md file or paste your text; nothing is uploaded."
+  howToTitle="How to Convert Markdown to PDF"
+  steps={['Select a .md file or paste your Markdown.', 'Choose page size and font.', 'Click <strong>Convert to PDF</strong> and download.']}
+  faqs={faqs}
+  related={['pdf-to-markdown', 'text-to-pdf', 'html-to-pdf', 'word-to-pdf']}
+>
+  <DocToPdf client:load kind="markdown" />
+
+  <Fragment slot="content">
+    <h2>Share Markdown with anyone</h2>
+    <p>
+      Markdown is great for writing, but not everyone can read it. A PDF looks polished on every device: send release notes to a client,
+      print documentation, hand in an assignment written in Obsidian, or save an AI chat answer as a tidy document.
+    </p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <h2>Styling</h2>
+    <p>
+      The PDF uses clear, GitHub-like styling: underlined top-level headings, shaded code blocks, bordered tables and quote bars. Pick sans,
+      serif or monospace and the text size that suits you. Need the reverse? <a href="/pdf-to-markdown">PDF to Markdown</a> turns PDFs
+      into Markdown.
+    </p>
+  </Fragment>
+</ToolLayout>

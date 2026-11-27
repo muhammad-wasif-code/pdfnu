@@ -1,0 +1,52 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PdfMetadata from '../islands/PdfMetadata';
+
+const faqs = [
+  { q: 'What is PDF metadata?', a: 'Information stored inside the file about the document rather than on its pages: title, author, subject, keywords, the app that created it and the creation and modification dates. Readers show it under Document Properties, and search engines often use the title.' },
+  { q: 'How do I remove all metadata from a PDF?', a: 'Open the file, click <strong>Remove all metadata</strong>, then save. The title, author, dates and the hidden XMP block are all removed. Page content is not touched.' },
+  { q: 'Why does my PDF show the wrong title in the browser tab?', a: 'The tab shows the Title field when it is set, which is often left over from a template. Change the title here and the new one appears in browser tabs and search results.' },
+  { q: 'Can I change the creation date?', a: 'Yes. Pick a new date and time, or clear it. Note that the creation date in the file says nothing reliable about when a document was really written.' },
+  { q: 'Does editing metadata change the document?', a: 'No. Only the document properties change. Text, images, links and form fields stay exactly as they were.' },
+  { q: 'Is my file uploaded?', a: 'No. Reading and editing happen in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="edit-pdf-metadata"
+  title="PDF Metadata Editor – Change Title, Author, Dates | PDFSherpa"
+  description="View, edit or remove PDF metadata: title, author, subject, keywords, creator and dates. Clear hidden XMP data too. Free, private, no upload."
+  h1="Edit PDF Metadata"
+  lead="See and change a PDF’s hidden properties (title, author, subject, keywords, creator app and dates) or remove them all before you share the file. Free, private, no upload."
+  howToTitle="How to Edit PDF Metadata"
+  steps={['Select or drop your PDF. Its current properties appear.', 'Edit any field, or click <strong>Remove all metadata</strong>.', 'Click <strong>Save</strong> and download.']}
+  faqs={faqs}
+  related={['redact-pdf', 'protect-pdf', 'flatten-pdf', 'compress-pdf']}
+>
+  <PdfMetadata client:load />
+
+  <Fragment slot="content">
+    <h2>Why edit metadata?</h2>
+    <ul>
+      <li><strong>Privacy:</strong> remove your name, your company or the software you used before sending a file outside your organisation.</li>
+      <li><strong>Search:</strong> a clear title and keywords help Google and internal search show the right document.</li>
+      <li><strong>Professional look:</strong> replace leftover titles like “Microsoft Word – Document1” with the real document title.</li>
+      <li><strong>Records:</strong> set the author and subject used by document management systems.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Two places metadata lives</h2>
+    <p>
+      PDFs keep properties in the Info dictionary and often a second copy in an XMP block. Some readers show one, some the other, so
+      editing only one can leave the old values visible. PDFSherpa writes your values to the Info dictionary and removes the old XMP
+      copy, so every reader shows the same thing.
+    </p>
+
+    <h2>Removing more than metadata</h2>
+    <p>
+      Metadata isn’t the only hidden information. To permanently remove text from pages, use <a href="/redact-pdf">Redact PDF</a>. To
+      merge comments and form fields into the page, use <a href="/flatten-pdf">Flatten PDF</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

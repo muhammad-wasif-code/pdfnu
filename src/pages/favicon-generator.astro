@@ -1,0 +1,24 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FaviconGenerator from '../islands/FaviconGenerator';
+
+const faqs = [
+  { q: "Which files are included?", a: "favicon.ico (16, 32 and 48 px), favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png (180 px), android-chrome 192 and 512 px PNGs, site.webmanifest and an HTML snippet." },
+  { q: "Where do I put the files?", a: "In the root folder of your website, then paste the lines from html-snippet.txt into the &lt;head&gt; of your pages." },
+  { q: "Can I use an emoji?", a: "Yes. Type an emoji in the text field; it is drawn with your device\u2019s emoji font." },
+  { q: "Is my logo uploaded?", a: "No. Everything happens in your browser and nothing is uploaded." },
+];
+---
+<ToolLayout slug="favicon-generator" title="Favicon Generator \u2013 ICO, Apple & Android Icons | PDFSherpa"
+  description="Make a favicon pack from a logo, letters or emoji: favicon.ico, PNG sizes, Apple touch icon, Android/PWA icons, manifest and HTML. Free, private."
+  h1="Favicon Generator" lead="Create every icon a website needs from your logo, a letter or an emoji: favicon.ico, 16 and 32 px PNGs, the Apple touch icon, Android/PWA icons, a web manifest and the HTML to paste."
+  howToTitle="How to Create a Favicon" steps={["Choose a logo image, or type letters or an emoji.", "Pick the shape, colours and padding and check the previews.", "Download the zip and upload the files to your website."]}
+  faqs={faqs} related={["image-to-svg", "resize-image", "image-converter", "circle-crop-image"]}>
+  <FaviconGenerator client:load />
+  <Fragment slot="content">
+    <h2>Why your site needs a favicon</h2>
+    <p>The favicon appears in browser tabs, bookmarks, search results on mobile and on phone home screens. A clear icon makes your site look trustworthy and easy to find among open tabs.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+  </Fragment>
+</ToolLayout>

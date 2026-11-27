@@ -1,0 +1,59 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PptToPdf from '../islands/PptToPdf';
+
+const faqs = [
+  { q: 'Do I need PowerPoint installed?', a: 'No. PDFSherpa reads the .pptx file itself, so it works on any phone, tablet, Chromebook or computer with a modern browser.' },
+  { q: 'What is kept in the PDF?', a: 'Slide size, backgrounds and themes, text with bullets and numbering, pictures, shapes, tables, charts, SmartArt diagrams and slide numbers. Each slide becomes one page.' },
+  { q: 'What about animations and videos?', a: 'A PDF can’t play them, so each slide is saved as it looks when fully built. Videos show their preview picture.' },
+  { q: 'Are hidden slides included?', a: 'Not by default, just like when you print from PowerPoint. Tick <strong>Include hidden slides</strong> to keep them.' },
+  { q: 'Can I convert .ppt or Keynote files?', a: 'Save them as .pptx first: in PowerPoint use File → Save As, in Keynote use File → Export To → PowerPoint, and in Google Slides use File → Download → Microsoft PowerPoint.' },
+  { q: 'Is my presentation uploaded?', a: 'No. The conversion runs entirely in your browser, so confidential decks never leave your device.' },
+];
+---
+<ToolLayout
+  slug="powerpoint-to-pdf"
+  title="PowerPoint to PDF – Convert PPTX to PDF Free | PDFSherpa"
+  description="Convert PowerPoint (.pptx) to PDF in your browser. Keeps slide design, text, pictures, tables and charts. Free, no signup, no upload, any language."
+  h1="PowerPoint to PDF"
+  lead="Convert a PowerPoint presentation to PDF without PowerPoint. Slide design, text, bullets, pictures, tables and charts are kept, one page per slide, and your file never leaves your device."
+  howToTitle="How to Convert PowerPoint to PDF"
+  steps={['Select or drop your .pptx file.', 'Click <strong>Convert to PDF</strong>.', '<strong>Download</strong> your PDF.']}
+  faqs={faqs}
+  related={['pdf-to-powerpoint', 'word-to-pdf', 'excel-to-pdf', 'compress-pdf']}
+>
+  <PptToPdf client:load />
+
+  <Fragment slot="content">
+    <h2>Why save slides as PDF?</h2>
+    <p>
+      A PDF looks the same on every device, even where PowerPoint isn’t installed and the theme fonts are missing. It is smaller to email,
+      can’t be changed by accident, and is the format most portals accept for assignments, proposals and handouts.
+    </p>
+
+    <h2>What the converter understands</h2>
+    <ul>
+      <li><strong>Design:</strong> slide masters, layouts, theme colours, solid, gradient and picture backgrounds.</li>
+      <li><strong>Text:</strong> titles, bullets, numbered lists, indent levels, alignment, autofit, bold, italic, underline and colours, in any language including Urdu, Arabic and Hindi.</li>
+      <li><strong>Objects:</strong> pictures (cropped, rotated, in shapes), preset and freeform shapes, arrows, connectors and groups.</li>
+      <li><strong>Data:</strong> tables with their table style, and column, bar, line, pie, area and scatter charts drawn as sharp vector graphics.</li>
+      <li><strong>SmartArt:</strong> drawn from the diagram PowerPoint saves with the file.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Limitations</h2>
+    <p>
+      Fonts are matched to similar open fonts (Calibri, Arial, Times New Roman and Cambria have exact-width replacements), so a few lines
+      may break differently. EMF/WMF pictures, 3D models and some rare effects (shadows, reflections, glow) are not drawn. Check the PDF
+      before you share it.
+    </p>
+
+    <h2>Going the other way</h2>
+    <p>
+      Need to edit slides from a PDF? Use <a href="/pdf-to-powerpoint">PDF to PowerPoint</a>. To make the finished PDF smaller for email,
+      use <a href="/compress-pdf">Compress PDF</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

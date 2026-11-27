@@ -1,0 +1,41 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import DocToPdf from '../islands/DocToPdf';
+
+const faqs = [
+  { q: 'How do I convert an EPUB to PDF?', a: 'Select the .epub file, choose a page size (A5 feels like a real book; A4 is better for printing) and click <strong>Convert to PDF</strong>.' },
+  { q: 'Are pictures and chapters kept?', a: 'Yes. Chapters stay in reading order and each starts on a new page. Pictures, headings, italics and the book’s own styles are kept.' },
+  { q: 'Can I convert Kindle books or books with DRM?', a: 'No. Only DRM-free EPUB files can be converted. Kindle formats (.mobi, .azw) aren’t supported.' },
+  { q: 'The book’s styles look odd. What can I do?', a: 'Turn off <strong>Use the book’s own styles</strong> for plain, even formatting with the font and size you choose.' },
+  { q: 'Is my book uploaded?', a: 'No. The conversion runs in your browser.' },
+];
+---
+<ToolLayout
+  slug="epub-to-pdf"
+  title="EPUB to PDF – Convert E-books to PDF Free | PDFSherpa"
+  description="Convert DRM-free EPUB e-books to PDF with chapters, pictures and styles. Choose A5, A4 or Letter. Free, private, no upload, no signup."
+  h1="EPUB to PDF"
+  lead="Convert a DRM-free EPUB e-book into a PDF you can print or read on any device. Chapters, pictures and formatting are kept, and each chapter starts on a new page. Nothing is uploaded."
+  howToTitle="How to Convert EPUB to PDF"
+  steps={['Select your .epub file.', 'Choose page size, font and text size.', 'Click <strong>Convert to PDF</strong> and download.']}
+  faqs={faqs}
+  related={['pdf-to-epub', 'booklet-pdf', 'compress-pdf', 'text-to-pdf']}
+>
+  <DocToPdf client:load kind="epub" />
+
+  <Fragment slot="content">
+    <h2>When a PDF is better than an EPUB</h2>
+    <ul>
+      <li><strong>Printing:</strong> PDFs have fixed pages and print predictably. Combine with <a href="/booklet-pdf">Booklet PDF</a> to print a folded book.</li>
+      <li><strong>Sharing:</strong> everyone can open a PDF without an e-reader app.</li>
+      <li><strong>Studying:</strong> page numbers stay the same, so you can cite them and annotate with <a href="/annotate-pdf">Annotate PDF</a>.</li>
+    </ul>
+    <AdSlot variant="inline" slot="tool-article" />
+    <h2>Limitations</h2>
+    <p>
+      DRM-protected books can’t be converted. Links between chapters become plain text, and embedded fonts are replaced with similar fonts.
+      To turn a PDF into an e-book, use <a href="/pdf-to-epub">PDF to EPUB</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

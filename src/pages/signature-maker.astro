@@ -1,0 +1,25 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import SignatureMaker from '../islands/SignatureMaker';
+
+const faqs = [
+  { q: "Is the background transparent?", a: "Yes, by default. The PNG can be placed on any document or e-mail without a white box." },
+  { q: "Is this a legally binding e-signature?", a: "It is a picture of your signature, which many organisations accept for everyday documents. Some contracts require a certified digital signature service." },
+  { q: "How do I put it on a PDF?", a: "Use <a href=\"/sign-pdf\">Sign PDF</a>: you can create or place your signature directly on the document." },
+  { q: "Is my signature stored or uploaded?", a: "No. It is created in your browser and never leaves your device." },
+];
+---
+<ToolLayout slug="signature-maker" title="Signature Maker \u2013 Create Your Signature Online Free | PDFSherpa"
+  description="Create a signature online: draw it, type it in a handwriting font or upload a photo. Download a transparent PNG for documents and e-mail. Free."
+  h1="Signature Maker" lead="Create a clean digital signature in seconds: draw it with your finger or mouse, type your name in a handwriting style, or upload a photo of your signature. Download it as a transparent PNG."
+  howToTitle="How to Make a Digital Signature" steps={["Click <strong>Create signature</strong> and draw, type or upload it.", "Choose the size and background.", "Download PNG or JPG."]}
+  faqs={faqs} related={["sign-pdf", "signature-cleaner", "image-to-svg", "fill-pdf-form"]}>
+  <SignatureMaker client:load />
+  <Fragment slot="content">
+    <h2>Three ways to create it</h2>
+    <ul><li><strong>Draw</strong> on screen with a finger, stylus or mouse.</li><li><strong>Type</strong> your name in a handwriting font.</li><li><strong>Upload</strong> a photo of your signature on paper; the background is removed.</li></ul>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>Have a scanned signature with a grey background? Clean it with <a href="/signature-cleaner">Signature Cleaner</a>.</p>
+  </Fragment>
+</ToolLayout>

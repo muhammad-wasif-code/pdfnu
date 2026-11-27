@@ -1,0 +1,42 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import DocToPdf from '../islands/DocToPdf';
+
+const faqs = [
+  { q: 'How do I convert a TXT file to PDF?', a: 'Select the .txt file (or paste the text), choose page size, font and text size, and click <strong>Convert to PDF</strong>.' },
+  { q: 'Are line breaks and spacing kept?', a: 'Yes. Every line break, blank line and indent is kept. Lines longer than the page width wrap neatly instead of being cut off.' },
+  { q: 'Which font should I use?', a: 'Monospace keeps columns in logs, code and fixed-width reports lined up. Sans or Serif read better for notes and letters.' },
+  { q: 'Does it work with Urdu, Arabic, Hindi or Chinese text?', a: 'Yes. Text in any language is drawn with a matching font, and right-to-left text is shown correctly.' },
+  { q: 'Can I start a new page at a certain point?', a: 'Yes. A form-feed character (used by many old reports and printers) starts a new page.' },
+  { q: 'Is my file uploaded?', a: 'No. The conversion runs in your browser.' },
+];
+---
+<ToolLayout
+  slug="text-to-pdf"
+  title="Text to PDF – Convert TXT to PDF Online Free | PDFSherpa"
+  description="Convert .txt files or pasted text to PDF. Keeps line breaks and spacing, wraps long lines, any language. A4 or Letter, choice of font. Free, private."
+  h1="Text to PDF"
+  lead="Turn a .txt file or pasted text into a clean PDF. Line breaks and spacing are kept, long lines wrap, and text in any language is supported. Nothing is uploaded."
+  howToTitle="How to Convert Text to PDF"
+  steps={['Select a .txt file or paste your text.', 'Choose page size, font and text size.', 'Click <strong>Convert to PDF</strong> and download.']}
+  faqs={faqs}
+  related={['markdown-to-pdf', 'word-to-pdf', 'html-to-pdf', 'pdf-to-text']}
+>
+  <DocToPdf client:load kind="text" />
+
+  <Fragment slot="content">
+    <h2>For notes, logs and plain reports</h2>
+    <p>
+      Plain text files are everywhere: meeting notes, exported chat logs, server logs, README files and reports from older systems.
+      A PDF version looks the same on every device, prints with proper margins and can be attached to emails and forms that only accept PDF.
+    </p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <h2>Good to know</h2>
+    <ul>
+      <li>The text in the PDF is real text: it can be searched, selected and copied.</li>
+      <li>Files with Markdown formatting (<code>#</code> headings, <code>**bold**</code>) look better with <a href="/markdown-to-pdf">Markdown to PDF</a>.</li>
+      <li>To go the other way, use <a href="/pdf-to-text">PDF to Text</a>.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>

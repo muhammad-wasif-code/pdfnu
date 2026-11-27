@@ -1,0 +1,44 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PageColors from '../islands/PageColors';
+
+const faqs = [
+  { q: 'What does inverting PDF colours do?', a: 'Every colour is replaced by its opposite: white becomes black, black becomes white, blue becomes orange and so on, like a photo negative.' },
+  { q: 'Can I make a dark-mode PDF for night reading?', a: 'Yes. Inverting a normal document gives light text on a black background, which is easier on the eyes in the dark and saves battery on OLED screens.' },
+  { q: 'Can I turn white text on black into black on white to save ink?', a: 'Yes. Invert slides or documents with dark backgrounds before printing and you will use far less ink or toner.' },
+  { q: 'Is the text still selectable?', a: 'Yes. The pages are not converted to images; a colour-inverting layer is added, so text stays searchable and sharp.' },
+  { q: 'Can I invert only some pages?', a: 'Yes. Tap pages to leave them unchanged, for example photo pages that look odd inverted.' },
+  { q: 'Is my file uploaded?', a: 'No. Everything happens in your browser.' },
+];
+---
+<ToolLayout
+  slug="invert-pdf-colors"
+  title="Invert PDF Colors – Dark Mode & Negative PDF | PDFSherpa"
+  description="Invert the colours of a PDF: black background with white text for night reading, or turn dark slides white to save ink. Text stays selectable. Free."
+  h1="Invert PDF Colors"
+  lead="Swap black and white (and every other colour) in a PDF. Make a dark-mode copy for reading at night, or turn dark slides into ink-saving white pages. Text stays sharp and selectable."
+  howToTitle="How to Invert the Colours of a PDF"
+  steps={['Select or drop your PDF.', 'Tap any pages you want to keep as they are.', 'Click <strong>Invert</strong> and download.']}
+  faqs={faqs}
+  related={['grayscale-pdf', 'pdf-background-color', 'compress-pdf', 'n-up-pdf']}
+>
+  <PageColors client:load kind="invert" />
+
+  <Fragment slot="content">
+    <h2>Two common reasons to invert</h2>
+    <ul>
+      <li><strong>Reading at night:</strong> white pages are glaring in a dark room. An inverted copy shows light text on black.</li>
+      <li><strong>Saving ink:</strong> presentation templates with dark backgrounds use a lot of toner. Invert them before printing handouts.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>How it works</h2>
+    <p>
+      A white “difference” layer is placed over each page. Viewers combine it with the page so every colour flips, while the original text,
+      vector graphics and images stay inside the file untouched. That keeps the PDF small and searchable. To remove colour completely
+      instead, use <a href="/grayscale-pdf">Grayscale PDF</a>; for a gentle tinted page, use <a href="/pdf-background-color">PDF Background Color</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

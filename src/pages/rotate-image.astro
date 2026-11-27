@@ -1,0 +1,27 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import RotateImage from '../islands/RotateImage';
+
+const faqs = [
+  { q: 'How do I rotate a picture?', a: 'Add your photo, tap <strong>↻ Right</strong> or <strong>↺ Left</strong> to turn it 90°, and save. For a slightly crooked photo, use the <strong>Straighten</strong> slider instead.' },
+  { q: 'Can I rotate many photos at once?', a: 'Yes. Add as many images as you like; they all get the same rotation and download together as a .zip.' },
+  { q: 'Does rotating reduce quality?', a: 'Turning by 90° or 180° keeps every pixel. Saving as PNG is lossless; JPG is saved at high quality.' },
+  { q: 'What happens to the corners when I straighten?', a: '“Crop to fill” trims the image slightly so there are no empty corners. “Keep all” keeps the whole picture and fills the corners with white, black or transparency.' },
+  { q: 'Are my photos uploaded?', a: 'No. Photos are rotated in your browser and never leave your device.' },
+];
+---
+<ToolLayout slug="rotate-image" title="Rotate Image Online – Turn or Straighten Photos | PDFSherpa"
+  description="Rotate images 90°, 180° or any angle and straighten tilted photos. Batch rotate JPG, PNG and WebP. Free, private, no upload."
+  h1="Rotate Image" lead="Turn photos by 90° or 180°, or straighten a tilted horizon to the exact degree. Rotate one picture or a whole batch at once. Nothing is uploaded."
+  howToTitle="How to Rotate an Image" steps={['Add one or more images.', 'Turn left/right or use the Straighten slider.', 'Click <strong>Rotate</strong> and download.']}
+  faqs={faqs} related={['flip-image', 'crop-image', 'resize-image', 'photo-editor']}>
+  <RotateImage client:load mode="rotate" />
+  <Fragment slot="content">
+    <h2>Fix sideways and crooked photos</h2>
+    <p>Phone photos sometimes show up sideways on other devices, and scanned or handheld shots are often a degree or two off. Rotate them the right way up, or straighten them precisely with the slider, and see the result live before you save.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <h2>Related tools</h2>
+    <p>Mirror a selfie with <a href="/flip-image">Flip Image</a>, trim edges with <a href="/crop-image">Crop Image</a>, or rotate PDF pages with <a href="/rotate-pdf">Rotate PDF</a>.</p>
+  </Fragment>
+</ToolLayout>

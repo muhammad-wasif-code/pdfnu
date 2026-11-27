@@ -1,0 +1,26 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import CollageMaker from '../islands/CollageMaker';
+
+const faqs = [
+  { q: 'How many photos can a collage have?', a: 'From 2 to 16. A layout that fits your number of photos is chosen automatically, and you can switch to any other.' },
+  { q: 'Which sizes are available?', a: 'Square (Instagram post), 4:5 (Instagram portrait), 3:2, 16:9 (YouTube, desktop), 9:16 (stories, reels) and A4 for printing.' },
+  { q: 'Can I choose which part of each photo shows?', a: 'Yes. Drag inside a photo in the preview to move it within its frame.' },
+  { q: 'Is there a watermark?', a: 'No. Collages are saved without any watermark, up to 4096 pixels wide.' },
+  { q: 'Are my photos uploaded?', a: 'No. The collage is made in your browser.' },
+];
+---
+<ToolLayout slug="collage-maker" title="Collage Maker – Free Photo Grid Online | PDFSherpa"
+  description="Make photo collages with 2 to 16 pictures: grid and featured layouts, square, story or A4 size, spacing, rounded corners. No watermark, no upload."
+  h1="Collage Maker" lead="Put 2 to 16 photos together in a stylish grid. Pick a layout and size (square, story, widescreen or A4), set spacing, corners and background colour, and drag each photo into position. No watermark, nothing uploaded."
+  howToTitle="How to Make a Photo Collage" steps={['Add your photos.', 'Choose a layout and shape, and drag photos to frame them.', 'Click <strong>Save collage</strong> and download.']}
+  faqs={faqs} related={['combine-images', 'add-text-to-image', 'resize-image', 'jpg-to-pdf']}>
+  <CollageMaker client:load />
+  <Fragment slot="content">
+    <h2>Layouts for every occasion</h2>
+    <p>Featured layouts give one photo the spotlight with smaller ones alongside, great for birthdays, trips and product launches. Even grids suit before/after shots, menus and mood boards.</p>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>To simply place pictures side by side or stacked, use <a href="/combine-images">Combine Images</a>. To print several photos on PDF pages, use <a href="/jpg-to-pdf">JPG to PDF</a>.</p>
+  </Fragment>
+</ToolLayout>

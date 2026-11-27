@@ -1,0 +1,51 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import EditBookmarks from '../islands/EditBookmarks';
+
+const faqs = [
+  { q: 'What are PDF bookmarks?', a: 'Bookmarks (also called the outline) are the clickable table of contents shown in the side panel of PDF readers. Clicking one jumps to that page.' },
+  { q: 'Can bookmarks be created automatically?', a: 'Yes. Click <strong>Find headings automatically</strong>. Headings are recognised by their larger or bold text and turned into bookmarks, with sub-headings nested underneath. Review the list before saving.' },
+  { q: 'Can I edit existing bookmarks?', a: 'Yes. Existing bookmarks are loaded so you can rename them, change their page, nest them, reorder them or delete them.' },
+  { q: 'How do I make a sub-bookmark?', a: 'Use the ⇥ button to indent a bookmark under the one above it, and ⇤ to move it back out.' },
+  { q: 'Does it work for scanned PDFs?', a: 'You can add bookmarks by hand to any PDF. Automatic detection needs real text, so run <a href="/ocr-pdf">OCR PDF</a> on scans first.' },
+  { q: 'Is my file uploaded?', a: 'No. Bookmarks are written in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="add-bookmarks-to-pdf"
+  title="Add Bookmarks to PDF – Edit Outline, Auto TOC | PDFSherpa"
+  description="Add, edit or auto-generate PDF bookmarks (a clickable table of contents). Nest chapters and sections, rename, reorder. Free, no upload."
+  h1="Add Bookmarks to a PDF"
+  lead="Create a clickable table of contents for any PDF. Find headings automatically or add bookmarks by hand, nest them into chapters and sections, and edit existing ones. Free, private, no watermark."
+  howToTitle="How to Add Bookmarks to a PDF"
+  steps={['Select or drop your PDF. Existing bookmarks are loaded.', 'Click <strong>Find headings automatically</strong> or add bookmarks yourself.', 'Adjust titles, pages and levels, then click <strong>Save</strong>.']}
+  faqs={faqs}
+  related={['split-pdf-by-bookmarks', 'edit-pdf-metadata', 'merge-pdf', 'ocr-pdf']}
+>
+  <EditBookmarks client:load />
+
+  <Fragment slot="content">
+    <h2>Why add bookmarks?</h2>
+    <p>
+      Bookmarks make long PDFs easy to navigate: readers see the structure at a glance and jump straight to a chapter. Many universities,
+      courts and publishers require them for theses, filings and e-books. After you merge several documents with
+      <a href="/merge-pdf">Merge PDF</a>, adding a bookmark for each one turns the result into a tidy bundle.
+    </p>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Automatic heading detection</h2>
+    <p>
+      PDFSherpa reads the text of every page, finds the normal body text size, and treats noticeably larger or bold lines as headings. The
+      largest become chapters and smaller ones become sections. Running headers and page numbers are ignored. It is a starting point:
+      check the list and remove anything that isn’t a real heading.
+    </p>
+
+    <h2>After saving</h2>
+    <p>
+      The PDF opens with the bookmarks panel visible. To split the document into one file per chapter, use
+      <a href="/split-pdf-by-bookmarks">Split by Bookmarks</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

@@ -1,0 +1,57 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import AnnotatePdf from '../islands/AnnotatePdf';
+
+const faqs = [
+  { q: 'How do I highlight text in a PDF?', a: 'Choose <strong>Highlight</strong> and drag across the text. The highlight snaps to the lines of text you covered. Underline and Strike work the same way.' },
+  { q: 'Will others see my annotations?', a: 'Yes. They are saved as standard PDF comments, so they show in Adobe Acrobat, Microsoft Edge, Chrome, Apple Preview and other readers. People can read, reply to or remove them there.' },
+  { q: 'Which annotation tools are available?', a: 'Highlight, underline, strikethrough, freehand pen, text boxes, sticky-note comments, boxes, circles and arrows, each in several colours.' },
+  { q: 'Can I add a comment to a highlight?', a: 'Yes. Tap the highlight with <strong>Select</strong> and type a comment. It appears as a pop-up note in PDF readers.' },
+  { q: 'Can I annotate a scanned PDF?', a: 'Yes. On scans the highlight covers exactly the area you drag, because there is no text to snap to.' },
+  { q: 'Is my file uploaded?', a: 'No. Annotating happens in your browser. Your PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="annotate-pdf"
+  title="Annotate PDF Online – Highlight, Comment, Draw | PDFSherpa"
+  description="Highlight, underline and comment on PDFs, add sticky notes, text, arrows and drawings. Saved as real PDF comments. Free, no upload, no signup."
+  h1="Annotate PDF"
+  lead="Highlight, underline and strike out text, add sticky notes and text comments, and draw arrows, boxes and freehand marks. Annotations are saved as real PDF comments that work in every reader. Free, private, no watermark."
+  howToTitle="How to Annotate a PDF"
+  steps={['Select or drop your PDF.', 'Pick a tool (Highlight, Note, Pen, Arrow…) and mark the page.', 'Click <strong>Save</strong> and download the annotated PDF.']}
+  faqs={faqs}
+  related={['edit-pdf', 'stamp-pdf', 'sign-pdf', 'flatten-pdf']}
+>
+  <AnnotatePdf client:load />
+
+  <Fragment slot="content">
+    <h2>Review documents like on paper</h2>
+    <p>
+      Annotate PDF gives you the pens and sticky notes of a paper review. Mark important lines, cross out text that should go, circle a
+      figure and point an arrow at it, or leave a note on the margin. Your name is saved as the author of each comment.
+    </p>
+
+    <h2>Real comments, not just drawings</h2>
+    <p>
+      Many free editors bake marks into the page. PDFSherpa saves standard PDF annotations instead. Your colleague can open the file in
+      Acrobat or Edge, see a list of your comments, reply to them and delete them when they are done. If you want the marks to become
+      a permanent part of the page, run the file through <a href="/flatten-pdf">Flatten PDF</a> afterwards.
+    </p>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Who uses it</h2>
+    <ul>
+      <li><strong>Students:</strong> highlight lecture notes and research papers.</li>
+      <li><strong>Teachers:</strong> mark assignments with comments and corrections.</li>
+      <li><strong>Teams:</strong> review contracts, designs and reports before sign-off.</li>
+    </ul>
+
+    <h2>Related tools</h2>
+    <p>
+      To change the document itself (add text, cover content, insert images), use <a href="/edit-pdf">Edit PDF</a>. To mark status, use
+      <a href="/stamp-pdf">Stamp PDF</a>. To sign, use <a href="/sign-pdf">Sign PDF</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

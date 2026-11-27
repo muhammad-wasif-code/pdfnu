@@ -14,7 +14,7 @@ interface Props {
 
 /** A page/file card with a lazily-filled thumbnail. */
 export default function PageThumb({ url, aspect = 1.414, rotate = 0, caption, sub, selected, dimmed, badge, children }: Props) {
-  const sideways = rotate % 180 !== 0;
+  const sideways = Math.abs(rotate % 180) === 90;
   return (
     <div class={`relative rounded-control border bg-white p-2 text-center transition dark:bg-night-2 ${selected ? 'border-brand ring-2 ring-brand' : 'border-line dark:border-white/10'} ${dimmed ? 'opacity-40' : ''}`}>
       <div class="relative mx-auto grid aspect-[3/4] w-full place-items-center overflow-hidden rounded-md bg-surface dark:bg-white/5">

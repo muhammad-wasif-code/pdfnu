@@ -2,7 +2,7 @@
 import { build } from 'esbuild';
 import { readFileSync, mkdirSync, existsSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, PDFName } from 'pdf-lib';
 
 mkdirSync('test/out', { recursive: true });
 await build({ entryPoints: ['src/lib/pdfOps.ts'], bundle: true, format: 'esm', platform: 'node', outfile: 'test/out/pdfOps.mjs', external: ['pdf-lib'], logLevel: 'error' });
@@ -248,6 +248,176 @@ ok('rebuild broken startxref + truncated trailer');
     words: [{ text: 'رسید', x0: 300, y0: 40, x1: 500, y1: 80 }, { text: 'कुल', x0: 40, y0: 300, x1: 140, y1: 340 }] }]);
   assert.ok(await has(ur, 'NotoNaskhArabic') && await has(ur, 'NotoSansDevanagari') && await has(ur, '/ActualText'), 'Urdu/Hindi invisible layer');
   ok('searchable PDF: invisible text layer over words (English, Urdu, Hindi)');
+}
+
+
+// alternate merge: fronts + backs (backs reversed), and single-file mode
+{
+  const fronts = await PDFDocument.create(); for (let i = 0; i < 3; i++) fronts.addPage([100 + i, 100]);
+  const backs = await PDFDocument.create(); for (let i = 0; i < 3; i++) backs.addPage([200 + i, 100]);
+  const fb = await fronts.save(), bb = await backs.save();
+  let r = await open(await ops.alternateMerge(fb.buffer.slice(0), bb.buffer.slice(0), true));
+  assert.deepEqual(r.getPages().map((p) => p.getWidth()), [100, 202, 101, 201, 102, 200]);
+  r = await open(await ops.alternateMerge(fb.buffer.slice(0), bb.buffer.slice(0), false));
+  assert.deepEqual(r.getPages().map((p) => p.getWidth()), [100, 200, 101, 201, 102, 202]);
+  const one = await PDFDocument.create(); for (let i = 0; i < 4; i++) one.addPage([10 + i, 100]);
+  r = await open(await ops.alternateMerge((await one.save()).buffer.slice(0), null, true));
+  assert.deepEqual(r.getPages().map((p) => p.getWidth()), [10, 13, 11, 12]);
+  ok('alternate merge (two files, reversed backs, single file)');
+}
+
+// insert blank pages
+{
+  const src = await PDFDocument.create(); src.addPage([600, 400]); src.addPage([300, 500]);
+  const { bytes, added } = await ops.insertBlankPages((await src.save()).buffer.slice(0), [{ after: -1, count: 1 }, { after: 0, count: 2 }], 'match');
+  const r = await open(bytes);
+  assert.equal(added, 3);
+  assert.deepEqual(r.getPages().map((p) => [p.getWidth(), p.getHeight()]), [[600, 400], [600, 400], [600, 400], [600, 400], [300, 500]]);
+  const a4 = await open((await ops.insertBlankPages((await src.save()).buffer.slice(0), [{ after: 1, count: 1 }], 'a4')).bytes);
+  assert.equal(Math.round(a4.getPage(2).getHeight()), 842);
+  ok('insert blank pages (match size, A4)');
+}
+
+// metadata read / write / clear
+{
+  const m0 = await ops.readMetadata(small());
+  const edited = await ops.writeMetadata(small(), { title: 'Quarterly report', author: 'A. Writer', subject: 'Sales', keywords: 'sales, q3', creator: '', producer: 'PDFSherpa', created: '2024-05-01T10:00:00.000Z', modified: null });
+  const m1 = await ops.readMetadata(edited.buffer.slice(edited.byteOffset, edited.byteOffset + edited.byteLength));
+  assert.equal(m1.title, 'Quarterly report'); assert.equal(m1.author, 'A. Writer'); assert.equal(m1.keywords, 'sales q3');
+  assert.equal(m1.creator, ''); assert.equal(m1.created, '2024-05-01T10:00:00.000Z'); assert.equal(m1.modified, null); assert.equal(m1.hasXmp, false);
+  assert.ok(typeof m0.title === 'string');
+  ok('metadata edit + clear');
+}
+
+// stamps, placed images, annotations
+{
+  const st = await open(await ops.stampPdf(buf('test/fixtures/rotated.pdf'), [{ page: 0, cx: 0.5, cy: 0.3, w: 0.4, text: 'APPROVED', sub: '27 Nov 2026', color: '#16a34a', angle: -12, opacity: 0.9, shape: 'round' }, { page: 1, cx: 0.5, cy: 0.5, w: 0.3, text: 'منظور', sub: '', color: '#dc2626', angle: 0, opacity: 1, shape: 'oval' }]));
+  assert.ok(st.getPageCount() >= 2);
+  const png = buf('test/fixtures/image.png');
+  const pi = await open(await ops.placeImages(small(), [{ pages: [0, 1, 2], x: 0.8, y: 0.02, w: 0.15, h: 0.05, png, opacity: 0.5 }]));
+  assert.equal(pi.getPageCount(), 3);
+  const an = await open(await ops.annotatePdf(small(), [
+    { kind: 'highlight', page: 0, color: '#facc15', quads: [{ x: 0.1, y: 0.1, w: 0.5, h: 0.02 }], note: 'check this' },
+    { kind: 'underline', page: 0, color: '#2563eb', quads: [{ x: 0.1, y: 0.2, w: 0.3, h: 0.02 }] },
+    { kind: 'strike', page: 0, color: '#dc2626', quads: [{ x: 0.1, y: 0.25, w: 0.3, h: 0.02 }] },
+    { kind: 'ink', page: 1, color: '#dc2626', width: 2, paths: [[[0.1, 0.1], [0.2, 0.15], [0.3, 0.1]]] },
+    { kind: 'square', page: 1, color: '#2563eb', width: 2, x: 0.4, y: 0.4, w: 0.2, h: 0.1 },
+    { kind: 'circle', page: 1, color: '#2563eb', width: 2, x: 0.4, y: 0.6, w: 0.2, h: 0.1 },
+    { kind: 'arrow', page: 1, color: '#111827', width: 2, x1: 0.1, y1: 0.8, x2: 0.4, y2: 0.7 },
+    { kind: 'text', page: 2, color: '#111827', size: 12, x: 0.1, y: 0.1, w: 0.4, h: 0.1, text: 'Hello\nآپ کا شکریہ' },
+    { kind: 'note', page: 2, color: '#facc15', x: 0.8, y: 0.1, text: 'Please sign here' },
+  ], 'Reviewer'));
+  const subs = an.getPages().flatMap((p) => { const a = p.node.Annots(); return a ? a.asArray().map((r) => String(an.context.lookup(r).get(PDFName.of('Subtype')))) : []; });
+  assert.deepEqual(subs, ['/Highlight', '/Underline', '/StrikeOut', '/Ink', '/Square', '/Circle', '/Line', '/FreeText', '/Text']);
+  ok('stamps, image placement on every page, 9 annotation types');
+}
+
+
+// N-up, booklet
+{
+  const r = await open(await ops.nUp(scanned(), { perSheet: 4, sheet: 'a4', orientation: 'auto', order: 'across', margin: 18, gap: 8, border: true }));
+  assert.equal(r.getPageCount(), 1);
+  const r2 = await open(await ops.nUp(small(), { perSheet: 2, sheet: 'a4', orientation: 'auto', order: 'across', margin: 18, gap: 8, border: false }));
+  assert.equal(r2.getPageCount(), 2); assert.ok(r2.getPage(0).getWidth() > r2.getPage(0).getHeight(), '2-up is landscape');
+  assert.deepEqual(ops.bookletOrder(8), [[7, 0], [1, 6], [5, 2], [3, 4]]);
+  assert.deepEqual(ops.bookletOrder(5), [[-1, 0], [1, -1], [-1, 2], [3, 4]]);
+  assert.deepEqual(ops.bookletOrder(4, true), [[0, 3], [2, 1]]);
+  const b = await open(await ops.booklet(buf('test/fixtures/rotated.pdf'), { sheet: 'a4', rtl: false, margin: 10, creep: 0 }));
+  assert.equal(b.getPageCount() % 2, 0);
+  ok('N-up 4/2 per sheet, booklet order (LTR, RTL, padding)');
+}
+
+// split by size
+{
+  const parts = await ops.splitBySize(scanned(), 3_000_000);
+  assert.ok(parts.length >= 2);
+  assert.equal(parts.reduce((t, p) => t + (p.last - p.first + 1), 0), 4);
+  for (const p of parts) assert.ok(p.bytes.length <= 3_000_000 || (p.first === p.last && p.tooBig));
+  ok(`split by size: ${parts.length} parts under 3 MB`);
+}
+
+// bookmarks
+{
+  const out = await ops.writeBookmarks(small(), [{ title: 'Intro', page: 0, level: 0 }, { title: 'Détails – ٹیسٹ', page: 1, level: 1 }, { title: 'End', page: 2, level: 0 }], 2);
+  const d2 = await open(out);
+  const outl = d2.catalog.lookup(PDFName.of('Outlines'));
+  assert.equal(outl.lookup(PDFName.of('Count')).asNumber(), 3);
+  const first = outl.lookup(PDFName.of('First'));
+  assert.equal(first.lookup(PDFName.of('Title')).decodeText(), 'Intro');
+  assert.equal(first.lookup(PDFName.of('First')).lookup(PDFName.of('Title')).decodeText(), 'Détails – ٹیسٹ');
+  const none = await open(await ops.writeBookmarks(out.buffer.slice(out.byteOffset, out.byteOffset + out.byteLength), [], 1));
+  assert.equal(none.catalog.get(PDFName.of('Outlines')), undefined);
+  ok('bookmarks: nested outline, unicode titles, clear');
+}
+
+// colours, annotations, content rotation
+{
+  for (const u8 of [await ops.invertColors(small(), null), await ops.pageBackground(small(), '#fef3c7', 'multiply', [0]), await ops.pageBackground(small(), '#fef3c7', 'behind', null), await ops.rotateContent(scanned(), [1.5, null, -2, 0])]) {
+    assert.ok((await open(u8)).getPageCount() >= 3);
+  }
+  const inv = await open(await ops.invertColors(small(), null));
+  const gsDict = inv.getPage(0).node.Resources().lookup(PDFName.of('ExtGState'));
+  assert.ok(gsDict.values().some((v) => String(inv.context.lookup(v).get(PDFName.of('BM'))) === '/Difference'), 'difference blend layer');
+  const annotated = await ops.annotatePdf(small(), [
+    { kind: 'highlight', page: 0, color: '#facc15', quads: [{ x: 0.1, y: 0.1, w: 0.5, h: 0.02 }] },
+    { kind: 'ink', page: 1, color: '#dc2626', width: 2, paths: [[[0.1, 0.1], [0.2, 0.15]]] },
+    { kind: 'note', page: 2, color: '#facc15', x: 0.8, y: 0.1, text: 'hi' },
+  ], '');
+  const ab = annotated.buffer.slice(annotated.byteOffset, annotated.byteOffset + annotated.byteLength);
+  const sum = await ops.annotationSummary(ab);
+  assert.equal(sum.comments, 2); assert.equal(sum.drawings, 1);
+  const { bytes, removed } = await ops.removeAnnotations(ab, ['comments']);
+  assert.equal(removed, 2);
+  const left = await ops.annotationSummary(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength));
+  assert.equal(left.comments, 0); assert.equal(left.drawings, 1);
+  const form = await ops.removeAnnotations(buf('test/fixtures/form.pdf'), ['forms']);
+  assert.ok(form.removed > 0); assert.equal((await open(form.bytes)).catalog.get(PDFName.of('AcroForm')), undefined);
+  ok('invert, paper colour, content rotation, annotation summary/removal (comments, forms)');
+}
+
+// skew detection (synthetic page with lines tilted 2.5°)
+{
+  await build({ entryPoints: ['src/lib/deskew.ts'], bundle: true, format: 'esm', platform: 'node', outfile: 'test/out/deskew.mjs', logLevel: 'error' });
+  const { detectSkew } = await import('../test/out/deskew.mjs');
+  const w = 800, h = 1000, g = new Uint8Array(w * h).fill(245);
+  const t = Math.tan((2.5 * Math.PI) / 180);
+  for (let line = 0; line < 30; line++) for (let x = 60; x < 740; x++) { if ((x >> 3) % 4 === 3) continue; const y0 = Math.round(80 + line * 28 + x * t); for (let dy = 0; dy < 8; dy++) if (y0 + dy < h) g[(y0 + dy) * w + x] = 20; }
+  const a = detectSkew(g, w, h);
+  assert.ok(Math.abs(a - 2.5) < 0.15, `detected ${a}`);
+  assert.equal(detectSkew(new Uint8Array(w * h).fill(250), w, h), null);
+  ok(`skew detection (${a}°), blank page → null`);
+}
+
+
+// links
+{
+  const { bytes, added } = await ops.addLinks(buf('test/fixtures/rotated.pdf'), [{ page: 0, x: 0.1, y: 0.1, w: 0.3, h: 0.05, url: 'pdfsherpa.com' }, { page: 1, x: 0.1, y: 0.2, w: 0.3, h: 0.05, toPage: 0 }, { page: 0, x: 0, y: 0, w: 0.1, h: 0.1, url: 'a@b.co' }, { page: 0, x: 0, y: 0, w: 0.1, h: 0.1 }]);
+  assert.equal(added, 3);
+  const d2 = await open(bytes);
+  const a0 = d2.getPage(0).node.Annots().asArray().map((r) => d2.context.lookup(r));
+  assert.equal(a0[0].lookup(PDFName.of('A')).lookup(PDFName.of('URI')).decodeText(), 'https://pdfsherpa.com');
+  assert.equal(a0[1].lookup(PDFName.of('A')).lookup(PDFName.of('URI')).decodeText(), 'mailto:a@b.co');
+  assert.ok(d2.getPage(1).node.Annots().size() === 1);
+  ok('links: web, e-mail, jump to page; empty link skipped');
+}
+
+
+// overlay, split halves, poster
+{
+  const ov = await open(await ops.overlayPdf(small(), buf('test/fixtures/invoice.pdf'), { layer: 'under', pages: 'all', repeat: 'first', opacity: 1, fit: 'stretch' }));
+  assert.equal(ov.getPageCount(), 3);
+  const ov2 = await open(await ops.overlayPdf(buf('test/fixtures/rotated.pdf'), small(), { layer: 'over', pages: 'first', repeat: 'cycle', opacity: 0.5, fit: 'fit' }));
+  assert.equal(ov2.getPageCount(), 2);
+  const land = await PDFDocument.create(); land.addPage([842, 595]); land.addPage([595, 842]);
+  const halves = await open(await ops.splitHalves((await land.save()).buffer.slice(0), { direction: 'auto', rtl: false, skipFirst: false, skipLast: false }));
+  assert.equal(halves.getPageCount(), 4);
+  assert.deepEqual(halves.getPages().map((p) => [Math.round(p.getWidth()), Math.round(p.getHeight())]), [[421, 595], [421, 595], [595, 421], [595, 421]]);
+  const rtl = await open(await ops.splitHalves((await land.save()).buffer.slice(0), { direction: 'vertical', rtl: true, skipFirst: false, skipLast: true }));
+  assert.equal(Math.round(rtl.getPage(0).getCropBox().x), 421); assert.equal(rtl.getPageCount(), 3);
+  const poster = await ops.posterPdf(small(), { page: 0, sheet: 'a4', across: 2, landscape: false, overlap: 20, marks: true });
+  assert.ok(poster.sheets >= 4 && poster.down >= 2);
+  assert.equal((await open(poster.bytes)).getPageCount(), poster.sheets);
+  ok(`overlay under/over, split halves (auto, RTL, keep last), poster ${poster.sheets} sheets ≈ ${poster.sizeCm.map((v) => v.toFixed(0)).join('×')} cm`);
 }
 
 console.log(`\nAll ${n} pdfOps tests passed`);

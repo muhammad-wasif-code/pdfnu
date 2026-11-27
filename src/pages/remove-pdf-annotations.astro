@@ -1,0 +1,49 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import RemoveAnnotations from '../islands/RemoveAnnotations';
+
+const faqs = [
+  { q: 'How do I remove all comments from a PDF?', a: 'Open the PDF; the comments, highlights and drawings it contains are counted. Keep the types you want removed ticked and click <strong>Remove</strong>.' },
+  { q: 'Can I keep links while removing comments?', a: 'Yes. Links and form fields are kept by default. Tick them only if you want them removed too.' },
+  { q: 'Will this remove text that was typed onto the page?', a: 'No. Only annotations (the layer of comments on top of the page) are removed. Text that is part of the page stays. To hide that, use <a href="/redact-pdf">Redact PDF</a>.' },
+  { q: 'What is the difference with Flatten PDF?', a: '<a href="/flatten-pdf">Flatten PDF</a> keeps comments but merges them into the page so they can’t be edited. Remove Annotations deletes them completely.' },
+  { q: 'Is my file uploaded?', a: 'No. Annotations are removed in your browser and the PDF never leaves your device.' },
+];
+---
+<ToolLayout
+  slug="remove-pdf-annotations"
+  title="Remove Annotations from PDF – Delete Comments | PDFSherpa"
+  description="Delete comments, highlights, sticky notes, drawings, stamps, links or form fields from a PDF. Choose what to keep. Free, private, no upload."
+  h1="Remove Annotations from a PDF"
+  lead="Delete review comments, highlights, sticky notes, drawings and stamps from a PDF before you send the final version. Choose exactly what to remove and keep links and form fields if you like."
+  howToTitle="How to Remove Comments from a PDF"
+  steps={['Select or drop your PDF. Its annotations are counted.', 'Tick the kinds of annotations to remove.', 'Click <strong>Remove</strong> and download.']}
+  faqs={faqs}
+  related={['flatten-pdf', 'annotate-pdf', 'redact-pdf', 'edit-pdf-metadata']}
+>
+  <RemoveAnnotations client:load />
+
+  <Fragment slot="content">
+    <h2>Clean up before sharing</h2>
+    <p>
+      Review rounds leave a trail: colleagues’ notes, highlights, “fix this” arrows and DRAFT stamps. Before a contract, report or thesis
+      goes out, remove them so readers see a clean document and internal discussions stay internal.
+    </p>
+
+    <h2>What can be removed</h2>
+    <ul>
+      <li><strong>Comments and markup:</strong> sticky notes, text comments, highlights, underlines, strikethroughs and their pop-ups.</li>
+      <li><strong>Drawings:</strong> pen marks, boxes, circles, lines and arrows.</li>
+      <li><strong>Stamps</strong>, <strong>attachments and media</strong>, <strong>links</strong> and <strong>form fields</strong>.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Also check</h2>
+    <p>
+      Hidden properties such as author names live in the document metadata; clear them with
+      <a href="/edit-pdf-metadata">Edit PDF Metadata</a>.
+    </p>
+  </Fragment>
+</ToolLayout>

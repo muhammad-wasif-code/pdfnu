@@ -184,7 +184,7 @@ const hex = (h: string): [number, number, number] => [parseInt(h.slice(0, 2), 16
 const K = 0.5523; // bezier circle constant
 
 /** Outline of a preset shape inside (0,0)-(w,h), y up. */
-function geomPath(s: XShape, w: number, h: number): PDFOperator[] {
+export function geomPath(s: Pick<XShape, "geom" | "adj" | "path">, w: number, h: number): PDFOperator[] {
   const o: PDFOperator[] = [];
   const poly = (pts: [number, number][]) => { pts.forEach(([x, y], i) => o.push(i ? lineTo(x, y) : moveTo(x, y))); o.push(closePath()); };
   const ss = Math.min(w, h);

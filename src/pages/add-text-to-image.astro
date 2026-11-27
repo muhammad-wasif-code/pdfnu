@@ -1,0 +1,26 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ImageText from '../islands/ImageText';
+
+const faqs = [
+  { q: 'How do I write on a picture?', a: 'Add your image, type your text, and drag it where you want it. Change the font, size, colour, outline and tilt, then save.' },
+  { q: 'Can I add more than one text?', a: 'Yes. Tap <strong>+ Add text</strong> for each caption or label, and tap any text on the picture to edit it.' },
+  { q: 'Can I write in Urdu, Arabic or Hindi?', a: 'Yes. Text in any language is drawn with your device’s fonts, including right-to-left scripts.' },
+  { q: 'How do I make text readable on a busy photo?', a: 'Turn on <strong>Outline</strong> or <strong>Box</strong>. An outline or a dark box behind the text keeps it readable on any background.' },
+  { q: 'Is my image uploaded?', a: 'No. Text is added in your browser.' },
+];
+---
+<ToolLayout slug="add-text-to-image" title="Add Text to Image – Write on Photos Online | PDFSherpa"
+  description="Add text to photos: captions, quotes and labels with fonts, colours, outlines and boxes. Drag to place, any language. Free, private, no upload."
+  h1="Add Text to Image" lead="Write on any photo: captions, quotes, labels or names. Choose a font, colour, outline or background box, drag the text into place, and save. Any language works, and nothing is uploaded."
+  howToTitle="How to Add Text to a Photo" steps={['Add your image.', 'Type your text, style it and drag it into place.', 'Click <strong>Save image</strong> and download.']}
+  faqs={faqs} related={['meme-generator', 'watermark-image', 'photo-editor', 'collage-maker']}>
+  <ImageText client:load meme={false} />
+  <Fragment slot="content">
+    <h2>Ideas</h2>
+    <ul><li>Quotes and greetings for WhatsApp, Instagram or Facebook.</li><li>Labels and arrows on screenshots and product photos.</li><li>Names and dates on event photos and invitations.</li></ul>
+    <AdSlot variant="inline" slot="tool-article" />
+    <p>For classic top-and-bottom captions, use <a href="/meme-generator">Meme Generator</a>. To protect photos with your name, use <a href="/watermark-image">Watermark Image</a>.</p>
+  </Fragment>
+</ToolLayout>

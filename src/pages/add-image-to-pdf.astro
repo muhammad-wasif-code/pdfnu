@@ -1,0 +1,46 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import AddImagePdf from '../islands/AddImagePdf';
+
+const faqs = [
+  { q: 'How do I add a picture to a PDF?', a: 'Open the PDF, click <strong>Add image</strong> and choose a JPG, PNG, WebP or GIF. Drag it into place, resize it with the blue dot, and save.' },
+  { q: 'Can I put my logo on every page?', a: 'Yes. Select the image and choose <strong>All pages</strong>. It appears in the same place on every page, and the image is stored only once, so the file stays small. You can also choose odd or even pages only.' },
+  { q: 'Are transparent PNGs supported?', a: 'Yes. Transparent areas stay transparent, so logos, signatures and seals sit cleanly on top of the page.' },
+  { q: 'Does adding an image reduce quality?', a: 'No. Photos keep their JPEG quality and pages are not re-rendered. Very large images are scaled to a sensible print resolution.' },
+  { q: 'How is this different from Edit PDF?', a: '<a href="/edit-pdf">Edit PDF</a> is for quick edits on one page at a time. Add Image to PDF is built for pictures: repeat on every page, snap to corners and set transparency.' },
+  { q: 'Is my file uploaded?', a: 'No. The PDF and your images stay on your device.' },
+];
+---
+<ToolLayout
+  slug="add-image-to-pdf"
+  title="Add Image to PDF – Insert Logo or Photo Free | PDFSherpa"
+  description="Insert a picture, logo or seal into a PDF. Drag, resize, set transparency and repeat it on every page. JPG, PNG, WebP. Free, no upload."
+  h1="Add Image to PDF"
+  lead="Insert a photo, logo, seal or signature image into your PDF. Drag it anywhere, resize it, make it see-through, or repeat it on every page. Free, private, no watermark."
+  howToTitle="How to Add an Image to a PDF"
+  steps={['Select or drop your PDF.', 'Click <strong>Add image</strong>, then drag and resize it on the page.', 'Choose which pages it appears on and click <strong>Save</strong>.']}
+  faqs={faqs}
+  related={['edit-pdf', 'stamp-pdf', 'watermark-pdf', 'jpg-to-pdf']}
+>
+  <AddImagePdf client:load />
+
+  <Fragment slot="content">
+    <h2>What you can do</h2>
+    <ul>
+      <li><strong>Letterhead:</strong> add your logo to the top corner of every page.</li>
+      <li><strong>Seals and signatures:</strong> place a scanned company seal or signature image. Clean its background first with <a href="/signature-cleaner">Signature Cleaner</a>.</li>
+      <li><strong>Photos:</strong> add a product photo, a passport photo to a form, or a screenshot to a report.</li>
+      <li><strong>Branding:</strong> a faint logo in the background with low opacity.</li>
+    </ul>
+
+    <AdSlot variant="inline" slot="tool-article" />
+
+    <h2>Tips for a clean result</h2>
+    <ul>
+      <li>Use the corner buttons to snap the image neatly into a corner or the centre.</li>
+      <li>For logos, use a PNG with a transparent background.</li>
+      <li>To turn pictures into new PDF pages instead, use <a href="/jpg-to-pdf">JPG to PDF</a> and then <a href="/merge-pdf">Merge PDF</a>.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>
