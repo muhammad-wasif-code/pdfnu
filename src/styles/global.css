@@ -92,6 +92,9 @@
 
   .tool-card { @apply card flex flex-col items-center px-2 py-4 text-center transition duration-200 sm:px-4 sm:py-5; }
   .tool-card:hover { @apply -translate-y-0.5 border-indigo-200 shadow-lift dark:border-brand-light/40; }
+  .tool-row { @apply card flex min-h-[3.75rem] items-center gap-2.5 px-2.5 py-2.5 sm:min-h-[4.25rem] sm:gap-3 sm:py-3 transition duration-200 sm:px-3.5; }
+  .tool-row:hover { @apply -translate-y-0.5 border-indigo-200 shadow-lift dark:border-brand-light/40; }
+  .tool-row:focus-visible { @apply outline-2 outline-offset-2 outline-brand; }
 
   /* Rich text for SEO content */
   .prose-sherpa { @apply max-w-none text-[15px] leading-7 text-gray-700 dark:text-gray-300; }

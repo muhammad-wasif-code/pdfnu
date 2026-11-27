@@ -1,11 +1,15 @@
 ---
 import Logo from './Logo.astro';
 import ToolIcon from './ToolIcon.astro';
-import { tools, categories, getTool, type Category } from '../data/tools';
+import { tools, categories, getTool, popularSlugs, type Category } from '../data/tools';
 
 const byCat = (c: Category) => tools.filter((t) => t.category === c);
-const cat = (c: Category) => categories.find((x) => x.name === c)!;
-const popular = ['compress-pdf', 'merge-pdf', 'pdf-to-word', 'edit-pdf', 'sign-pdf', 'jpg-to-pdf'].map(getTool);
+const id = (c: string) => c.toLowerCase();
+const popular = popularSlugs.slice(0, 9).map(getTool);
+const tabs = [
+  { id: 'popular', name: 'Popular', dot: 'bg-brand', count: popular.length },
+  ...categories.map((c) => ({ id: id(c.name), name: c.name, dot: c.dot, count: byCat(c.name).length })),
+];
 const searchText = (t: (typeof tools)[number]) => `${t.name} ${t.short} ${t.category} ${t.keywords}`.toLowerCase().replace(/[^a-z0-9]+/g, " ");
 ---
 <header class="site-header sticky top-0 z-40 border-b border-gray-100 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-night/85">
@@ -54,62 +58,103 @@ const searchText = (t: (typeof tools)[number]) => `${t.name} ${t.short} ${t.cate
     </div>
   </div>
 
-  <!-- Desktop mega menu -->
+  <!-- Desktop mega menu: categories on the left, their tools on the right. Typing searches all tools. -->
   <div
     id="tools-menu"
     data-menu-panel="desktop"
     class="menu-panel absolute inset-x-0 top-full hidden md:block"
   >
     <div class="container-page pt-2">
-      <div class="card max-h-[calc(100dvh-5.5rem)] overflow-y-auto overscroll-contain p-0 shadow-2xl shadow-indigo-950/10 dark:shadow-black/40" role="region" aria-label="All tools">
-        <div class="flex flex-wrap items-center gap-3 border-b border-line px-5 py-4 dark:border-white/10">
-          <label class="relative min-w-[16rem] flex-1">
+      <div class="card overflow-hidden p-0 shadow-2xl shadow-indigo-950/10 dark:shadow-black/40" role="region" aria-label="All tools">
+        <div class="flex items-center gap-4 border-b border-line px-4 py-3 dark:border-white/10">
+          <label class="relative flex-1">
             <span class="sr-only">Search tools</span>
             <svg viewBox="0 0 20 20" class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.5"/><path d="m13.2 13.2 3.3 3.3"/></svg>
             <input
               type="search"
               data-menu-search
-              placeholder={`Search ${tools.length} tools…`}
+              placeholder={`Search all ${tools.length} tools…`}
               autocomplete="off"
               class="h-11 w-full rounded-full border border-line bg-surface pl-10 pr-4 text-sm text-ink outline-none transition placeholder:text-gray-400 focus:border-brand/50 focus:bg-white focus:ring-4 focus:ring-brand/10 dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:bg-white/10"
             />
           </label>
-          <div class="flex flex-wrap items-center gap-1.5" data-menu-popular>
-            <span class="mr-1 text-xs font-semibold uppercase tracking-wider text-muted dark:text-gray-400">Popular</span>
-            {popular.map((t) => (
-              <a href={`/${t.slug}`} class="inline-flex min-h-9 items-center rounded-full border border-line px-3 text-xs font-semibold text-gray-700 transition-colors hover:border-brand/40 hover:bg-brand-soft hover:text-brand dark:border-white/10 dark:text-gray-300 dark:hover:border-brand-light/40 dark:hover:bg-white/5 dark:hover:text-white">{t.short}</a>
+          <p class="hidden items-center gap-1.5 text-xs text-muted lg:flex dark:text-gray-400">
+            <kbd class="rounded-md border border-line bg-white px-1.5 py-0.5 font-sans text-[11px] font-semibold text-gray-600 dark:border-white/15 dark:bg-white/5 dark:text-gray-300">Enter</kbd> opens the first match
+          </p>
+        </div>
+
+        <div class="flex">
+          <div role="tablist" aria-label="Tool categories" aria-orientation="vertical" class="menu-tabs flex w-52 shrink-0 flex-col gap-0.5 border-r border-line bg-surface/70 p-2 lg:w-56 dark:border-white/10 dark:bg-white/[0.02]">
+            {tabs.map((t, i) => (
+              <button
+                type="button"
+                role="tab"
+                id={`mt-${t.id}`}
+                data-tab={t.id}
+                aria-selected={i === 0 ? 'true' : 'false'}
+                aria-controls={`mp-${t.id}`}
+                tabindex={i === 0 ? 0 : -1}
+                class="menu-tab flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3 text-left text-sm font-semibold text-gray-700 transition-colors hover:bg-white hover:text-ink aria-selected:bg-white aria-selected:text-ink aria-selected:shadow-sm dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white dark:aria-selected:bg-white/10 dark:aria-selected:text-white"
+              >
+                <span class={`h-2 w-2 shrink-0 rounded-full ${t.dot}`} aria-hidden="true"></span>
+                {t.name}
+                <span class="ml-auto rounded-full bg-gray-200/70 px-2 py-0.5 text-[11px] font-bold tabular-nums text-gray-600 dark:bg-white/10 dark:text-gray-400">{t.count}</span>
+              </button>
             ))}
+            <a href="/#tools" class="mt-auto flex min-h-10 items-center gap-1.5 rounded-xl px-3 text-xs font-semibold text-brand hover:bg-white dark:text-brand-light dark:hover:bg-white/5">
+              Browse all {tools.length} on one page
+              <svg viewBox="0 0 20 20" class="h-3.5 w-3.5" fill="currentColor" aria-hidden="true"><path d="M7.3 4.3a1 1 0 0 1 1.4 0l5 5a1 1 0 0 1 0 1.4l-5 5a1 1 0 0 1-1.4-1.4L11.6 10 7.3 5.7a1 1 0 0 1 0-1.4Z"/></svg>
+            </a>
+          </div>
+
+          <div data-menu-body class="h-[min(31rem,calc(100dvh-13rem))] min-w-0 flex-1 overflow-y-auto overscroll-contain p-3">
+            <section id="mp-popular" role="tabpanel" aria-labelledby="mt-popular" data-menu-group data-menu-popular data-cat="popular">
+              <div class="px-2 pb-2 pt-1">
+                <p class="text-sm font-bold text-ink dark:text-white">Popular tools</p>
+                <p class="text-xs text-muted dark:text-gray-400">The ones people reach for most</p>
+              </div>
+              <ul class="menu-grid grid gap-0.5 md:grid-cols-2 lg:grid-cols-3">
+                {popular.map((t) => (
+                  <li>
+                    <a href={`/${t.slug}`} class="menu-link group">
+                      <ToolIcon tool={t} size="sm" />
+                      <span class="min-w-0">
+                        <span class="block truncate text-sm font-semibold leading-5 text-gray-800 group-hover:text-ink dark:text-gray-200 dark:group-hover:text-white">{t.name}</span>
+                        <span class="block truncate text-xs leading-4 text-muted dark:text-gray-400">{t.tagline}</span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+            {categories.map((c) => (
+              <section id={`mp-${id(c.name)}`} role="tabpanel" aria-labelledby={`mt-${id(c.name)}`} data-menu-group data-cat={id(c.name)} hidden class="menu-group">
+                <div class="px-2 pb-2 pt-1">
+                  <p class="flex items-center gap-2 text-sm font-bold text-ink dark:text-white">
+                    {c.name}<span class="text-xs font-semibold text-gray-400 dark:text-gray-500">{byCat(c.name).length} tools</span>
+                  </p>
+                  <p class="text-xs text-muted dark:text-gray-400">{c.blurb}</p>
+                </div>
+                <ul class="menu-grid grid gap-0.5 md:grid-cols-2 lg:grid-cols-3">
+                  {byCat(c.name).map((t) => (
+                    <li data-menu-item data-search={searchText(t)}>
+                      <a href={`/${t.slug}`} class="menu-link group">
+                        <ToolIcon tool={t} size="sm" />
+                        <span class="min-w-0">
+                          <span class="block truncate text-sm font-semibold leading-5 text-gray-800 group-hover:text-ink dark:text-gray-200 dark:group-hover:text-white">{t.name}</span>
+                          <span class="block truncate text-xs leading-4 text-muted dark:text-gray-400">{t.tagline}</span>
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+            <p data-menu-empty hidden class="px-6 py-16 text-center text-sm text-muted dark:text-gray-400">No tools match that search.</p>
           </div>
         </div>
 
-        <!-- CSS columns balance the groups automatically (long groups like Convert flow into the next column),
-             so the panel stays short enough to fit a laptop screen without scrolling. -->
-        <div class="gap-x-3 px-4 pb-1 pt-4 md:columns-3 lg:columns-4">
-          {categories.map(({ name: c }) => (
-                <section data-menu-group aria-label={c} class="pb-3">
-                  <p class={`mb-1 flex break-after-avoid items-center gap-2 px-2 text-[11px] font-bold uppercase tracking-[0.12em] ${cat(c).accent}`}>
-                    <span class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true"></span>{c}
-                    <span class="font-semibold text-gray-400 dark:text-gray-500">{byCat(c).length}</span>
-                  </p>
-                  <ul>
-                    {byCat(c).map((t) => (
-                      <li data-menu-item data-search={searchText(t)} class="break-inside-avoid">
-                        <a href={`/${t.slug}`} class="group flex items-center gap-3 rounded-xl px-2 py-[3px] transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
-                          <ToolIcon tool={t} size="sm" />
-                          <span class="min-w-0">
-                            <span class="block truncate text-sm font-semibold leading-5 text-gray-800 group-hover:text-ink dark:text-gray-200 dark:group-hover:text-white">{t.name}</span>
-                            <span class="block text-xs leading-4 text-muted dark:text-gray-400">{t.tagline}</span>
-                          </span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-          ))}
-        </div>
-        <p data-menu-empty hidden class="px-6 pb-8 pt-2 text-center text-sm text-muted dark:text-gray-400">No tools match that search.</p>
-
-        <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface/70 px-5 py-3 text-sm dark:border-white/10 dark:bg-white/[0.03]">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface/70 px-5 py-2.5 text-sm dark:border-white/10 dark:bg-white/[0.03]">
           <p class="flex items-center gap-2 text-xs font-medium text-gray-600 dark:text-gray-400">
             <svg viewBox="0 0 20 20" class="h-4 w-4 text-success" fill="currentColor" aria-hidden="true"><path d="M10 1.5 3.5 4v5c0 4.1 2.8 7.6 6.5 8.9 3.7-1.3 6.5-4.8 6.5-8.9V4L10 1.5Zm3 6.2-3.6 3.9a.8.8 0 0 1-1.1 0L6.9 10a.8.8 0 1 1 1.1-1.1l.9.9L11.9 6.6A.8.8 0 1 1 13 7.7Z"/></svg>
             Every tool runs in your browser. Files never leave your device.
@@ -129,26 +174,34 @@ const searchText = (t: (typeof tools)[number]) => `${t.name} ${t.short} ${t.cate
     id="mobile-menu"
     data-menu-panel="mobile"
     aria-label="Tools menu"
-    class="menu-panel absolute inset-x-0 top-full h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain bg-white md:hidden dark:bg-night"
+    class="menu-panel absolute inset-x-0 top-full h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain bg-surface md:hidden dark:bg-night"
   >
-    <div class="sticky top-0 z-10 border-b border-line bg-white/95 px-4 pb-3 pt-3 backdrop-blur dark:border-white/10 dark:bg-night/95">
-      <label class="relative block">
+    <div class="sticky top-0 z-10 border-b border-line bg-white/95 pt-3 backdrop-blur dark:border-white/10 dark:bg-night/95">
+      <label class="relative mx-4 block">
         <span class="sr-only">Search tools</span>
         <svg viewBox="0 0 20 20" class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.5"/><path d="m13.2 13.2 3.3 3.3"/></svg>
         <input
           type="search"
           data-menu-search
-          placeholder={`Search ${tools.length} tools…`}
+          placeholder={`Search all ${tools.length} tools…`}
           autocomplete="off"
           class="h-12 w-full rounded-2xl border border-line bg-surface pl-10 pr-4 text-base text-ink outline-none placeholder:text-gray-400 focus:border-brand/50 focus:bg-white focus:ring-4 focus:ring-brand/10 dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:bg-white/10"
         />
       </label>
+      <div data-menu-jumps class="flex gap-1.5 overflow-x-auto px-4 pb-3 pt-2.5 [scrollbar-width:none]">
+        {categories.map((c) => (
+          <button type="button" data-jump={id(c.name)} class="flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 text-[13px] font-semibold text-gray-700 active:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-gray-200">
+            <span class={`h-1.5 w-1.5 rounded-full ${c.dot}`} aria-hidden="true"></span>{c.name}
+            <span class="text-[11px] font-bold text-gray-400 dark:text-gray-500">{byCat(c.name).length}</span>
+          </button>
+        ))}
+      </div>
     </div>
 
     <div class="px-4 pb-8 pt-4">
       <div data-menu-popular>
         <p class="mb-2 px-1 text-[11px] font-bold uppercase tracking-[0.12em] text-muted dark:text-gray-400">Popular</p>
-        <div class="-mx-4 flex gap-2 overflow-x-auto px-4 pb-3 pt-1 [scrollbar-width:none]">
+        <div class="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 pt-0.5 [scrollbar-width:none]">
           {popular.map((t) => (
             <a href={`/${t.slug}`} class="flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-line bg-white py-1 pl-1 pr-3.5 text-sm font-semibold text-gray-800 dark:border-white/10 dark:bg-white/5 dark:text-gray-200">
               <ToolIcon tool={t} size="sm" />{t.short}
@@ -158,11 +211,14 @@ const searchText = (t: (typeof tools)[number]) => `${t.name} ${t.short} ${t.cate
       </div>
 
       {categories.map((c) => (
-        <section data-menu-group aria-label={c.name} class="mt-6">
-          <p class={`mb-2 flex items-center gap-2 px-1 text-[11px] font-bold uppercase tracking-[0.12em] ${c.accent}`}>
-            <span class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true"></span>{c.name}
-            <span class="font-semibold text-gray-400 dark:text-gray-500">{byCat(c.name).length}</span>
-          </p>
+        <section data-menu-group data-cat={id(c.name)} aria-label={c.name} class="mt-6 scroll-mt-32">
+          <div class="mb-2.5 px-1">
+            <p class="flex items-center gap-2 text-[15px] font-bold text-ink dark:text-white">
+              <span class={`h-2 w-2 rounded-full ${c.dot}`} aria-hidden="true"></span>{c.name}
+              <span class="text-xs font-semibold text-gray-400 dark:text-gray-500">{byCat(c.name).length}</span>
+            </p>
+            <p class="mt-0.5 text-xs text-muted dark:text-gray-400">{c.blurb}</p>
+          </div>
           <ul class="grid grid-cols-2 gap-2">
             {byCat(c.name).map((t) => (
               <li data-menu-item data-search={searchText(t)}>
@@ -177,9 +233,9 @@ const searchText = (t: (typeof tools)[number]) => `${t.name} ${t.short} ${t.cate
       <p data-menu-empty hidden class="py-10 text-center text-sm text-muted dark:text-gray-400">No tools match that search.</p>
 
       <div class="mt-8 grid grid-cols-3 gap-2 border-t border-line pt-5 text-center text-sm font-semibold text-gray-700 dark:border-white/10 dark:text-gray-300">
-        <a href="/guides" class="flex min-h-11 items-center justify-center rounded-xl bg-surface dark:bg-white/5">Guides</a>
-        <a href="/about" class="flex min-h-11 items-center justify-center rounded-xl bg-surface dark:bg-white/5">About</a>
-        <a href="/contact" class="flex min-h-11 items-center justify-center rounded-xl bg-surface dark:bg-white/5">Contact</a>
+        <a href="/guides" class="flex min-h-11 items-center justify-center rounded-xl bg-white dark:bg-white/5">Guides</a>
+        <a href="/about" class="flex min-h-11 items-center justify-center rounded-xl bg-white dark:bg-white/5">About</a>
+        <a href="/contact" class="flex min-h-11 items-center justify-center rounded-xl bg-white dark:bg-white/5">Contact</a>
       </div>
       <p class="mt-5 text-center text-xs text-muted dark:text-gray-400">All {tools.length} tools run in your browser. Files never leave your device.</p>
     </div>
@@ -205,6 +261,18 @@ const searchText = (t: (typeof tools)[number]) => `${t.name} ${t.short} ${t.cate
   .menu-trigger[aria-expanded='true'] .b2 { opacity: 0; }
   .menu-trigger[aria-expanded='true'] .b3 { transform: translateY(-5px) rotate(-45deg); }
   :global(html.menu-locked) { overflow: hidden; }
+  .menu-link {
+    display: flex; align-items: center; gap: 0.75rem; border-radius: 0.75rem; padding: 0.45rem 0.5rem;
+    transition: background-color 0.15s;
+  }
+  .menu-link:hover, .menu-link:focus-visible { background: rgb(243 244 246 / 0.9); }
+  :global(.dark) .menu-link:hover, :global(.dark) .menu-link:focus-visible { background: rgb(255 255 255 / 0.05); }
+  /* While searching, results span the full width and the category list steps aside. */
+  .menu-panel[data-searching] .menu-tabs { display: none; }
+  .menu-panel[data-searching] .menu-group + .menu-group { margin-top: 0.75rem; }
+  @media (min-width: 1024px) {
+    .menu-panel[data-searching] .menu-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
 </style>
 
 <script>
@@ -241,6 +309,7 @@ const searchText = (t: (typeof tools)[number]) => `${t.name} ${t.short} ${t.cate
   function open(m: Menu) {
     if (current) close();
     current = m;
+    resets.get(m)?.();
     m.panel.setAttribute('data-open', '');
     m.btn.setAttribute('aria-expanded', 'true');
     if (m.kind === 'mobile') { m.btn.setAttribute('aria-label', 'Close menu'); root.classList.add('menu-locked'); }
@@ -248,33 +317,99 @@ const searchText = (t: (typeof tools)[number]) => `${t.name} ${t.short} ${t.cate
     if (m.kind === 'desktop') m.panel.querySelector<HTMLInputElement>('[data-menu-search]')?.focus({ preventScroll: true });
   }
 
+  const resets = new Map<Menu, () => void>();
+
   menus.forEach((m) => {
     m.btn.addEventListener('click', () => (current === m ? close() : open(m)));
 
     const input = m.panel.querySelector<HTMLInputElement>('[data-menu-search]');
     const items = [...m.panel.querySelectorAll<HTMLElement>('[data-menu-item]')];
     const groups = [...m.panel.querySelectorAll<HTMLElement>('[data-menu-group]')];
-    const popular = m.panel.querySelector<HTMLElement>('[data-menu-popular]');
+    const popularBits = [...m.panel.querySelectorAll<HTMLElement>('[data-menu-popular]:not([data-menu-group])')];
+    const jumps = m.panel.querySelector<HTMLElement>('[data-menu-jumps]');
+    const tabs = [...m.panel.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const body = m.panel.querySelector<HTMLElement>('[data-menu-body]');
     const empty = m.panel.querySelector<HTMLElement>('[data-menu-empty]');
-    input?.addEventListener('input', () => {
-      const words = input.value.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+    let active = 'popular';
+
+    const words = () => (input?.value ?? '').toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+
+    function render() {
+      const w = words();
+      const searching = w.length > 0;
+      m.panel.toggleAttribute('data-searching', searching);
       let shown = 0;
       items.forEach((li) => {
         // Match word starts, so "word" finds PDF to Word but not "password".
-        const hit = words.every((w) => (" " + li.dataset.search).includes(" " + w));
+        const hit = !searching || w.every((x) => (' ' + li.dataset.search).includes(' ' + x));
         li.hidden = !hit;
         if (hit) shown++;
       });
-      groups.forEach((g) => (g.hidden = !g.querySelector('[data-menu-item]:not([hidden])')));
-      if (popular) popular.hidden = words.length > 0;
-      if (empty) empty.hidden = shown > 0;
+      groups.forEach((g) => {
+        if (searching) g.hidden = g.hasAttribute('data-menu-popular') || !g.querySelector('[data-menu-item]:not([hidden])');
+        else g.hidden = tabs.length > 0 && g.dataset.cat !== active;
+      });
+      popularBits.forEach((p) => (p.hidden = searching));
+      if (jumps) jumps.hidden = searching;
+      tabs.forEach((t) => {
+        const on = t.dataset.tab === active;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+      });
+      if (empty) empty.hidden = !searching || shown > 0;
+    }
+
+    function select(tab: string) {
+      if (tab === active) return;
+      active = tab;
+      render();
+      body?.scrollTo(0, 0);
+    }
+
+    tabs.forEach((t, i) => {
+      let timer = 0;
+      t.addEventListener('click', () => select(t.dataset.tab!));
+      // A short delay, so sweeping the pointer across the list to reach the tools doesn't flip tabs.
+      t.addEventListener('mouseenter', () => { timer = window.setTimeout(() => select(t.dataset.tab!), 90); });
+      t.addEventListener('mouseleave', () => clearTimeout(timer));
+      t.addEventListener('keydown', (e) => {
+        const n = tabs.length;
+        const j = e.key === 'ArrowDown' ? (i + 1) % n : e.key === 'ArrowUp' ? (i - 1 + n) % n : e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : -1;
+        if (j < 0) return;
+        e.preventDefault();
+        select(tabs[j].dataset.tab!);
+        tabs[j].focus();
+      });
     });
+
+    // Mobile: category chips jump to their section inside the sheet.
+    jumps?.querySelectorAll<HTMLButtonElement>('[data-jump]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const sec = m.panel.querySelector<HTMLElement>(`[data-menu-group][data-cat="${b.dataset.jump}"]`);
+        const bar = m.panel.querySelector<HTMLElement>('.sticky');
+        if (!sec) return;
+        // Scroll the sheet itself (not the page), leaving room for its sticky search bar.
+        const top = sec.getBoundingClientRect().top - m.panel.getBoundingClientRect().top + m.panel.scrollTop - (bar?.offsetHeight ?? 0) - 8;
+        m.panel.scrollTo({ top, behavior: 'smooth' });
+      }),
+    );
+
+    input?.addEventListener('input', render);
     // Enter in search opens the first match.
     input?.addEventListener('keydown', (e) => {
-      if (e.key !== 'Enter') return;
-      const first = m.panel.querySelector<HTMLAnchorElement>('[data-menu-item]:not([hidden]) a');
+      if (e.key !== 'Enter' || !words().length) return;
+      const first = m.panel.querySelector<HTMLAnchorElement>('[data-menu-group]:not([hidden]) [data-menu-item]:not([hidden]) a');
       if (first) { e.preventDefault(); first.click(); }
     });
+
+    resets.set(m, () => {
+      if (input) input.value = '';
+      active = 'popular';
+      render();
+      body?.scrollTo(0, 0);
+      if (m.kind === 'mobile') m.panel.scrollTo(0, 0);
+    });
+    render();
   });
 
   document.addEventListener('click', (e) => {

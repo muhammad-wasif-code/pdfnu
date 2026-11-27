@@ -119,14 +119,17 @@ export const tools: Tool[] = [
   { slug: 'pdf-to-image-pdf', name: 'Flatten PDF to Images', short: 'Image PDF', tagline: 'Non-editable picture PDF', category: 'Security', from: '#d1d5db', to: '#1f2937', icon: 'rasterize', keywords: 'convert pdf to image pdf rasterize flatten non editable cannot copy text scan look' },
 ];
 
-export const categories: { name: Category; accent: string }[] = [
-  { name: 'Optimize', accent: 'text-rose-600 dark:text-rose-400' },
-  { name: 'Organize', accent: 'text-blue-600 dark:text-blue-400' },
-  { name: 'Convert', accent: 'text-amber-600 dark:text-amber-400' },
-  { name: 'Edit', accent: 'text-pink-600 dark:text-pink-400' },
-  { name: 'Security', accent: 'text-violet-600 dark:text-violet-400' },
-  { name: 'Image', accent: 'text-sky-600 dark:text-sky-400' },
+export const categories: { name: Category; accent: string; dot: string; blurb: string }[] = [
+  { name: 'Optimize', accent: 'text-rose-600 dark:text-rose-400', dot: 'bg-rose-500', blurb: 'Shrink, repair and straighten files' },
+  { name: 'Organize', accent: 'text-blue-600 dark:text-blue-400', dot: 'bg-blue-500', blurb: 'Merge, split, reorder and tidy up pages' },
+  { name: 'Convert', accent: 'text-amber-600 dark:text-amber-400', dot: 'bg-amber-500', blurb: 'Turn PDFs into Word, Excel, images and back' },
+  { name: 'Edit', accent: 'text-pink-600 dark:text-pink-400', dot: 'bg-pink-500', blurb: 'Add text, signatures, stamps and more' },
+  { name: 'Security', accent: 'text-violet-600 dark:text-violet-400', dot: 'bg-violet-500', blurb: 'Lock, unlock and black out private details' },
+  { name: 'Image', accent: 'text-sky-600 dark:text-sky-400', dot: 'bg-sky-500', blurb: 'Resize, convert and edit photos, plus QR codes' },
 ];
+
+/** Most-used tools, shown first in the menu and on the home page. */
+export const popularSlugs = ['compress-pdf', 'merge-pdf', 'split-pdf', 'pdf-to-word', 'edit-pdf', 'sign-pdf', 'jpg-to-pdf', 'pdf-to-jpg', 'word-to-pdf', 'compress-image', 'organize-pdf', 'protect-pdf'];
 
 export const getTool = (slug: string) => {
   const t = tools.find((x) => x.slug === slug);

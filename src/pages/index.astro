@@ -5,7 +5,19 @@ import TrustBadges from '../components/TrustBadges.astro';
 import HeroArt from '../components/HeroArt.astro';
 import FAQ from '../components/FAQ.astro';
 import TrustProof from '../components/TrustProof.astro';
-import { tools } from '../data/tools';
+import { tools, categories, getTool, popularSlugs, type Category } from '../data/tools';
+import ToolIcon from '../components/ToolIcon.astro';
+
+const byCat = (c: Category) => tools.filter((t) => t.category === c);
+const id = (c: string) => c.toLowerCase();
+const popular = popularSlugs.map(getTool);
+const quick = popularSlugs.slice(0, 6).map(getTool);
+
+const steps = [
+  { n: '1', title: 'Pick a tool', text: 'Search or browse 100 tools for PDFs and images.' },
+  { n: '2', title: 'Add your file', text: 'Drop it in. It opens right in your browser, nothing is uploaded.' },
+  { n: '3', title: 'Download', text: 'Save the result. No signup, no watermark, no waiting.' },
+];
 
 const why = [
   { title: 'Your Privacy First', text: 'Files stay on your device.', d: 'M12 2.5 4.5 5.4v5.9c0 4.6 3.2 8.8 7.5 10.2 4.3-1.4 7.5-5.6 7.5-10.2V5.4L12 2.5Zm3.7 7.2-4.6 4.6a.9.9 0 0 1-1.3 0l-2.3-2.3a.9.9 0 1 1 1.3-1.3l1.7 1.7 3.9-3.9a.9.9 0 1 1 1.3 1.2Z', fill: true },
@@ -36,52 +48,131 @@ const jsonLd = [
   <!-- Hero -->
   <section class="relative overflow-hidden">
     <div class="hero-glow pointer-events-none absolute -right-40 -top-40 h-[34rem] w-[34rem]" aria-hidden="true"></div>
-    <div class="container-page relative grid items-center gap-8 pb-8 pt-8 sm:pt-12 md:grid-cols-[1.25fr_.75fr] md:pb-10 md:pt-14">
+    <div class="hero-glow pointer-events-none absolute -left-60 top-40 h-[26rem] w-[26rem] opacity-60" aria-hidden="true"></div>
+    <div class="container-page relative grid items-center gap-8 pb-8 pt-8 sm:pt-12 md:grid-cols-[1.3fr_.7fr] md:pb-12 md:pt-14">
       <div>
-        <h1 class="text-[2rem] font-extrabold leading-[1.15] tracking-tight text-ink sm:text-[2.5rem] sm:leading-[1.15] lg:text-[2.85rem] dark:text-white">
+        <p class="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white/80 py-1 pl-1.5 pr-3 text-xs font-semibold text-gray-700 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
+          <span class="rounded-full bg-brand px-2 py-0.5 text-[11px] font-bold text-white">{tools.length} tools</span>
+          Free, private, works offline
+        </p>
+        <h1 class="mt-4 text-[2rem] font-extrabold leading-[1.15] tracking-tight text-ink sm:text-[2.5rem] sm:leading-[1.15] lg:text-[2.85rem] dark:text-white">
           Every PDF tool you need.
-          <span class="block text-brand dark:text-brand-light">Fast, free, and your files never leave your device.</span>
+          <span class="block bg-gradient-to-r from-brand to-violet-600 bg-clip-text text-transparent dark:from-brand-light dark:to-violet-300">Fast, free, and your files never leave your device.</span>
         </h1>
 
         <form class="mt-6 max-w-xl" role="search" action="#tools" onsubmit="return false">
           <label for="tool-search" class="sr-only">Search tools</label>
-          <div class="flex items-center rounded-control border border-line bg-white shadow-soft focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/10 dark:border-white/10 dark:bg-night-2">
-            <svg viewBox="0 0 24 24" class="ml-4 h-5 w-5 shrink-0 text-gray-400 md:order-last md:mr-4 md:ml-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
-            <input id="tool-search" type="search" autocomplete="off" placeholder="Search tools..." class="h-12 min-w-0 flex-1 bg-transparent px-3 text-[15px] text-ink outline-none placeholder:text-gray-400 md:px-4 dark:text-white" />
+          <div class="flex items-center rounded-2xl border border-line bg-white p-1.5 shadow-lift focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/10 dark:border-white/10 dark:bg-night-2">
+            <svg viewBox="0 0 24 24" class="ml-2.5 h-5 w-5 shrink-0 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+            <input id="tool-search" type="search" autocomplete="off" placeholder={`Search ${tools.length} tools, e.g. “compress”`} class="h-11 min-w-0 flex-1 bg-transparent px-3 text-[15px] text-ink outline-none placeholder:text-gray-400 dark:text-white" />
+            <a href="#tools" class="hidden h-11 shrink-0 items-center rounded-xl bg-brand px-4 text-sm font-semibold text-white transition-colors hover:bg-brand-dark sm:flex">Browse all</a>
           </div>
         </form>
 
-        <TrustBadges class="mt-5" />
+        <div class="-mx-4 mt-4 flex items-center gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+          <span class="mr-1 shrink-0 text-xs font-semibold text-muted dark:text-gray-400">Popular:</span>
+          {quick.map((t) => (
+            <a href={`/${t.slug}`} class="inline-flex min-h-9 shrink-0 items-center rounded-full border border-line bg-white/70 px-3 text-xs font-semibold text-gray-700 transition-colors hover:border-brand/40 hover:bg-brand-soft hover:text-brand dark:border-white/10 dark:bg-white/5 dark:text-gray-300 dark:hover:border-brand-light/40 dark:hover:text-white">{t.short}</a>
+          ))}
+        </div>
+
+        <TrustBadges class="mt-6" />
       </div>
       <div class="hidden md:block"><HeroArt /></div>
     </div>
   </section>
 
   <!-- Tools -->
-  <section id="tools" class="container-page" aria-labelledby="tools-title">
-    <h2 id="tools-title" class="sr-only">All PDF and image tools</h2>
-    <div id="tool-grid" class="grid grid-cols-3 gap-2.5 sm:gap-4 md:grid-cols-4">
-      {tools.map((t) => <ToolCard tool={t} />)}
+  <section id="tools" class="container-page scroll-mt-20" aria-labelledby="tools-title">
+    <div class="flex flex-wrap items-end justify-between gap-2">
+      <div>
+        <h2 id="tools-title" class="text-xl font-bold tracking-tight text-ink sm:text-h3 dark:text-white">All PDF and image tools</h2>
+        <p class="mt-1 text-sm text-muted dark:text-gray-400">{tools.length} free tools in {categories.length} groups. Pick one to start.</p>
+      </div>
     </div>
-    <p id="no-results" class="hidden py-10 text-center text-sm text-muted" role="status">No matching tools. Try “compress” or “merge”.</p>
+
+    <!-- Category filter: sticks under the header while you scroll the tools -->
+    <div class="sticky top-16 z-20 -mx-4 mt-4 border-b border-line/70 bg-white/85 px-4 py-2.5 backdrop-blur-xl sm:-mx-6 sm:px-6 dark:border-white/10 dark:bg-night/85">
+      <div id="cat-filter" class="-mx-1 flex gap-1.5 overflow-x-auto px-1 [scrollbar-width:none]" role="toolbar" aria-label="Filter tools by category">
+        <button type="button" data-filter="all" aria-pressed="true" class="cat-chip">All <span class="cat-count">{tools.length}</span></button>
+        <button type="button" data-filter="popular" aria-pressed="false" class="cat-chip"><span class="h-1.5 w-1.5 rounded-full bg-brand" aria-hidden="true"></span>Popular</button>
+        {categories.map((c) => (
+          <button type="button" data-filter={id(c.name)} aria-pressed="false" class="cat-chip">
+            <span class={`h-1.5 w-1.5 rounded-full ${c.dot}`} aria-hidden="true"></span>{c.name}<span class="cat-count">{byCat(c.name).length}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div id="tool-sections">
+      <section data-group="popular" data-popular class="pt-6" aria-labelledby="g-popular">
+        <div class="mb-3 flex items-center gap-2.5">
+          <span class="grid h-7 w-7 place-items-center rounded-lg bg-brand-soft text-brand dark:bg-brand/20 dark:text-brand-light" aria-hidden="true">
+            <svg viewBox="0 0 20 20" class="h-4 w-4" fill="currentColor"><path d="M10 1.8l2.4 5 5.4.6-4 3.7 1.1 5.4L10 13.8l-4.9 2.7 1.1-5.4-4-3.7 5.4-.6L10 1.8Z"/></svg>
+          </span>
+          <div>
+            <h3 id="g-popular" class="text-base font-bold text-ink dark:text-white">Popular</h3>
+            <p class="text-xs text-muted dark:text-gray-400">The tools people use most</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+          {popular.map((t) => <ToolCard tool={t} variant="row" />)}
+        </div>
+      </section>
+
+      {categories.map((c) => (
+        <section data-group={id(c.name)} class="pt-8" aria-labelledby={`g-${id(c.name)}`}>
+          <div class="mb-3 flex items-center gap-2.5">
+            <span class={`h-7 w-1.5 rounded-full ${c.dot}`} aria-hidden="true"></span>
+            <div>
+              <h3 id={`g-${id(c.name)}`} class="flex items-baseline gap-2 text-base font-bold text-ink dark:text-white">
+                {c.name}<span class="text-xs font-semibold text-gray-400 dark:text-gray-500">{byCat(c.name).length} tools</span>
+              </h3>
+              <p class="text-xs text-muted dark:text-gray-400">{c.blurb}</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+            {byCat(c.name).map((t) => <ToolCard tool={t} variant="row" />)}
+          </div>
+        </section>
+      ))}
+    </div>
+    <p id="no-results" class="hidden py-14 text-center text-sm text-muted dark:text-gray-400" role="status">No matching tools. Try “compress” or “merge”.</p>
   </section>
 
-  <!-- Why PDFSherpa -->
-  <section class="container-page mt-10 sm:mt-12" aria-labelledby="why-title">
-    <div class="rounded-card bg-brand-soft/80 px-5 py-8 sm:px-8 dark:bg-white/[.04]">
-      <h2 id="why-title" class="text-center text-xl font-bold tracking-tight text-ink sm:text-h3 dark:text-white">Why PDFSherpa?</h2>
-      <ul class="mt-6 grid gap-5 sm:grid-cols-2 md:grid-cols-4 md:gap-4">
-        {why.map((w) => (
-          <li class="flex items-start gap-3 md:flex-col md:items-center md:text-center">
-            <svg viewBox="0 0 24 24" class="h-7 w-7 shrink-0 text-brand dark:text-brand-light" fill={w.fill ? 'currentColor' : 'none'} stroke={w.fill ? 'none' : 'currentColor'} stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={w.d} /></svg>
-            <div>
-              <h3 class="text-sm font-semibold text-ink dark:text-white">{w.title}</h3>
-              <p class="mt-0.5 text-[13px] text-gray-600 dark:text-gray-400">{w.text}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
+  <!-- How it works + why -->
+  <section class="container-page mt-14 sm:mt-16" aria-labelledby="how-title">
+    <div class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-indigo-600 via-brand to-violet-700 px-5 py-9 text-white sm:px-10 sm:py-12">
+      <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" aria-hidden="true"></div>
+      <div class="relative">
+        <h2 id="how-title" class="text-xl font-bold tracking-tight sm:text-h3">Done in three steps</h2>
+        <p class="mt-1 text-sm text-indigo-100">Everything happens on your device. There is no upload to wait for.</p>
+        <ol class="mt-7 grid gap-4 sm:grid-cols-3">
+          {steps.map((s) => (
+            <li class="rounded-2xl bg-white/10 p-4 ring-1 ring-white/15 backdrop-blur-sm">
+              <span class="grid h-8 w-8 place-items-center rounded-full bg-white text-sm font-extrabold text-brand">{s.n}</span>
+              <h3 class="mt-3 text-sm font-semibold">{s.title}</h3>
+              <p class="mt-1 text-[13px] leading-relaxed text-indigo-100">{s.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
+  </section>
+
+  <section class="container-page mt-12 sm:mt-14" aria-labelledby="why-title">
+    <h2 id="why-title" class="text-center text-xl font-bold tracking-tight text-ink sm:text-h3 dark:text-white">Why PDFSherpa?</h2>
+    <ul class="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+      {why.map((w) => (
+        <li class="card p-4 sm:p-5">
+          <span class="grid h-10 w-10 place-items-center rounded-xl bg-brand-soft text-brand dark:bg-brand/20 dark:text-brand-light">
+            <svg viewBox="0 0 24 24" class="h-5 w-5" fill={w.fill ? 'currentColor' : 'none'} stroke={w.fill ? 'none' : 'currentColor'} stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={w.d} /></svg>
+          </span>
+          <h3 class="mt-3 text-sm font-semibold text-ink dark:text-white">{w.title}</h3>
+          <p class="mt-0.5 text-[13px] text-gray-600 dark:text-gray-400">{w.text}</p>
+        </li>
+      ))}
+    </ul>
   </section>
 
   <!-- Verifiable trust + feedback -->
@@ -93,25 +184,65 @@ const jsonLd = [
   </div>
 </BaseLayout>
 
+<style>
+  .cat-chip {
+    display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.4rem; min-height: 2.5rem;
+    border-radius: 9999px; border: 1px solid var(--color-line); background: #fff; padding: 0 0.9rem;
+    font-size: 0.8125rem; font-weight: 600; color: rgb(55 65 81); transition: background-color .15s, border-color .15s, color .15s;
+  }
+  .cat-chip:hover { border-color: rgb(79 70 229 / .35); color: var(--color-ink); }
+  .cat-chip[aria-pressed='true'] { background: var(--color-ink); border-color: var(--color-ink); color: #fff; }
+  .cat-count { font-size: 11px; font-weight: 700; opacity: .55; font-variant-numeric: tabular-nums; }
+  :global(.dark) .cat-chip { background: rgb(255 255 255 / .05); border-color: rgb(255 255 255 / .1); color: rgb(209 213 219); }
+  :global(.dark) .cat-chip:hover { color: #fff; border-color: rgb(165 180 252 / .4); }
+  :global(.dark) .cat-chip[aria-pressed='true'] { background: #fff; border-color: #fff; color: var(--color-night); }
+</style>
+
 <script>
-  // Live tool filter (progressive enhancement; the grid works without JS).
+  // Category filter + live search (progressive enhancement; every tool is a plain link without JS).
   const input = document.getElementById('tool-search') as HTMLInputElement;
-  const cards = [...document.querySelectorAll<HTMLAnchorElement>('[data-tool]')];
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('#cat-filter [data-filter]')];
+  const groups = [...document.querySelectorAll<HTMLElement>('#tool-sections [data-group]')];
   const empty = document.getElementById('no-results')!;
-  input.addEventListener('input', () => {
+  const toolsTop = document.getElementById('tools')!;
+  let filter = 'all';
+
+  function render() {
     const terms = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    const searching = terms.length > 0;
     let shown = 0;
-    for (const c of cards) {
-      const ok = terms.every((t) => c.dataset.keywords!.includes(t));
-      c.hidden = !ok;
-      if (ok) shown++;
+    for (const g of groups) {
+      // While searching, look through every group (and skip the Popular copies so nothing shows twice).
+      const inFilter = searching ? !g.hasAttribute('data-popular') : filter === 'all' || g.dataset.group === filter;
+      let n = 0;
+      for (const c of g.querySelectorAll<HTMLAnchorElement>('[data-tool]')) {
+        const ok = inFilter && terms.every((t) => c.dataset.keywords!.includes(t));
+        c.hidden = !ok;
+        if (ok) n++;
+      }
+      g.hidden = n === 0;
+      shown += n;
     }
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(!searching && c.dataset.filter === filter)));
     empty.classList.toggle('hidden', shown > 0);
-  });
+  }
+
+  chips.forEach((c) =>
+    c.addEventListener('click', () => {
+      filter = c.dataset.filter!;
+      if (input.value) input.value = '';
+      render();
+      c.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      // If the filter bar is stuck under the header, bring the list back to its top.
+      if (toolsTop.getBoundingClientRect().top < 0) toolsTop.scrollIntoView({ block: 'start' });
+    }),
+  );
+  input.addEventListener('input', render);
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-      const first = cards.find((c) => !c.hidden);
+      const first = document.querySelector<HTMLAnchorElement>('#tool-sections [data-group]:not([hidden]) [data-tool]:not([hidden])');
       if (first && input.value.trim()) location.href = first.href;
     }
   });
+  render();
 </script>
